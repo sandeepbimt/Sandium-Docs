@@ -21,6 +21,17 @@ Read this before proposing technical changes. Detailed evidence belongs in linke
 - Product: Android browser initially based on official Brave Android.
 - No Sandium-specific build, cache or checkpoint behavior is proven yet.
 
+## Brave-native Siso/BuildBuddy integration (2026-10-17)
+
+- **VERIFIED:** Sandium master commit 06cd65a7e4fcea784e73c6deb9e4ce52889dc710 pins Brave Core 1.100.10 and Chromium 156.0.8078.39.
+- **VERIFIED from source code:** Brave Core supports REAPI through .env/gclient custom vars and Siso; --use_remoteexec true is available and remote execution defaults off.
+- **Critical adapter detail:** With rbe_service, Brave initially sets reapi_backend_config_path=google.star; Sandium must override that to a Sandium-owned BuildBuddy backend. Brave sisoUtils.ts also writes -config googlechrome; compatibility with BuildBuddy must be validated, not assumed.
+- **Reference-only proof:** SANDFOX's Chromium M151 checkpoint reports one successful real C++ remote action with remote:1, local:0, cache:0. This validates the concept for that action only; it does not prove cache hits, checkpoint restore, Chromium M156 behavior or a complete APK.
+- **Architecture direction:** CircleCI orchestrates and hosts the source workspace; Siso drives the build; BuildBuddy executes eligible remote actions. Remote execution does not remove source sync, GN generation, local-only actions, packaging or tests.
+- **Isolation:** A new API key alone does not guarantee cache isolation. Verify a Sandium-specific REAPI instance/namespace or a separate BuildBuddy project; otherwise disable remote-cache writes until scope is clear. Never copy SANDFOX credentials, caches, checkpoints, artifacts or workflows.
+- **No build yet:** Account/project configuration, quotas/cost, actual resource class, generated .sisoenv/.sisorc, remote execution at the pinned revision and APK completion remain unverified.
+- **Detailed record:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
+
 ## Lesson entry format
 
 ID; status; concise rule; conditions/scope; evidence links; originating experiment/decision; date. Add entries only when evidence supports them. Keep narrative in detailed records.
