@@ -60,3 +60,12 @@
 - **Current priority:** Verify the recordkeeper workflow and resulting commit before resuming browser-source feasibility work. No browser build may be triggered by this test.
 - **CircleCI:** Pending a separately configured Sandium-only API/webhook integration. Do not use SANDFOX credentials, caches, artifacts or infrastructure.
 - **No manual upkeep:** The user is not responsible for editing Markdown. ChatGPT updates conversation-derived findings in each session; automation captures machine evidence. If either layer misses an update, ChatGPT owns correcting the records and the automation design.
+
+
+## Anti-loop and ledger-scope safeguards
+
+- The recordkeeper must exclude its own runs and successful documentation-validation runs from new evidence entries.
+- Failed or cancelled documentation-validation runs must still be recorded as failures, but never as clean-base candidates.
+- The status/handoff "latest workflow" snapshot must exclude both recordkeeper and documentation-validation workflows. Otherwise each generated documentation commit can trigger validation, which can trigger another status commit indefinitely.
+- When no relevant non-documentation workflow exists, record that fact instead of substituting a docs-only run as the latest project/build result.
+- Idempotency means both no duplicate run entries and no idle commits. A scheduled timestamp alone must not change tracked files.
