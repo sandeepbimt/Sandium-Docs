@@ -139,3 +139,16 @@ Record test ID, date, source commit, run URL, command, expected/actual result, e
 - [ ] Recorder cannot trigger browser builds; no browser build starts during these tests.
 - [ ] The final automation commit is inspected and linked here.
 - [ ] CircleCI integration is separately marked pending until a Sandium-only endpoint/token is configured and tested.
+
+### Pinned REAPI configuration and no-build gate checks
+
+- [ ] At Chromium pin 156.0.8078.39, verify the DEPS-to-configure_siso.py path for reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper, and record the pinned Siso revision.
+- [ ] Confirm Brave's projects.chrome.custom_vars overrides the rbe_service defaults for all four REAPI settings through the supported .env prefix merge. Verify .gclient values and generated .sisoenv rather than only checking that variables are present.
+- [ ] Confirm the source checkout layout is <workspace>/src (Chromium) and <workspace>/src/brave (Sandium/Brave Core), with .gclient at <workspace>. Ensure the CircleCI working_directory or checkout path matches Brave's rootDir assumptions.
+- [ ] Validate the backend config using the digest-pinned Chromium/Siso image documented for non-Google RBE, while omitting Google-specific worker labels. Verify that the selected image can be pulled by the Sandium BuildBuddy account before any compile action is attempted.
+- [ ] Test the credential helper offline using fake keys and fake URIs: valid BuildBuddy host returns the expected x-buildbuddy-api-key header; unexpected host/protocol, malformed JSON, and missing secret fail closed; secret does not appear in logs or diagnostic output. Verify executable mode in the actual CI checkout.
+- [ ] Verify a stable Sandium REAPI instance/namespace that is shared by intended Sandium stages and identical future runs, and verify the BuildBuddy organization is independent of SANDFOX. An instance label or operator acknowledgment alone does not prove authorization or cache isolation.
+- [ ] Run Chromium's pinned configure_siso.py against a minimal temporary layout to generate .sisoenv and backend.star and assert the output values. This is a local/no-build configuration check and must not call REAPI.
+- [ ] Keep the googlechrome Siso preset disabled in the first remote qualification. The preset changes remote eligibility across multiple action classes; enable it only after a controlled comparison proves compatibility and speed benefits on BuildBuddy.
+- [ ] Only after explicit approval, run a pinned Siso auth-check as a distinct connection gate. It contacts the BuildBuddy REAPI service but must not sync full Chromium or compile. Record status without printing credentials. Do not confuse successful authentication with successful remote execution or cache hits.
+- [ ] Before choosing the five-stage handoff mechanism, measure Git-object cache restore, source worktree materialization, Siso state/output checkpoint packing, upload/download and restore time independently. A full Chromium tree snapshot is not the default because it risks consuming a stage's one-hour limit.
