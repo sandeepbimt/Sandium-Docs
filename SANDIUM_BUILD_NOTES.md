@@ -63,8 +63,19 @@ Record source/config identity, workflow run, artifact path, size, SHA-256, archi
 
 ### Feasibility conclusion
 
-The documented build path is clear; the affordable execution environment is not. No Sandium build should start until a pinned source revision is verified against its Chromium DEPS pin, and a free/persistent Linux x86-64 builder with sufficient storage and RAM plus a validated remote-build/cache entitlement is identified. The exact Brave Core pin previously recorded for investigation is `06cd65a7e4fcea784e73c6deb9e4ce52889dc710` (package version `1.100.10`, Chromium pin `156.0.8078.39`); treat these as provisional until checked against the repository files again before implementation.
+The documented build path is clear; the affordable execution environment is not. No Sandium build should start until a pinned source revision is verified against its Chromium DEPS pin, and a free/persistent Linux x86-64 builder with sufficient storage and RAM plus a validated remote-build/cache entitlement is identified. The exact Brave Core pin was re-verified on 2026-10-17 against Sandium master: commit `06cd65a7e4fcea784e73c6deb9e4ce52889dc710`, package version `1.100.10`, Chromium pin `156.0.8078.39`. Re-read these files and capture the actual checkout SHA before implementation; branch master is mutable.
 
+
+## CircleCI + BuildBuddy + Siso architecture review (2026-10-17)
+
+- Source inspection confirms Brave Core has its own native Siso/REAPI path. config.ts reads rbe_service, use_remoteexec, and siso_cache_dir; when rbe_service is set, generated Chromium custom vars default to reapi_address, reapi_instance=default, and reapi_backend_config_path=google.star before project custom-var overrides are merged.
+- A Sandium-owned BuildBuddy backend path must explicitly override google.star. Brave's sisoUtils.ts also automatically adds -config googlechrome when rbe_service is set. This is a revision-specific integration risk to validate, not assume correct or remove speculatively.
+- The build option --use_remoteexec true exists and remote execution defaults off. Preserve opt-in behavior; do not enable RBE globally.
+- SANDFOX's saved Chromium M151 proof demonstrated one real remote C++ action, but its counters reported cache:0. It does not prove remote-cache hits, reusable checkpoints, the pinned M156 source, or full APK production.
+- CircleCI should orchestrate and host the source workspace; BuildBuddy executes eligible remote actions. Remote compilation does not remove dependency sync, GN generation, local-only actions, packaging or device tests.
+- A Sandium-specific BuildBuddy API key and independently verified instance/cache namespace are required. A new key alone does not prove cache isolation. Do not reuse SANDFOX credentials, cache entries, checkpoints, artifacts, or workflows.
+- CircleCI currently documents a one-hour maximum job on the Free plan. Resource class, disk/RAM headroom, credits and source/artifact storage need account-level verification. Do not copy SANDFOX's artificial 35/36-minute timeout.
+- Detailed design and rollout gates: [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). This is source analysis only; no build, CI run, or integration configuration has been executed.
 
 ## Documentation automation boundary
 
