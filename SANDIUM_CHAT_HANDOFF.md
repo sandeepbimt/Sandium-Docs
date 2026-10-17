@@ -34,7 +34,7 @@ Purpose: resume from repository evidence without reconstructing history from cha
 6. State verified current state and one next action before editing or running anything.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
-- **Latest observed completed GitHub run:** Sandium documentation validation / run #18 (failure) — https://github.com/sandeepbimt/Sandium/actions/runs/38997172822
-- **Commit:** `f1738ad11f04457ca636dddc8b76b7d692b35985`; branch `main`
-- **Boundary:** GitHub evidence is polled automatically. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.
+- No completed non-documentation workflow run has been verified as a project/build result yet.
+- Documentation-validation run #18 failed due to a malformed newline in the validator; source fix was committed at `63d0d723e5d8ee67e1725ab65bcf12dcb61f6223`, and later validation still needs inspection.
+- Documentation runs are excluded from the latest project/build snapshot and clean-base ledger. CircleCI ingestion remains pending a Sandium-only integration; ChatGPT owns conversation-derived decisions.
 <!-- SANDIUM_AUTO_STATUS_END -->
