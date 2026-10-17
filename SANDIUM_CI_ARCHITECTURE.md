@@ -34,6 +34,21 @@ Each stage has one primary responsibility, explicit inputs/outputs and a handoff
 
 The detailed pass/fail checklist and required evidence are in [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md). These are design acceptance gates, not evidence that the implementation has passed and not authorization to start a build.
 
+## Performance and maximum-speed acceptance
+
+The five-stage design must be optimized end-to-end across CircleCI orchestration, Brave-native Siso and BuildBuddy remote execution/action cache. “Maximum speed” means the lowest measured practical elapsed time for the same reproducible build identity—not speculative concurrency or a cache setting that has not been proven useful.
+
+- CircleCI should orchestrate five strictly sequential, definitive stages. Reuse compatible source/dependency state, generated build graph, Siso state, outputs and verified APKs. A later stage must inspect a verified APK-ready marker before checkout, sync, restore or other expensive work.
+- Siso must use the version pinned by the selected Chromium revision and a backend configuration proven compatible with that revision. Tune concurrency, transfer thresholds and cache behavior only after capturing a baseline. Do not import SANDFOX tuning values as assumptions.
+- BuildBuddy remote execution/cache must use a verified Sandium-specific endpoint and isolated instance/namespace. Authentication, cache isolation and effective acceleration are separate assertions and require separate evidence. Do not enable cache writes or remote execution while endpoint/instance/helper compatibility is unresolved.
+- Instrument wall time by stage and phase: source checkout/sync, hooks/toolchain, GN generation, local actions, remote execution, cache lookup/hit/miss, packaging, checkpoint/artifact transfer, validation and handover. Capture total pipeline time, resource use where available, Siso action counters and BuildBuddy invocation IDs.
+- Establish a cold baseline first, then change one bottleneck at a time and compare identical source/config/toolchain/target identities. Reject optimizations that reduce time by weakening identity validation, artifact verification, cache isolation or diagnostics.
+- Every stage targets at most 50 minutes end-to-end, including preparation and handover, and must remain under CircleCI's one-hour job ceiling. If measurement indicates the target cannot be met, stop and redesign before another full run.
+- After a complete, verified APK is durably published, every downstream stage and later identical pipeline must skip expensive work and finish its job logic within 60 seconds after job start (queue wait excluded).
+- Cross-run reuse is accepted only when logs/counters prove useful work was reused and redundant work/time fell. Cache configuration, archive presence, a green job or a cache-hit label alone does not prove performance.
+
+The detailed pass/fail items and evidence requirements are in [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md), under “Siso, BuildBuddy and CircleCI performance acceptance”. These criteria do not authorize a CI run or build.
+
 ## Mandatory gates
 
 - No build until feasibility, expected cost, pass criteria and diagnostics are documented and approved.
