@@ -509,3 +509,12 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **What this does not prove:** Remote execution of a build action, executor image availability/compatibility, cache behavior, source/build-state reuse, complete build feasibility, or APK production.
 - **Scope:** No Chromium checkout, GN generation, compilation, APK build, master change, or SANDFOX infrastructure operation.
 - **Prevention rule:** Preserve this working package identifier and revision. Do not repeat the failed `infra/tools/siso/linux-amd64` guess. Do not promote auth success into a build-success claim.
+
+
+### FAIL-SISO-003 — Public plan data does not prove account entitlement or cost (2026-10-17)
+
+- **Learning:** Public BuildBuddy pricing lists a free Personal plan with remote execution and bounded cache transfer, while the self-hosted RBE configuration guide describes Enterprise requirements for configuring a self-hosted deployment. Do not conflate these offerings.
+- **Learning:** CircleCI Free allowances depend on account/project context; public open-source credit allowances do not automatically prove a particular project qualifies.
+- **What remains unknown:** The user's actual BuildBuddy organization plan, remaining remote execution/cache allowance, overage behavior, CircleCI plan/credits and resource-class access.
+- **Prevention:** Before any remote action, inspect actual account usage/billing pages and define a hard stop. Never claim the service is free based only on public pricing pages.
+- **Scope:** No account billing screens, secrets, REAPI calls, CI runs, sync or builds were accessed/performed during this review.
