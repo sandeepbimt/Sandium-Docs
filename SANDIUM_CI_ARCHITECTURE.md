@@ -70,6 +70,9 @@ Verified source-code findings at Sandium commit 06cd65a7e4fcea784e73c6deb9e4ce52
 - Do not use SANDFOX workflows, credentials, caches, checkpoints, artifacts, or source checkout as Sandium dependencies.
 - No artificial 35/36-minute cap. Respect actual CircleCI plan limits; preserve diagnostics and add checkpoint logic only if measurement proves it necessary.
 
+- A preflight-only CircleCI config is staged on [branch ci/sandium-buildbuddy-siso-preflight](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight), commit 3610ff348694d9cf923dbcffaf633017fade4edc. It has a workflow parameter defaulting false and defines no source-sync or build job. Local YAML and bash syntax parsing passed; CircleCI server-side validation, CircleCI project linkage, secret wiring and workflow execution are not verified.
+- The preflight checks only source metadata and presence of configured values. It does not call BuildBuddy, authenticate the key, prove cache isolation, or compile. SANDIUM_CACHE_SCOPE_CONFIRMED is only an explicit operator acknowledgment, not technical proof.
+
 ## Current status
 
 No Sandium CI workflow or checkpoint implementation has been validated. This document is a proposal, not evidence of a working pipeline.
