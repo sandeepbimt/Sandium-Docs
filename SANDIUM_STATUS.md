@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-17  
-**Status:** Documentation validation passes; Brave build feasibility audit in progress  
+**Status:** Recordkeeping automation implementation committed; end-to-end verification pending; no browser build started  
 **Repository:** https://github.com/sandeepbimt/Sandium
 
 ## Current state
@@ -10,7 +10,7 @@
 - [x] Core project records and handoff protocol committed.
 - [x] Documentation-only GitHub Actions workflow and validator committed.
 - [x] Documentation validation workflow passes (run #4).
-- [x] Cross-platform clean-base ledger and CI run-naming convention committed.\n- [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).
+- [x] Cross-platform clean-base ledger and CI run-naming convention committed.\n- [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).\n- [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
@@ -37,7 +37,7 @@ Complete a pinned-revision feasibility report: verify the selected Brave Core re
 ## Records
 
 - [Charter](SANDIUM_STARTER.md) · [Knowledge](SANDIUM_KNOWLEDGE.md) · [Decisions](SANDIUM_DECISIONS.md) · [Experiments](SANDIUM_EXPERIMENT_LOG.md) · [Failure learnings](SANDIUM_FAILURE_LEARNINGS.md) · [Build notes](SANDIUM_BUILD_NOTES.md) · [Test plan](SANDIUM_TEST_PLAN.md) · [Chat handoff](SANDIUM_CHAT_HANDOFF.md) · [CI architecture](SANDIUM_CI_ARCHITECTURE.md)
-- [Documentation validator](.github/scripts/validate_docs.py) · [Validation workflow](.github/workflows/docs-validation.yml)
+- [Automation contract](SANDIUM_AUTOMATION_RULES.md) · [Recordkeeper](.github/workflows/project-recordkeeper.yml) · [Recorder script](.github/scripts/record_workflow_evidence.py)\n- [Documentation validator](.github/scripts/validate_docs.py) · [Validation workflow](.github/workflows/docs-validation.yml) · [Automation test plan](SANDIUM_TEST_PLAN.md)
 
 ## Update rule
 
