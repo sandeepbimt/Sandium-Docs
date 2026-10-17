@@ -105,3 +105,12 @@ The recordkeeper is a metadata/documentation workflow only; it must never check 
 - **Environment:** local temporary Linux workspace and Python standard library; no BuildBuddy secret, network request, Siso executable, gclient, GN, source sync, compile or APK build. This validates configuration generation only, not Brave EnvConfig integration, Siso helper protocol at runtime, remote execution, cache isolation, executor image pullability or speed.
 - **First test failure / fix:** an assertion searched for the raw text label:action_default, which also appeared in a comment. The backend comment was made descriptive without the literal property string and the assertion was narrowed to quoted property syntax. The corrected suite passed 14/14. See FAIL-SISO-001.
 - **Next gate:** separate explicit approval for the pinned Siso auth-check against BuildBuddy. Do not run it, start CI, or begin compilation until that gate is approved.
+
+
+## Siso auth workflow bootstrap failure (2026-10-17)
+
+- Isolated workflow: [run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), Sandium branch `review/sandium-buildbuddy-backend-2026-10-17`, workflow commit `dea3e5ee0b214098117d26c823fc32c080022f4d`.
+- Attempt 1 stopped because the GitHub Actions secret `BUILDBUDDY_API_KEY` was absent. User confirmed the secret was added; attempt 2 was started.
+- Attempt 2 passed checkout but failed in Siso installation: `Error: no such package: infra/tools/siso/linux-amd64`. The auth-check step was skipped; no BuildBuddy authorization result exists.
+- Next: verify the pinned Siso revision's exact CIPD package/install method from authoritative Chromium/Brave source and package metadata, correct the workflow minimally, and rerun only the auth-only workflow.
+- No Chromium sync, GN, compilation, APK build, or SANDFOX operation occurred. See EXP-SISO-002 and FAIL-SISO-002.
