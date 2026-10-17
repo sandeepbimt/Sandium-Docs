@@ -6,18 +6,19 @@ Purpose: resume from repository evidence without reconstructing history from cha
 
 - **Repository:** https://github.com/sandeepbimt/Sandium
 - **Branch:** main
-- **Phase:** Documentation foundation and Brave build feasibility; no Android build has run.
+- **Phase:** Documentation foundation committed; first docs validation run pending. No Android build has run.
 - **Charter:** [SANDIUM_STARTER.md](SANDIUM_STARTER.md)
 - **Status:** [SANDIUM_STATUS.md](SANDIUM_STATUS.md)
 - **Must-read learnings:** [SANDIUM_KNOWLEDGE.md](SANDIUM_KNOWLEDGE.md)
 - **Detailed records:** Follow links in status and knowledge index.
-- **Next action:** Review/validate documentation bootstrap, then continue official Brave Android source/build feasibility audit.
+- **Documentation automation:** [validator](.github/scripts/validate_docs.py) and [GitHub Actions workflow](.github/workflows/docs-validation.yml). This is documentation-only; it does not compile Brave or trigger browser builds.
+- **Next action:** Inspect the first documentation-validation run, fix any issues, then continue the official Brave Android source/build feasibility audit.
 - **Do not:** Trigger builds before feasibility/cost is documented; use SANDFOX as a build dependency; assume cache/checkpoint behavior; store secrets.
 
 ## Session close checklist
 
 1. Inspect repository commit and work performed this session.
-2. Append consequential experiments, including failures/interrupted attempts, with links and actual costs where known.
+2. Append consequential experiments, including failed/interrupted attempts, with links and actual costs where known.
 3. Update failure learnings and decisions without erasing history.
 4. Update knowledge index for reusable evidence-backed lessons.
 5. Update build notes/test results when evidence changes.
