@@ -64,3 +64,8 @@ Record source/config identity, workflow run, artifact path, size, SHA-256, archi
 ### Feasibility conclusion
 
 The documented build path is clear; the affordable execution environment is not. No Sandium build should start until a pinned source revision is verified against its Chromium DEPS pin, and a free/persistent Linux x86-64 builder with sufficient storage and RAM plus a validated remote-build/cache entitlement is identified. The exact Brave Core pin previously recorded for investigation is `06cd65a7e4fcea784e73c6deb9e4ce52889dc710` (package version `1.100.10`, Chromium pin `156.0.8078.39`); treat these as provisional until checked against the repository files again before implementation.
+
+
+## Documentation automation boundary
+
+The recordkeeper is a metadata/documentation workflow only; it must never check out or compile Brave, sync Chromium dependencies, or trigger browser CI. Its successful execution is not a browser build result and must not qualify as a clean base. No Sandium Android build or APK has been produced as part of this documentation work. End-to-end recordkeeper execution remains unverified; see [automation rules](SANDIUM_AUTOMATION_RULES.md) and [experiment EXP-AUTO-001](SANDIUM_EXPERIMENT_LOG.md).
