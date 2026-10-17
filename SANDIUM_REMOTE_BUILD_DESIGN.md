@@ -25,6 +25,28 @@ SANDFOX remains reference-only. This design reuses technical lessons, not SANDFO
 4. use_remoteexec defaults to false. The build CLI supports --use_remoteexec true. Preserve this opt-in behavior.
 5. Source sync, third-party dependency download, GN generation, local-only actions, packaging and device tests remain work for the CircleCI coordinator even when compile actions execute remotely.
 
+## REAPI endpoint, authentication and cache-scope review (2026-10-17)
+
+### Verified from pinned source metadata
+
+Chromium DEPS for Sandium's pin `156.0.8078.39` declares `reapi_address`, `reapi_instance`, `reapi_backend_config_path`, and `reapi_credential_helper` for non-Google REAPI configuration. It pins Siso to `c574896b272b40aac6e44c228ee0b471ea7e3d7d`. The credential-helper variable is documented as a binary available on PATH or an absolute path. Source: [Chromium DEPS](https://chromium.googlesource.com/chromium/src/%2B/8a02fdbdfd14beedbb001c49e39d4d8666488921/DEPS) shows this Siso pin and variable contract; exact pinned source retrieval was not available through the source browser during this review.
+
+Siso's published authentication guide says a non-Google REAPI backend needs a compatible credential helper, mTLS, or insecure mode. Insecure mode must not be used for a public cloud service. The current guide documents `SISO_CREDENTIAL_HELPER` and Bazel-compatible credential-helper support. Compatibility at Sandium's exact pinned Siso hash remains unverified. [Siso authentication guide](https://chromium.googlesource.com/build/%2B/b1d3e7eff1af4e3ddb2fe779cf541a4ea4071cb3/siso/docs/auth.md).
+
+### BuildBuddy endpoint and authentication
+
+- **Documented candidate, not validated for Siso:** BuildBuddy's RBE guide uses `grpcs://remote.buildbuddy.io` as the Bazel remote-execution endpoint. It is a reasonable candidate for a later controlled Sandium check, but does not prove the pinned Siso client, Brave's `-config googlechrome` settings, and this BuildBuddy organization work together.
+- BuildBuddy documents API-key authentication using the `x-buildbuddy-api-key` gRPC metadata/header and supports multiple organization API keys. This establishes the header name, not end-to-end Siso integration. [BuildBuddy authentication guide](https://www.buildbuddy.io/docs/guide-auth/).
+- The credential-helper specification allows a helper to return request headers, so a helper that emits `x-buildbuddy-api-key` is protocol-plausible. It must accept only the expected REAPI URI, fail closed for other hosts, read the key from a protected environment secret, and never log the key. Do not implement or enable it until tested against the pinned Siso. [Credential-helper specification](https://github.com/EngFlow/credential-helper-spec/blob/main/spec.md).
+- BuildBuddy documents `remote.buildbuddy.io` in Bazel RBE examples and describes its managed Cloud remote caching/execution platform. These facts do not prove this account's feature access or quotas. [BuildBuddy RBE setup](https://www.buildbuddy.io/docs/rbe-setup/) · [BuildBuddy Quickstart](https://www.buildbuddy.io/docs/quickstart/).
+
+### Instance namespace and isolation
+
+BuildBuddy documents `remote_instance_name` as a way to namespace separate Bazel caches. Chromium exposes `reapi_instance` for a non-RBE address. However, the exact mapping of a chosen BuildBuddy instance name to Siso's REAPI `instance_name`, account permissions, and resulting cache-isolation boundary have not been verified. A separate API key is authentication separation, not cache isolation. Do not guess an instance string or enable cache writes against an unverified namespace.
+
+### Review conclusion
+
+The next safe technical step remains **read-only contract resolution**: inspect the pinned Siso credential-helper protocol and generated `.sisoenv`/`.sisorc` contract from the exact Chromium dependency revision; confirm BuildBuddy's supported REAPI endpoint and instance semantics for this account; then document the exact helper and cache-isolation design. No repository build, CI run, credential use, or configuration change is part of this step.
 ## Intended architecture
 
 - CircleCI: pinned source checkout/sync, dependency and toolchain hooks, GN configuration, orchestration, packaging, diagnostic preservation, artifact hashing and later device smoke tests.
