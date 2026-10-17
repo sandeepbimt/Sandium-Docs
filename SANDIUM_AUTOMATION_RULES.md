@@ -50,3 +50,13 @@
 - **Required next:** automatic ingestion of GitHub workflow completions and generated evidence summaries.
 - **Not automatically available from GitHub alone:** private ChatGPT conversation semantics and CircleCI events without an explicitly configured Sandium-only integration.
 - **Never claim full automation** until GitHub run ingestion, CircleCI ingestion (if CircleCI is used), artifact/test evidence, and session handoff updates have each been demonstrated end-to-end.
+
+
+## Current implementation status (2026-10-17)
+
+- **Committed:** Automation contract, GitHub Actions recordkeeper, evidence recorder, validator checks, decision DEC-004, experiment EXP-AUTO-001, operational risk OPS-001, and end-to-end acceptance criteria.
+- **Not yet proven:** The complete trigger → GitHub API read → correctly classified record update → commit/push path has not been verified end-to-end. Until that passes, describe the automation as implemented but unverified.
+- **Record classification:** Every eligible non-documentation GitHub workflow outcome may be recorded in the experiment log. Build notes are updated only for build-related workflows. The clean-base ledger receives only relevant build-related runs that report artifacts, always as CANDIDATE ONLY. Documentation-validation and recordkeeper runs must not become clean-base candidates.
+- **Current priority:** Verify the recordkeeper workflow and resulting commit before resuming browser-source feasibility work. No browser build may be triggered by this test.
+- **CircleCI:** Pending a separately configured Sandium-only API/webhook integration. Do not use SANDFOX credentials, caches, artifacts or infrastructure.
+- **No manual upkeep:** The user is not responsible for editing Markdown. ChatGPT updates conversation-derived findings in each session; automation captures machine evidence. If either layer misses an update, ChatGPT owns correcting the records and the automation design.
