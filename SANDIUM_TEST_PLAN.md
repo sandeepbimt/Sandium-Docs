@@ -140,7 +140,7 @@ Record test ID, date, source commit, run URL, command, expected/actual result, e
 - [ ] The final automation commit is inspected and linked here.
 - [ ] CircleCI integration is separately marked pending until a Sandium-only endpoint/token is configured and tested.
 
-### Pinned REAPI configuration and no-build gate checks
+## Phase 1A — Pinned REAPI configuration and no-build gate checks
 
 - [ ] At Chromium pin 156.0.8078.39, verify the DEPS-to-configure_siso.py path for reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper, and record the pinned Siso revision.
 - [ ] Confirm Brave's projects.chrome.custom_vars overrides the rbe_service defaults for all four REAPI settings through the supported .env prefix merge. Verify .gclient values and generated .sisoenv rather than only checking that variables are present.
