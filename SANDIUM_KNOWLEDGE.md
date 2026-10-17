@@ -65,3 +65,12 @@ ID; status; concise rule; conditions/scope; evidence links; originating experime
 - 14 local tests pass for fake credential-helper requests, rejected hosts/protocols/ports, missing credentials, malformed input, runtime env idempotence and secret exclusion, endpoint/namespace guards, helper chmod, and backend image/property checks.
 - Chromium 156.0.8078.39 configure_siso.py blob SHA cb0ce6aadd79bf1e0fa88f3da6b0b82ffee366e5 matched exactly and generated the expected .sisoenv plus byte-identical backend.star in a temporary workspace.
 - This is offline configuration evidence only. Actual Siso helper invocation, BuildBuddy auth/instance/image behavior, remote cache, source-state reuse, speed and APK production remain unverified.
+
+
+## Siso/BuildBuddy auth check — verified update (2026-10-17)
+
+- **VERIFIED:** Isolated workflow run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) succeeded after changing the CIPD package identifier from `infra/tools/siso/linux-amd64` to `build/siso/linux-amd64`.
+- **VERIFIED from workflow log:** Siso revision pin `git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d` installed successfully; the auth-only command reported success for `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`.
+- **VERIFIED scope:** No Chromium checkout, GN generation, compilation or APK build occurred.
+- **NOT PROVEN:** Remote execution, executor image compatibility, remote cache operation, same-run/cross-run reuse, five-stage CI performance, or APK production.
+- **Record:** See [EXP-SISO-002](SANDIUM_EXPERIMENT_LOG.md) and [FAIL-SISO-002](SANDIUM_FAILURE_LEARNINGS.md).
