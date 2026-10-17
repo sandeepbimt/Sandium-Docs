@@ -45,7 +45,8 @@ def main():
     fresh = []
     for run in reversed(runs):
         rid, name = int(run["id"]), (run.get("name") or run.get("path") or "unknown-workflow")
-        if rid in seen or "recordkeeper" in name.lower() or "documentation validation" in name.lower():
+        low_name = name.lower()
+        if rid in seen or "recordkeeper" in low_name or "documentation validation" in low_name:
             continue
         if run.get("status") == "completed":
             fresh.append(run)
@@ -68,9 +69,16 @@ def main():
             "- **Artifacts:** " + artifact_summary + "\n"
             "- **Run evidence:** " + url + "\n"
             "- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.\n")
-        append(ROOT / "SANDIUM_CLEAN_BASE_LEDGER.md", heading, record)
+        low_name = name.lower()
+        # General workflow evidence belongs in the experiment log. Only build-related
+        # workflows belong in build notes; only build/artifact candidates belong in the clean-base ledger.
         append(ROOT / "SANDIUM_EXPERIMENT_LOG.md", heading, record)
-        append(ROOT / "SANDIUM_BUILD_NOTES.md", heading, record)
+        build_related = any(term in low_name for term in ("build", "android", "apk", "checkpoint", "compile", "artifact", "clean-base"))
+        if build_related:
+            append(ROOT / "SANDIUM_BUILD_NOTES.md", heading, record)
+        if build_related and artifacts:
+            append(ROOT / "SANDIUM_CLEAN_BASE_LEDGER.md", heading,
+                   record + "\n- **Automatic classification:** CANDIDATE ONLY; acceptance requires source/config pins, artifact integrity, install/smoke tests and required test evidence.\n")
         if conclusion != "success":
             append(ROOT / "SANDIUM_FAILURE_LEARNINGS.md", "### Automated CI outcome — run " + str(rid),
                    record + "\n**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.\n")
