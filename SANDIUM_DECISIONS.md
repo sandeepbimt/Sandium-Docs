@@ -84,3 +84,16 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Rollback:** Keep remote execution disabled by default and revert only Sandium-specific configuration if remote behavior is unproven.
 - **Revisit when:** CircleCI project/resources and BuildBuddy account capabilities are verified or pinned Brave Siso behavior requires a different configuration.
 - **Related record:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
+
+## DEC-006 — Five-stage, reuse-first CI acceptance contract
+
+- **Status:** ACCEPTED
+- **Date:** 2026-10-17
+- **Problem:** Avoid repeating expensive Chromium source synchronization, build-graph generation, compilation and handover work across stages and future runs; prevent a stage from consuming the full one-hour CI limit; stop promptly once a valid APK exists.
+- **Evidence:** Explicit user requirements recorded on 2026-10-17; criteria are now written in [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md) and reflected in [SANDIUM_CI_ARCHITECTURE.md](SANDIUM_CI_ARCHITECTURE.md).
+- **Prior learning reviewed:** Prior SANDFOX experiments demonstrated that full build work can repeat and that cache/archive presence alone does not prove restoration or forward progress. SANDFOX remains reference-only; none of its infrastructure or artifacts may be used as dependencies.
+- **Decision and rationale:** Sandium CI must have exactly five sequential, purpose-defined stages. Each stage does definitive work only and consumes validated previous-stage state. Design for at most 50 minutes end-to-end per stage, including all preparation and handover, to leave margin under the one-hour job ceiling. Persist and prove same-run and cross-run reuse. If any stage produces a complete, integrity-checked APK matching the requested build identity, persist it with its manifest and require every downstream stage to skip expensive work and exit quickly.
+- **Trade-offs and risks:** Persistent checkpoints and caches increase storage/transfer and invalidation complexity. Incorrect keys or incomplete manifests can cause stale reuse; correctness checks take priority over the fast path. Actual reuse, time limits and fast-skip behavior remain unvalidated.
+- **Validation criteria:** Satisfy the complete checklist in the CI section of [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md), including cold run, same-run handover, warm cross-run reuse, early APK fast path, and corruption/change invalidation tests. Preserve stage durations, handover timings, action/output counters, source/config identity, logs and artifact SHA-256.
+- **Rollback:** Do not silently weaken these criteria or change the required stage count. If pinned Brave/Siso or provider limits make a criterion infeasible, document the specific evidence and obtain an explicit decision before changing the contract.
+- **Revisit when:** Measured implementation evidence or a verified upstream/provider constraint proves a requirement infeasible.
