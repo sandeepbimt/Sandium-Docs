@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-17  
-**Status:** Recordkeeping automation implementation committed; end-to-end verification pending; no browser build started  
+**Status:** CircleCI + BuildBuddy + Siso architecture reviewed against Brave Core; Sandium-only setup unconfigured; no browser build started  
 **Repository:** https://github.com/sandeepbimt/Sandium
 
 ## Current state
@@ -17,13 +17,15 @@
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
+- [x] Brave-native Siso/REAPI integration points inspected; Sandium-only design documented (not implemented or tested).
 - [ ] Reproducible Android APK is produced.
 
 Do not mark work complete without evidence.
 
 ## Verified facts
 
-- Repository: sandeepbimt/Sandium, default branch main.
+- Browser source repository: sandeepbimt/Sandium, default branch master; verified fork parent is brave/brave-core.
+- Source reviewed: 06cd65a7e4fcea784e73c6deb9e4ce52889dc710; Brave Core 1.100.10; Chromium pin 156.0.8078.39.
 - Documentation files and a documentation-only workflow exist on main.
 - The docs validator is read-only and does not build the browser. A separate scheduled recordkeeper has Actions read / repository contents write permission to record completed GitHub runs; it must be verified end-to-end.
 - No Sandium Android build result is established yet.
@@ -31,15 +33,15 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-A reproducible, affordable Android build path and safe checkpoint/cache strategy must be established before expensive builds. Chromium's official Android instructions require at least 100 GB free disk and recommend more than 16 GB RAM; a standard hosted GitHub runner is not an adequate assumption for a full build.
+The Brave-native Siso/REAPI route is source-supported but not validated against Sandium's Chromium 156 pin. Sandium-specific CircleCI project/context, a protected BuildBuddy API key, isolated REAPI cache namespace, account quota/cost, and compatibility of Brave's generated google.star default plus -config googlechrome with BuildBuddy remain unresolved. CircleCI Free has a one-hour job cap; remote execution does not remove source-sync, GN, packaging or test costs. The docs recordkeeper's end-to-end operation is also unverified.
 
 ## Single next action
 
-Verify the recordkeeper and documentation validator end-to-end: inspect the latest validation/recordkeeper runs, fix failures, confirm no duplicate or idle commits and no docs-only clean-base entries, then inspect the resulting repository commit. Do not start a browser build during this check. Once documentation automation is proven, resume the pinned-revision Brave Android feasibility report.
+Complete Sandium-only infrastructure preflight without compiling: confirm CircleCI resource class/runtime/credits and arrange a protected Sandium-specific BuildBuddy key plus isolated cache namespace. Then prepare a disabled-by-default CircleCI configuration that validates pins and remote configuration before any expensive source sync or build. Do not launch an APK build or reuse SANDFOX infrastructure.
 
 ## Records
 
-- [Charter](SANDIUM_STARTER.md) · [Knowledge](SANDIUM_KNOWLEDGE.md) · [Decisions](SANDIUM_DECISIONS.md) · [Experiments](SANDIUM_EXPERIMENT_LOG.md) · [Failure learnings](SANDIUM_FAILURE_LEARNINGS.md) · [Build notes](SANDIUM_BUILD_NOTES.md) · [Test plan](SANDIUM_TEST_PLAN.md) · [Chat handoff](SANDIUM_CHAT_HANDOFF.md) · [CI architecture](SANDIUM_CI_ARCHITECTURE.md)
+- [Charter](SANDIUM_STARTER.md) · [Remote build design](SANDIUM_REMOTE_BUILD_DESIGN.md) · [Knowledge](SANDIUM_KNOWLEDGE.md) · [Decisions](SANDIUM_DECISIONS.md) · [Experiments](SANDIUM_EXPERIMENT_LOG.md) · [Failure learnings](SANDIUM_FAILURE_LEARNINGS.md) · [Build notes](SANDIUM_BUILD_NOTES.md) · [Test plan](SANDIUM_TEST_PLAN.md) · [Chat handoff](SANDIUM_CHAT_HANDOFF.md) · [CI architecture](SANDIUM_CI_ARCHITECTURE.md)
 - [Automation contract](SANDIUM_AUTOMATION_RULES.md) · [Recordkeeper](.github/workflows/project-recordkeeper.yml) · [Recorder script](.github/scripts/record_workflow_evidence.py)
 - [Documentation validator](.github/scripts/validate_docs.py) · [Validation workflow](.github/workflows/docs-validation.yml) · [Automation test plan](SANDIUM_TEST_PLAN.md)
 
