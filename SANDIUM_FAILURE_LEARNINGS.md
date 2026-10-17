@@ -482,3 +482,17 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **Prevention rule:** Assert structured/configured property syntax or parse the configuration; avoid raw substrings that can be satisfied by explanatory comments.
 - **Do not repeat unless:** The backend schema or property names change.
 - **Related records:** EXP-SISO-001, DEC-007, SANDIUM_REMOTE_BUILD_DESIGN.md.
+
+
+### FAIL-SISO-002 — Pinned Siso CIPD install package not found in GitHub Actions
+
+- **Date / workflow:** 2026-10-17, [run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), attempt 2.
+- **Source revision:** Sandium review branch commit `dea3e5ee0b214098117d26c823fc32c080022f4d`.
+- **Expected:** Install Siso pinned to `c574896b272b40aac6e44c228ee0b471ea7e3d7d`, then run the bounded auth-only check.
+- **Observed:** Checkout succeeded. The `Install pinned Siso` step failed with `Error: no such package: infra/tools/siso/linux-amd64`; the authentication step did not run.
+- **Root cause status:** The configured CIPD package identifier or installation approach is invalid for the available package registry/path. Exact root cause is not yet confirmed; do not state that the pinned revision itself is unavailable without checking authoritative metadata.
+- **Secret:** Attempt 1 had failed because `BUILDBUDDY_API_KEY` was absent. User added it before attempt 2. No secret value appeared in the recorded error.
+- **What it proves / does not prove:** It proves the workflow bootstrap cannot install Siso with the current package string. It does not prove BuildBuddy connectivity, credentials, instance validity or auth-check syntax because Siso never launched.
+- **Mitigation:** Inspect the pinned Chromium/Brave DEPS and configure/build scripts plus official depot_tools/CIPD package metadata. Correct only the installation mechanism; preserve pinned revision and auth-only scope. Then rerun the isolated workflow.
+- **Prevention rule:** Verify the exact package identifier and pin format from source or registry before spending a CI run. Keep setup errors distinct from network/auth failures.
+- **Scope guard:** No Chromium sync, GN, compilation, APK or SANDFOX action occurred.
