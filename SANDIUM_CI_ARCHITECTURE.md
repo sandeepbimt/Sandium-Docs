@@ -5,6 +5,9 @@
 
 ## Goals
 
+- Record every candidate clean base in [SANDIUM_CLEAN_BASE_LEDGER.md](SANDIUM_CLEAN_BASE_LEDGER.md), including GitHub and CircleCI run identities, exact config path/commit, achievement, tests, artifacts and limitations.
+- Use purpose-oriented CircleCI workflow/job names; identify each run by workflow name plus pipeline number/ID and source commit. Do not create naming-only runs.
+
 - Establish reproducible Brave Android build within actual resource/cost constraints.
 - Use five sequential stages only if measured boundaries provide benefit.
 - Prove same-workflow checkpoint restoration before cross-run reuse.
