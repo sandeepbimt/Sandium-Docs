@@ -1,0 +1,33 @@
+name: Sandium documentation validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'SANDIUM_*.md'
+      - '.github/scripts/validate_docs.py'
+      - '.github/workflows/docs-validation.yml'
+  pull_request:
+    paths:
+      - 'SANDIUM_*.md'
+      - '.github/scripts/validate_docs.py'
+      - '.github/workflows/docs-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-docs:
+    name: Validate Sandium documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Sandium
+        uses: actions/checkout@v4
+      - name: Validate documents and local links
+        run: python3 .github/scripts/validate_docs.py
