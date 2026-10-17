@@ -18,6 +18,8 @@ A successful workflow exit is not sufficient where the goal is checkpoint restor
 - [ ] Checkout/dependency/output storage supported by sources or measurement.
 - [ ] Android targets, APK path and verification method identified.
 - [ ] Remote execution/cache availability and cost established.
+- [ ] Sandium-specific BuildBuddy key and isolated REAPI cache instance/namespace verified; a separate key alone is insufficient.
+- [ ] Brave-native generated Siso configuration reviewed, including google.star override and -config googlechrome interaction.
 - [ ] Decision record states feasibility under constraints.
 
 ## Phase 2 — Sandium-only CI plumbing
@@ -25,6 +27,8 @@ A successful workflow exit is not sufficient where the goal is checkpoint restor
 - [ ] Workflow exists only in Sandium and has no accidental build trigger.
 - [ ] Least-privilege permissions.
 - [ ] No SANDFOX resources, caches, credentials or artifacts used as dependencies.
+- [ ] Remote execution remains opt-in; default build configuration is unchanged.
+- [ ] Sandium-specific CircleCI project/context and protected secret are configured before any remote build run.
 - [ ] Source/config identity recorded for each run/checkpoint.
 - [ ] Diagnostics survive failures/timeouts.
 
