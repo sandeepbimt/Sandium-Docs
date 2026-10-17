@@ -40,7 +40,7 @@ The isolated Siso authentication workflow passed in run [39037465682](https://gi
 
 ## Single next action
 
-Preserve run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) as the successful auth-only baseline. Gate review: authentication passed, but BuildBuddy entitlement/quotas and cost, technical cache isolation, full generated-config integration, executor image/worker behavior, and remote action execution remain unverified. Do not start a remote action or browser build until the no-build infrastructure/cost gaps are closed and a separate gate is explicitly approved. Keep cache/reuse and APK production unverified.
+The no-build plan/cost and source-wiring audit is recorded in the remote build design, experiment log and knowledge base. Public pricing is not account-specific proof: BuildBuddy plan/usage, CircleCI eligibility/credits/resource class, actual backend-path resolution, and technical cache isolation remain unverified. Next action: inspect the actual BuildBuddy organization plan/usage and CircleCI plan/usage screens; report only plan, remaining allowance and resource-class access, never secrets. No remote action or build.
 
 ## Records
 
