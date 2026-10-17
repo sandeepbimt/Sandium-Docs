@@ -40,7 +40,7 @@ The isolated Siso authentication workflow passed in run [39037465682](https://gi
 
 ## Single next action
 
-Preserve run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) as the successful auth-only baseline. Do not start a browser build yet; next work must first pass the charter’s feasibility/cost and explicit approval gates. Keep remote execution, cache/reuse and APK production marked unverified.
+Preserve run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) as the successful auth-only baseline. Gate review: authentication passed, but BuildBuddy entitlement/quotas and cost, technical cache isolation, full generated-config integration, executor image/worker behavior, and remote action execution remain unverified. Do not start a remote action or browser build until the no-build infrastructure/cost gaps are closed and a separate gate is explicitly approved. Keep cache/reuse and APK production unverified.
 
 ## Records
 
