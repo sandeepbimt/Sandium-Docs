@@ -52,3 +52,15 @@ Distinguish source/dependency reuse, remote action cache, runner-local cache, se
 ## Artifact contract
 
 Record source/config identity, workflow run, artifact path, size, SHA-256, archive integrity, signing/debug state and device install/smoke test. Never commit signing keys or secrets.
+
+## Official source feasibility findings (2026-10-17)
+
+- Brave's official Android development guide documents dependency installation followed by `pnpm run sync --target_os=android` and `pnpm run build --target_os=android`. For a debug APK it documents `pnpm run build Debug --target_os=android --target_arch=arm --target_android_output_format=apk`. These are source-documented commands, not yet executed in Sandium.
+- Brave's `brave-core` README says initialization downloads Chromium source and can take a long time; its general build note says builds may take hours depending on processor and memory.
+- Chromium's official Android build guide states Linux x86-64, at least 8 GB RAM, more than 16 GB RAM highly recommended, and at least 100 GB free disk. These are Chromium minimum/recommendation figures, not a promise that a constrained hosted runner can complete a Brave build.
+- Chromium documents Siso as the main build tool and `autoninja` as its build wrapper. Remote execution is configured with `use_remoteexec = true` in Chromium GN args, but this alone does not establish free remote-execution access, correct credentials, reusable checkpoints, or a working Brave build.
+- Source references: [Brave Android Development Environment](https://github.com/brave/brave-browser/wiki/Android-Development-Environment), [Brave Core README](https://github.com/brave/brave-core/blob/master/README.md), [Chromium Android build instructions](https://chromium.googlesource.com/chromium/src/+/main/docs/android_build_instructions.md).
+
+### Feasibility conclusion
+
+The documented build path is clear; the affordable execution environment is not. No Sandium build should start until a pinned source revision is verified against its Chromium DEPS pin, and a free/persistent Linux x86-64 builder with sufficient storage and RAM plus a validated remote-build/cache entitlement is identified. The exact Brave Core pin previously recorded for investigation is `06cd65a7e4fcea784e73c6deb9e4ce52889dc710` (package version `1.100.10`, Chromium pin `156.0.8078.39`); treat these as provisional until checked against the repository files again before implementation.
