@@ -42,3 +42,10 @@ Complete a pinned-revision feasibility report: verify the selected Brave Core re
 ## Update rule
 
 Update after every meaningful session and consequential experiment. Record confirmed state only; label hypotheses explicitly.
+
+<!-- SANDIUM_AUTO_STATUS_START -->
+- **Recorder check:** 2026-10-17 03:00 UTC
+- **Latest observed completed GitHub run:** Sandium documentation validation / run #13 (success) — https://github.com/sandeepbimt/Sandium/actions/runs/38997062740
+- **Commit:** `bded111bb3bdb7456c6f9dcda2b53bee12500f0d`; branch `main`
+- **Boundary:** GitHub evidence is polled automatically. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.
+<!-- SANDIUM_AUTO_STATUS_END -->
