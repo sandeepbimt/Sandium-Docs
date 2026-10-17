@@ -6,13 +6,14 @@ Purpose: resume from repository evidence without reconstructing history from cha
 
 - **Repository:** https://github.com/sandeepbimt/Sandium
 - **Branch:** main
-- **Phase:** Documentation foundation committed; first docs validation run pending. No Android build has run.
+- **Phase:** Documentation validation passes; official Brave build feasibility audit in progress. No Android build has run.
 - **Charter:** [SANDIUM_STARTER.md](SANDIUM_STARTER.md)
 - **Status:** [SANDIUM_STATUS.md](SANDIUM_STATUS.md)
 - **Must-read learnings:** [SANDIUM_KNOWLEDGE.md](SANDIUM_KNOWLEDGE.md)
 - **Detailed records:** Follow links in status and knowledge index.
 - **Documentation automation:** [validator](.github/scripts/validate_docs.py) and [GitHub Actions workflow](.github/workflows/docs-validation.yml). This is documentation-only; it does not compile Brave or trigger browser builds.
-- **Next action:** Inspect the first documentation-validation run, fix any issues, then continue the official Brave Android source/build feasibility audit.
+- **Next action:** Complete the pinned-revision Brave Android build feasibility report; no build until the resource/cost/approval gates pass.
+- **Clean-base governance:** [SANDIUM_CLEAN_BASE_LEDGER.md](SANDIUM_CLEAN_BASE_LEDGER.md) records exact GitHub + CircleCI identities, config path/commit, achievements, tests and artifact evidence. CircleCI workflow/job names must be purpose-oriented; each run is uniquely identified by workflow name + pipeline number/ID + source commit. Do not run CI solely for naming.
 - **Do not:** Trigger builds before feasibility/cost is documented; use SANDFOX as a build dependency; assume cache/checkpoint behavior; store secrets.
 
 ## Session close checklist
@@ -25,7 +26,8 @@ Purpose: resume from repository evidence without reconstructing history from cha
 6. Update status with confirmed state, blockers and exactly one next action.
 7. Refresh this handoff with exact branch/commit/run/artifact links and must-not-repeat warnings.
 8. Run documentation validation and review the diff.
-9. Never claim a file was saved until the repository commit is verified.
+9. Append every candidate clean base to the ledger, including rejected/failed candidates when they inform decisions.
+10. Never claim a file was saved until the repository commit is verified.
 
 ## New-chat startup checklist
 
