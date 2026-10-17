@@ -53,3 +53,18 @@ Follow charter scope order. Record device, Android version, workload and measure
 ## Result record
 
 Record test ID, date, source commit, run URL, command, expected/actual result, evidence, status and linked experiment/failure IDs.
+
+
+## Phase 0A — Recordkeeper end-to-end validation
+
+- [ ] Recorder Python syntax passes the repository validator.
+- [ ] Scheduled/manual workflow starts and fetches GitHub workflow runs with the provided token.
+- [ ] It records a completed non-documentation run once, including run ID, source SHA, jobs, conclusion, artifact metadata and evidence URL.
+- [ ] A second poll creates no duplicate records and no commit when nothing has changed.
+- [ ] Failure/cancelled outcomes are recorded without inventing a root cause.
+- [ ] Documentation-only runs are excluded from the clean-base ledger.
+- [ ] Build notes/clean-base ledger receive only relevant build/artifact candidates; artifact presence alone does not accept a clean base.
+- [ ] Generated status/handoff snapshots are correct and do not overwrite human-authored sections.
+- [ ] Recorder cannot trigger browser builds; no browser build starts during these tests.
+- [ ] The final automation commit is inspected and linked here.
+- [ ] CircleCI integration is separately marked pending until a Sandium-only endpoint/token is configured and tested.
