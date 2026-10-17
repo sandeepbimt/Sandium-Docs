@@ -46,7 +46,7 @@ BuildBuddy documents `remote_instance_name` as a way to namespace separate Bazel
 
 ### Review conclusion
 
-The next safe technical step remains **read-only contract resolution**: inspect the pinned Siso credential-helper protocol and generated `.sisoenv`/`.sisorc` contract from the exact Chromium dependency revision; confirm BuildBuddy's supported REAPI endpoint and instance semantics for this account; then document the exact helper and cache-isolation design. No repository build, CI run, credential use, or configuration change is part of this step.
+At the time of the initial read-only review, the next safe technical step was contract resolution. That source investigation is now documented below, and an isolated adapter patch plus offline config-generation test has been completed. The remaining blocker is runtime validation of the actual pinned Siso/BuildBuddy path; it requires a separately approved auth-check.
 ## Intended architecture
 
 - CircleCI: pinned source checkout/sync, dependency and toolchain hooks, GN configuration, orchestration, packaging, diagnostic preservation, artifact hashing and later device smoke tests.
@@ -104,11 +104,11 @@ A no-build CircleCI preflight has been staged in [branch ci/sandium-buildbuddy-s
 
 The config has one workflow parameter, run_sandium_rbe_preflight, defaulting to false. The only defined job is a lightweight metadata/configuration check. It does not check out the huge source tree, call BuildBuddy, run gclient, run GN, or compile. It fetches only package.json and the backend file at the exact CircleCI commit SHA. It requires protected CircleCI environment values for the address, explicit REAPI instance, API-key presence, and a cache-scope acknowledgment; it never prints the API key.
 
-Local static checks passed: YAML parsing and bash syntax parsing. This is not CircleCI server-side config validation, does not prove the CircleCI project is linked, does not authenticate the key, and cannot establish cache isolation by itself. The SANDIUM_CACHE_SCOPE_CONFIRMED flag is only an operator acknowledgment, not technical proof. The workflow has not been triggered. No build job exists in this preflight config.
+Local static checks passed: YAML parsing and bash syntax parsing. This is not CircleCI server-side config validation, does not prove the CircleCI project is linked, does not authenticate the key, and cannot establish cache isolation by itself. The SANDIUM_CACHE_SCOPE_CONFIRMED flag is only an operator acknowledgment, not technical proof. A previous GitHub-triggered CircleCI preflight attempt reached the CircleCI job but failed because SANDIUM_REAPI_ADDRESS was unset at that time. The job stopped before contacting BuildBuddy. No build job exists in this preflight config, and no successful preflight/authenticated REAPI request is established.
 
 ## Verdict
 
-**Architecture fit: promising, not validated for Sandium.** Account access, isolated cache namespace, CircleCI configuration, the generated Brave Siso settings, remote execution on the pinned revision, cost and full APK completion remain unverified. No source build or CI workflow has run for Sandium.
+**Architecture fit: promising, still not validated end-to-end.** A lightweight CircleCI preflight was attempted but failed before BuildBuddy access due to the missing endpoint variable. The separate source-review branch now passes offline tests and the pinned config-generator check, but account access, cache isolation, helper interoperability, image pull, remote execution, cost and full APK completion remain unverified. No Chromium source sync or browser compile/APK build has run.
 
 
 ## Source patch review branch (2026-10-17)

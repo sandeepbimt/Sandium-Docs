@@ -25,7 +25,7 @@ Append one record per consequential experiment, including failed, interrupted an
 
 ## Experiment history
 
-No Sandium Android build or CI experiment has been run. Documentation-only validation should also be recorded if it changes the automation design.
+No Sandium Android build has been run. A lightweight CircleCI preflight attempt failed before BuildBuddy access because SANDIUM_REAPI_ADDRESS was unset at that time; the attempt did not perform source sync or compile. EXP-SISO-001 records the offline adapter/configuration test. Documentation-only validation should also be recorded if it changes the automation design.
 
 ## ID allocation and automation
 
