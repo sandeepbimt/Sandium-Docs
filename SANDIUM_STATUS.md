@@ -36,11 +36,12 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-The isolated source-review branch now contains the BuildBuddy backend candidate, runtime .env generator, fail-closed credential helper, offline tests, and the earlier opt-in change for Brave's Google-specific Siso preset. Fourteen offline tests passed. Chromium's exact pinned configure_siso.py was verified by blob hash and run in a temporary workspace; it generated the expected .sisoenv and copied backend.star byte-for-byte. This does not prove Siso's runtime helper protocol, BuildBuddy account authorization, namespace isolation, executor image pullability, remote action/cache behavior or five-stage timing. No Siso auth-check, REAPI request, source sync, CircleCI browser build, compile or APK build has occurred. The branch remains unmerged. See SANDIUM_REMOTE_BUILD_DESIGN.md for source references and evidence.
+The isolated Siso authentication workflow exists on the Sandium review branch. Run 39037465682 attempt 1 stopped because GitHub Actions lacked the `BUILDBUDDY_API_KEY` repository secret; the user added it. Attempt 2 passed checkout but failed during Siso installation with `no such package: infra/tools/siso/linux-amd64`. The auth-check never executed, so BuildBuddy authorization remains untested. No Chromium sync, GN generation, compilation or APK build occurred. See EXP-SISO-002 and FAIL-SISO-002.
 
 ## Single next action
 
-Obtain separate explicit approval for the next network gate: run the pinned Siso executable's auth-check against the documented BuildBuddy endpoint with the protected Sandium key. It must not sync Chromium or compile, and logs must redact all credentials. Before that gate, review the isolated [source patch branch](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17); it is four commits ahead of master and zero behind, with no PR/merge and no Actions runs on the branch. No source code was changed on master. Do not trigger CI, contact REAPI or build an APK until the corresponding gate is explicitly approved. SANDFOX remains reference-only.
+Inspect the exact pinned Chromium/Brave source and authoritative depot_tools/CIPD metadata to establish the correct Siso installation method for revision `c574896b272b40aac6e44c228ee0b471ea7e3d7d`. Make the smallest correction to the isolated auth workflow, then rerun only that workflow. Do not guess the package identifier, start Chromium sync/compilation, or touch SANDFOX.
+
 ## Records
 
 - [Charter](SANDIUM_STARTER.md) · [Remote build design](SANDIUM_REMOTE_BUILD_DESIGN.md) · [Knowledge](SANDIUM_KNOWLEDGE.md) · [Decisions](SANDIUM_DECISIONS.md) · [Experiments](SANDIUM_EXPERIMENT_LOG.md) · [Failure learnings](SANDIUM_FAILURE_LEARNINGS.md) · [Build notes](SANDIUM_BUILD_NOTES.md) · [Test plan](SANDIUM_TEST_PLAN.md) · [Chat handoff](SANDIUM_CHAT_HANDOFF.md) · [CI architecture](SANDIUM_CI_ARCHITECTURE.md)
