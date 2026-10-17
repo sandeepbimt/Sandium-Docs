@@ -428,3 +428,16 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Learning / prevention rule:** Keep runtime secrets out of .env and source; validate the generated file with the pinned upstream generator before touching the network. A unit-test assertion that scans raw text must distinguish configured property syntax from prose comments.
 - **Related failure / decision IDs:** FAIL-SISO-001; DEC-007.
 - **Next action:** Obtain separate explicit approval for pinned Siso auth-check against BuildBuddy, with no Chromium sync or compile.
+
+
+### EXP-SISO-002 — GitHub Actions Siso authentication workflow bootstrap
+
+- **Date:** 2026-10-17
+- **Status:** FAIL — setup failure before authentication; BuildBuddy authorization remains untested.
+- **Workflow:** [Sandium Siso BuildBuddy Auth Check, run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), branch `review/sandium-buildbuddy-backend-2026-10-17`, commit `dea3e5ee0b214098117d26c823fc32c080022f4d`.
+- **Purpose/scope:** Check the pinned Siso connection to `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`, without Chromium checkout, GN, compilation or APK build.
+- **Attempt 1:** Failed before Siso install because the GitHub Actions repository secret `BUILDBUDDY_API_KEY` was missing. User subsequently confirmed adding the secret. Secret value was not disclosed.
+- **Attempt 2:** Checkout passed; Siso install step failed in about two seconds with `Error: no such package: infra/tools/siso/linux-amd64`. Authentication step was skipped.
+- **Interpretation:** This is a Siso package/bootstrap naming or installation-method error, not a BuildBuddy authentication failure. No auth response, REAPI request or BuildBuddy authorization result was obtained.
+- **Cost/effects:** One short GitHub Actions runner attempt; no Chromium sync, GN generation, compilation, APK or SANDFOX action.
+- **Next action:** Inspect the pinned Chromium/Brave source and official depot_tools/CIPD package metadata to identify the exact Siso installation method for revision `c574896b272b40aac6e44c228ee0b471ea7e3d7d`; make the smallest workflow correction and rerun only this isolated workflow. Do not guess package identifiers or widen scope.
