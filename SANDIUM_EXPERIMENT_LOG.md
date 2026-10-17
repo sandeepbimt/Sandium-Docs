@@ -441,3 +441,17 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Interpretation:** This is a Siso package/bootstrap naming or installation-method error, not a BuildBuddy authentication failure. No auth response, REAPI request or BuildBuddy authorization result was obtained.
 - **Cost/effects:** One short GitHub Actions runner attempt; no Chromium sync, GN generation, compilation, APK or SANDFOX action.
 - **Next action:** Inspect the pinned Chromium/Brave source and official depot_tools/CIPD package metadata to identify the exact Siso installation method for revision `c574896b272b40aac6e44c228ee0b471ea7e3d7d`; make the smallest workflow correction and rerun only this isolated workflow. Do not guess package identifiers or widen scope.
+
+
+### EXP-SISO-002 — Pinned Siso installation and BuildBuddy authentication (2026-10-17, update)
+
+- **Workflow:** [Sandium Siso BuildBuddy Auth Check, run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682)
+- **Sandium branch/commit shown in run:** `review/sandium-buildbuddy-backend-2026-10-17`, commit `fd7411a` (short SHA as displayed by GitHub).
+- **Attempt 1:** Failed because repository secret `BUILDBUDDY_API_KEY` was missing. User added the secret; its value was not disclosed or recorded.
+- **Attempt 2:** The initial CIPD identifier `infra/tools/siso/linux-amd64` failed with `no such package`; auth step did not execute.
+- **Correction:** Workflow changed to use Chromium depot_tools CIPD package identifier `build/siso/linux-amd64` pinned with `git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d`. Workflow commit title shown in GitHub: `fix: use Chromium Siso CIPD package name`.
+- **Verified result:** Run #2 succeeded in 53 seconds total (job 50 seconds). Install step passed in 8 seconds. The authentication step log states it logged in by `ci/siso/buildbuddy-credential-helper.py`, invoked `use reapi "remote.buildbuddy.io:443" instance "sandium/android-arm64/ci"`, and printed `Siso authentication check succeeded.`
+- **Scope confirmation:** The step explicitly says no Chromium checkout, GN, compile, or APK build was performed. No SANDFOX infrastructure was touched.
+- **Interpretation:** The isolated Siso authentication check is now VERIFIED for this endpoint/instance and configured credential helper. This does not prove remote action execution, cache reads/writes, executor image compatibility, full build behavior, reuse, runtime, or APK production.
+- **Warning:** GitHub summary showed one annotation warning; its content has not been inspected in the supplied evidence.
+- **Next action:** Stop at this successful baseline; do not launch a build. Before any remote-execution/build experiment, review the feasibility/cost gates in the charter, remote-build design and test plan.
