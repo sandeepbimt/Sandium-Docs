@@ -455,3 +455,13 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Interpretation:** The isolated Siso authentication check is now VERIFIED for this endpoint/instance and configured credential helper. This does not prove remote action execution, cache reads/writes, executor image compatibility, full build behavior, reuse, runtime, or APK production.
 - **Warning:** GitHub summary showed one annotation warning; its content has not been inspected in the supplied evidence.
 - **Next action:** Stop at this successful baseline; do not launch a build. Before any remote-execution/build experiment, review the feasibility/cost gates in the charter, remote-build design and test plan.
+
+
+### EXP-SISO-003 — No-build plan/cost and wiring audit (2026-10-17)
+
+- **Scope:** Public vendor documentation and read-only inspection of Sandium review-branch source. No workflow, CircleCI job, REAPI request or build was run.
+- **Publicly documented:** BuildBuddy pricing currently lists Personal as free with up to 80 remote-build cores and 100 GB cache transfer; Team is pay-as-you-go beyond included transfer. BuildBuddy's self-hosted RBE configuration guide says self-hosted remote execution configuration requires Enterprise. These are distinct product/deployment contexts and do not establish this account's entitlement. Sources: [BuildBuddy pricing](https://www.buildbuddy.io/pricing/), [BuildBuddy RBE configuration](https://www.buildbuddy.io/docs/config-rbe/).
+- **Publicly documented:** CircleCI Free includes 30,000 monthly credits for personal usage; public Linux open-source projects may qualify for up to 400,000 credits. Account/project eligibility and available resource classes/remaining credits are not known. Sources: [CircleCI credits](https://circleci.com/docs/guides/plans-pricing/credits/), [CircleCI pricing](https://circleci.com/pricing/).
+- **Verified source audit:** Runtime env generator keeps remote execution disabled and Google-specific Siso preset disabled; helper is host/scheme/port-scoped; backend image is digest-pinned.
+- **Remaining gap:** Actual account-level BuildBuddy plan/usage and CircleCI plan/credits are not accessible through the repository connector. The generated backend relative path has not been confirmed by observing Brave's full runtime resolution in the intended workspace. A successful auth-only check is not proof of cache namespace isolation or remote execution.
+- **Decision:** No remote action or build. Keep Gate 0 and Gate 1 partial. Next action requires the user to inspect the BuildBuddy organization plan/usage and CircleCI plan/usage screens; report plan/remaining quota and allowed resource class only, never API keys or secrets.
