@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-17  
-**Status:** Documentation baseline committed; first validation run pending  
+**Status:** Documentation validation passes; Brave build feasibility audit in progress  
 **Repository:** https://github.com/sandeepbimt/Sandium
 
 ## Current state
@@ -9,7 +9,7 @@
 - [x] Independent Sandium repository exists.
 - [x] Core project records and handoff protocol committed.
 - [x] Documentation-only GitHub Actions workflow and validator committed.
-- [ ] First documentation validation workflow passes.
+- [x] Documentation validation workflow passes (run #4).
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
@@ -27,11 +27,11 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-A reproducible, affordable Android build path and safe checkpoint/cache strategy must be established before expensive builds.
+A reproducible, affordable Android build path and safe checkpoint/cache strategy must be established before expensive builds. Chromium's official Android instructions require at least 100 GB free disk and recommend more than 16 GB RAM; a standard hosted GitHub runner is not an adequate assumption for a full build.
 
 ## Single next action
 
-Run or inspect the first Sandium documentation-validation workflow and fix any validation failures. Do not start a Brave build yet.
+Complete a pinned-revision feasibility report: verify the selected Brave Core revision, its Chromium pin, toolchain, build targets, storage/RAM requirements, and a genuinely available free/persistent Linux x86-64 builder. Do not start a Brave build until the report and approval gate are satisfied.
 
 ## Records
 
