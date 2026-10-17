@@ -65,9 +65,9 @@ Every stage needs explicit pass criteria and retained evidence.
 
 Once an APK exists, record device model, Android version, build revision, test conditions and method. Measure cold/warm launch, cold/warm navigation, first launch and process-death recovery, memory, blocking, PWA install/launch/navigation/back-forward/reload/external links, and dark rendering across native-dark, image/video, SVG, canvas, code and embedded content.
 
-## Documentation system
+## Documentation system and automation
 
-Maintain SANDIUM_STATUS.md, SANDIUM_KNOWLEDGE.md, SANDIUM_DECISIONS.md, SANDIUM_FAILURE_LEARNINGS.md, SANDIUM_EXPERIMENT_LOG.md, SANDIUM_BUILD_NOTES.md, SANDIUM_TEST_PLAN.md, SANDIUM_CHAT_HANDOFF.md and SANDIUM_CI_ARCHITECTURE.md. Repository records are authoritative; chat history is supplementary. Never store secrets. Preserve history and label verified facts, hypotheses, rejected approaches and superseded decisions separately.
+The user will not manually maintain project Markdown. The [SANDIUM_AUTOMATION_RULES.md](SANDIUM_AUTOMATION_RULES.md) contract defines decisive update triggers. GitHub workflow evidence must be ingested automatically into the clean-base ledger, experiment log, failure learnings, build notes, status and handoff. ChatGPT owns updating semantic records from each work session because GitHub cannot read private ChatGPT history. CircleCI evidence must be integrated separately if CircleCI is used. Unknown facts stay UNKNOWN; no guessed outcomes or false clean-base claims. Preserve history and label verified facts, hypotheses, rejected approaches and superseded decisions separately. Never store secrets. If any automation is not proven end-to-end, state the limitation and fix it rather than transferring the maintenance burden to the user.
 
 ## Definition of progress
 
