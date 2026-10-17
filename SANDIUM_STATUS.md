@@ -10,7 +10,8 @@
 - [x] Core project records and handoff protocol committed.
 - [x] Documentation-only GitHub Actions workflow and validator committed.
 - [x] Documentation validation workflow passes (run #4).
-- [x] Cross-platform clean-base ledger and CI run-naming convention committed.\n- [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).\n- [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
+- [x] Cross-platform clean-base ledger and CI run-naming convention committed.
+- [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).\n- [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
