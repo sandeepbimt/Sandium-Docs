@@ -16,18 +16,13 @@ Purpose: resume from repository evidence without reconstructing history from cha
 - **Clean-base governance:** [SANDIUM_CLEAN_BASE_LEDGER.md](SANDIUM_CLEAN_BASE_LEDGER.md) records exact GitHub + CircleCI identities, config path/commit, achievements, tests and artifact evidence. CircleCI workflow/job names must be purpose-oriented; each run is uniquely identified by workflow name + pipeline number/ID + source commit. Do not run CI solely for naming.
 - **Do not:** Trigger builds before feasibility/cost is documented; use SANDFOX as a build dependency; assume cache/checkpoint behavior; store secrets.
 
-## Session close checklist
+## Session close protocol (owned by ChatGPT, not the user)
 
 1. Inspect repository commit and work performed this session.
-2. Append consequential experiments, including failed/interrupted attempts, with links and actual costs where known.
-3. Update failure learnings and decisions without erasing history.
-4. Update knowledge index for reusable evidence-backed lessons.
-5. Update build notes/test results when evidence changes.
-6. Update status with confirmed state, blockers and exactly one next action.
-7. Refresh this handoff with exact branch/commit/run/artifact links and must-not-repeat warnings.
-8. Run documentation validation and review the diff.
-9. Append every candidate clean base to the ledger, including rejected/failed candidates when they inform decisions.
-10. Never claim a file was saved until the repository commit is verified.
+2. Apply the triggers in [SANDIUM_AUTOMATION_RULES.md](SANDIUM_AUTOMATION_RULES.md): preserve experiments/failures, decisions, reusable knowledge, build/test evidence, status and handoff.
+3. Append candidate clean bases and rejected/failed candidates when they inform decisions; never promote a green run without artifact and test evidence.
+4. Run documentation validation, review the diff and verify the repository commit.
+5. Report what was updated and what remains unautomated; never tell the user to manually update these records.
 
 ## New-chat startup checklist
 
