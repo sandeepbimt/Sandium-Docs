@@ -387,3 +387,25 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Artifacts:** No artifacts reported by GitHub.
 - **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39000715223
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+### GitHub Actions run 39028971739
+
+- **Recorded:** 2026-10-17 11:46 UTC
+- **Workflow/run:** Sandium documentation validation / run #58 (run ID `39028971739`)
+- **Branch/commit:** `main` / `8b35c411813e2509f47bd6b53c7deb609664231b`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T11:30:41Z, last updated 2026-10-17T11:30:50Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39028971739
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+### GitHub Actions run 39029189037
+
+- **Recorded:** 2026-10-17 11:46 UTC
+- **Workflow/run:** Sandium documentation validation / run #62 (run ID `39029189037`)
+- **Branch/commit:** `main` / `180dbc9be96a3daf7e55a6bcd89dff968740b745`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T11:34:00Z, last updated 2026-10-17T11:34:08Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39029189037
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
