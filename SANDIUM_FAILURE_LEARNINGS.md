@@ -45,3 +45,20 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **Prevention rule:** Never claim recordkeeping is fully automated until a real end-to-end run passes.
 - **Do not repeat unless:** A new failure or regression occurs.
 - **Related records:** [Automation rules](SANDIUM_AUTOMATION_RULES.md), [Decision DEC-004](SANDIUM_DECISIONS.md), [Test plan](SANDIUM_TEST_PLAN.md).
+
+
+### FAIL-AUTO-002 — Documentation validator syntax regression
+
+- **Date / experiment ID:** 2026-10-17 / EXP-AUTO-001
+- **Status:** CONFIRMED ROOT CAUSE
+- **Source revision / configuration:** Commit f1738ad11f04457ca636dddc8b76b7d692b35985; documentation validation workflow.
+- **Expected behavior:** Validator should parse and check the required document list.
+- **Observed behavior:** GitHub Actions run #18 failed before checks ran.
+- **Evidence:** [Failed run #18](https://github.com/sandeepbimt/Sandium/actions/runs/38997172822); log reported SyntaxError at validator line 13 because a literal backslash-n sequence was inserted into the Python list.
+- **What it proves / does not prove:** It proves the validator source had a syntax error at that commit. It says nothing about browser build feasibility or recordkeeper operation.
+- **Root cause:** Text replacement wrote the two characters \\n instead of a real newline in the REQUIRED list.
+- **Fix / mitigation:** Corrected the list formatting in commit 63d0d723e5d8ee67e1725ab65bcf12dcb61f6223.
+- **Validation:** Awaiting a new documentation workflow run against the fix commit.
+- **Prevention rule:** Inspect fetched source after programmatic string edits; add syntax validation and verify actual workflow output.
+- **Do not repeat unless:** Another validator regression occurs.
+- **Related records:** [EXP-AUTO-001](SANDIUM_EXPERIMENT_LOG.md), [test plan](SANDIUM_TEST_PLAN.md).
