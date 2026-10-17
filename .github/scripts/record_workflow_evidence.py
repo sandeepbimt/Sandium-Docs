@@ -84,6 +84,7 @@ def main():
             "- **Commit:** " + TICK + str(latest.get("head_sha", "UNKNOWN")) + TICK + "; branch " + TICK + str(latest.get("head_branch", "UNKNOWN")) + TICK + "\n"
             "- **Boundary:** GitHub evidence is polled automatically. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.\n")
     else:
+        latest_block = "- No completed GitHub workflow run was available from the API.\\n"
     for path in [ROOT / "SANDIUM_STATUS.md", ROOT / "SANDIUM_CHAT_HANDOFF.md"]:
         replace_generated(path, "<!-- SANDIUM_AUTO_STATUS_START -->", "<!-- SANDIUM_AUTO_STATUS_END -->", latest_block)
     changed = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
