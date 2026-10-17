@@ -76,17 +76,14 @@ def main():
                    record + "\n**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.\n")
         seen.add(rid)
     state["seen_run_ids"] = sorted(seen)[-500:]
-    state["last_polled_utc"] = NOW
     STATE_PATH.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
     latest = next((r for r in runs if r.get("status") == "completed" and "recordkeeper" not in (r.get("name") or "").lower()), None)
     if latest:
         latest_block = (
-            "- **Recorder check:** " + NOW + "\n"
             "- **Latest observed completed GitHub run:** " + str(latest.get("name", "UNKNOWN")) + " / run #" + str(latest.get("run_number", "UNKNOWN")) + " (" + str(latest.get("conclusion", "UNKNOWN")) + ") — " + str(latest.get("html_url", "UNKNOWN")) + "\n"
             "- **Commit:** " + TICK + str(latest.get("head_sha", "UNKNOWN")) + TICK + "; branch " + TICK + str(latest.get("head_branch", "UNKNOWN")) + TICK + "\n"
             "- **Boundary:** GitHub evidence is polled automatically. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.\n")
     else:
-        latest_block = "- **Recorder check:** " + NOW + "\n- No completed GitHub workflow run was available from the API.\n"
     for path in [ROOT / "SANDIUM_STATUS.md", ROOT / "SANDIUM_CHAT_HANDOFF.md"]:
         replace_generated(path, "<!-- SANDIUM_AUTO_STATUS_START -->", "<!-- SANDIUM_AUTO_STATUS_END -->", latest_block)
     changed = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
