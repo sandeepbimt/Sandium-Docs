@@ -34,8 +34,7 @@ Purpose: resume from repository evidence without reconstructing history from cha
 6. State verified current state and one next action before editing or running anything.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
-- **Recorder check:** 2026-10-17 03:00 UTC
-- **Latest observed completed GitHub run:** Sandium documentation validation / run #13 (success) — https://github.com/sandeepbimt/Sandium/actions/runs/38997062740
-- **Commit:** `bded111bb3bdb7456c6f9dcda2b53bee12500f0d`; branch `main`
+- **Latest observed completed GitHub run:** Sandium documentation validation / run #18 (failure) — https://github.com/sandeepbimt/Sandium/actions/runs/38997172822
+- **Commit:** `f1738ad11f04457ca636dddc8b76b7d692b35985`; branch `main`
 - **Boundary:** GitHub evidence is polled automatically. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.
 <!-- SANDIUM_AUTO_STATUS_END -->
