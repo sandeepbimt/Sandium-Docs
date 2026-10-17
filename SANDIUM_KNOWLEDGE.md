@@ -74,3 +74,11 @@ ID; status; concise rule; conditions/scope; evidence links; originating experime
 - **VERIFIED scope:** No Chromium checkout, GN generation, compilation or APK build occurred.
 - **NOT PROVEN:** Remote execution, executor image compatibility, remote cache operation, same-run/cross-run reuse, five-stage CI performance, or APK production.
 - **Record:** See [EXP-SISO-002](SANDIUM_EXPERIMENT_LOG.md) and [FAIL-SISO-002](SANDIUM_FAILURE_LEARNINGS.md).
+
+
+## Public cost/plan evidence and wiring audit (2026-10-17)
+
+- BuildBuddy's public pricing page lists the hosted Personal plan as free, up to 80 remote-build cores and 100 GB cache transfer; Team is pay-as-you-go beyond included transfer. The self-hosted RBE configuration guide states remote execution configuration requires Enterprise. These pages describe different contexts and do not verify the user's account entitlement. [Pricing](https://www.buildbuddy.io/pricing/) · [RBE configuration](https://www.buildbuddy.io/docs/config-rbe/).
+- CircleCI public documentation lists 30,000 credits/month for Free personal use and up to 400,000 credits for qualifying public Linux open-source builds. The user's eligibility, remaining balance and resource-class access are unknown. [Credits](https://circleci.com/docs/guides/plans-pricing/credits/) · [Pricing](https://circleci.com/pricing/).
+- Read-only source inspection confirms the runtime generator keeps remote execution and Google's Siso preset disabled, the helper scopes credentials to the secure BuildBuddy REAPI host, and the backend image is digest-pinned. These are source properties, not runtime proof.
+- Remaining unknowns: account-specific entitlements/usage; exact backend-path resolution through Brave's runtime workspace/config chain; technical cache isolation; image pull and remote action behavior. No remote action or build is authorized.
