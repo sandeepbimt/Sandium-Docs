@@ -55,5 +55,13 @@ ID; status; concise rule; conditions/scope; evidence links; originating experime
 - **SECURITY:** Keep the BuildBuddy API key only in a protected Sandium CircleCI secret. The helper must reject unexpected hosts/protocols and must never log the key. Do not enable insecure REAPI.
 - **SISO PRESET:** Chromium's googlechrome preset is specifically maintained for Google's RBE, separate from backend.star. Keep it opt-in during initial qualification; compare the broader remote action rules on BuildBuddy before enabling for speed.
 - **CAPACITY RISK:** CircleCI workspace data is workflow-scoped and is transferred to each downstream job; cross-run reuse needs cache or other persistent state. Full Chromium source snapshot packaging is not the default; source materialization and checkpoint times must be measured separately against the 50-minute stage target.
-- **NEXT GATE:** Prepare a source-only configuration/helper patch and deterministic offline tests; run Chromium's pinned configure_siso.py in a temporary layout without calling REAPI. No CI, network auth test, source sync or build has been performed for this investigation.
+- **NEXT GATE:** The source-only adapter patch and deterministic offline tests are complete on review/sandium-buildbuddy-backend-2026-10-17. Fourteen unit tests passed and pinned configure_siso.py generated the expected local config. Next, obtain separate explicit approval for Siso auth-check; no CI, REAPI request, sync or build has been performed.
 - **Details and references:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
+
+
+## Offline adapter evidence (2026-10-17)
+
+- Branch: [review/sandium-buildbuddy-backend-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17); final commit 806f565ea44e256344f05cafe1b2b80b577aecfc. Four commits ahead of master, zero behind, no PR/merge.
+- 14 local tests pass for fake credential-helper requests, rejected hosts/protocols/ports, missing credentials, malformed input, runtime env idempotence and secret exclusion, endpoint/namespace guards, helper chmod, and backend image/property checks.
+- Chromium 156.0.8078.39 configure_siso.py blob SHA cb0ce6aadd79bf1e0fa88f3da6b0b82ffee366e5 matched exactly and generated the expected .sisoenv plus byte-identical backend.star in a temporary workspace.
+- This is offline configuration evidence only. Actual Siso helper invocation, BuildBuddy auth/instance/image behavior, remote cache, source-state reuse, speed and APK production remain unverified.

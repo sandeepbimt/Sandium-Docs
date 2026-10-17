@@ -465,3 +465,20 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
 
 **Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+
+### FAIL-SISO-001 — Offline backend test assertion matched an explanatory comment
+
+- **Date / experiment ID:** 2026-10-17 / EXP-SISO-001
+- **Status:** CONFIRMED ROOT CAUSE; fixed and retested.
+- **Source revision / configuration:** Review branch review/sandium-buildbuddy-backend-2026-10-17, initial adapter patch commit 41d0ba23b368720db0cff98468e7f25969b9fc3d.
+- **Expected behavior:** The offline unit test should confirm the backend config does not declare Google-specific worker-pool labels.
+- **Observed behavior:** One of 14 tests initially failed because a raw substring search for label:action_default matched that text in a human-readable comment, not in a Starlark property.
+- **Evidence:** [Initial patch](https://github.com/sandeepbimt/Sandium/commit/41d0ba23b368720db0cff98468e7f25969b9fc3d); [test correction](https://github.com/sandeepbimt/Sandium/commit/806f565ea44e256344f05cafe1b2b80b577aecfc). After correction, all 14 tests passed.
+- **What it proves / does not prove:** It proves the initial test assertion was too broad. It does not indicate a BuildBuddy runtime or remote execution failure, and it does not validate Starlark parsing or image pullability.
+- **Root cause:** The assertion searched prose as though it were configuration data.
+- **Fix / mitigation:** Reworded the comment and narrowed assertions to quoted property syntax.
+- **Validation:** Fourteen offline unit tests passed; exact pinned configure_siso.py config generation also passed in a temporary workspace.
+- **Prevention rule:** Assert structured/configured property syntax or parse the configuration; avoid raw substrings that can be satisfied by explanatory comments.
+- **Do not repeat unless:** The backend schema or property names change.
+- **Related records:** EXP-SISO-001, DEC-007, SANDIUM_REMOTE_BUILD_DESIGN.md.

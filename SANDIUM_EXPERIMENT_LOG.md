@@ -409,3 +409,22 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Artifacts:** No artifacts reported by GitHub.
 - **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39029189037
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+
+### EXP-SISO-001 — Offline Sandium BuildBuddy adapter/configure_siso validation
+
+- **Status:** PASS — for source-only/offline scope; runtime integration remains unverified.
+- **Date:** 2026-10-17
+- **Question:** Can Sandium's runtime REAPI configuration generate the expected Siso config and backend file with safe, deterministic helper behavior without network access or a Chromium checkout?
+- **Hypothesis and falsification:** The candidate settings can be generated through Brave's documented override names; the pinned Chromium configure_siso.py resolves the backend path and emits exact .sisoenv values. Falsified if offline helper tests, config generation, backend copy or identity checks fail.
+- **Baseline:** Sandium master Brave Core 1.100.10, Chromium 156.0.8078.39, Siso c574896b272b40aac6e44c228ee0b471ea7e3d7d. Review branch includes the earlier two-commit Google-preset opt-in change.
+- **Exact change / command:** Source adapter branch [review/sandium-buildbuddy-backend-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17), final commit 806f565ea44e256344f05cafe1b2b80b577aecfc. Ran python3 -m unittest discover -s tests/ci -p test_*.py -v in a local temporary copy; ran the exact pinned configure_siso.py with the candidate endpoint, stable namespace, backend relative path and absolute helper path.
+- **Environment:** Local temporary Linux workspace, standard Python libraries, fake credentials and fake URIs only. Exact upstream configure_siso.py blob SHA verified as cb0ce6aadd79bf1e0fa88f3da6b0b82ffee366e5. No Chromium sync, Siso executable, BuildBuddy request, CI run or compilation.
+- **Expected / actual cost:** Fourteen unit tests completed in about six seconds; config generation completed locally without external resources. No CI minutes, BuildBuddy invocation or remote execution spend.
+- **Evidence:** [Source branch](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17); [source patch commit](https://github.com/sandeepbimt/Sandium/commit/41d0ba23b368720db0cff98468e7f25969b9fc3d); [test assertion fix](https://github.com/sandeepbimt/Sandium/commit/806f565ea44e256344f05cafe1b2b80b577aecfc); local exact blob hash, test output, .sisoenv assertions and byte-identical backend copy were verified.
+- **Observed result:** 14/14 tests passed. .env managed block was idempotent, preserved unrelated settings and contained no fake key. Pinned configure_siso.py emitted the expected SISO_REAPI_INSTANCE, SISO_REAPI_ADDRESS and SISO_CREDENTIAL_HELPER values and copied backend.star byte-for-byte.
+- **Conclusion:** VERIFIED for offline generation and helper unit tests only; BuildBuddy/Siso runtime interoperability is INCONCLUSIVE.
+- **What it proves / unknowns:** It proves the chosen custom-var names/values can be represented and the pinned upstream config generator resolves the candidate backend path in a matching workspace layout. It does not prove Brave's full .env-to-.gclient execution path, the credential-helper request URI emitted by pinned Siso, account auth, cache isolation, image pull, remote action/cache hits, five-stage reuse, or APK completion.
+- **Learning / prevention rule:** Keep runtime secrets out of .env and source; validate the generated file with the pinned upstream generator before touching the network. A unit-test assertion that scans raw text must distinguish configured property syntax from prose comments.
+- **Related failure / decision IDs:** FAIL-SISO-001; DEC-007.
+- **Next action:** Obtain separate explicit approval for pinned Siso auth-check against BuildBuddy, with no Chromium sync or compile.

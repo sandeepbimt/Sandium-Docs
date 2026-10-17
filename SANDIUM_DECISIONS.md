@@ -100,7 +100,7 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 
 ## DEC-007 — Use the pinned Chromium non-Google REAPI path for BuildBuddy
 
-- **Status:** PROPOSED — source-supported design; not yet implemented or runtime-validated.
+- **Status:** PROPOSED — implemented on an isolated source-review branch and validated offline; still not runtime-validated against Siso/BuildBuddy.
 - **Date:** 2026-10-17
 - **Problem:** Brave's default RBE configuration selects google.star and the default instance; BuildBuddy needs an explicit, isolated, reproducible non-Google backend.
 - **Evidence:** Sandium pins Chromium 156.0.8078.39 and Siso c574896b272b40aac6e44c228ee0b471ea7e3d7d. Chromium DEPS passes reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper to configure_siso.py. Brave merges projects_chrome_custom_vars after rbe_service-derived defaults. Chromium's official non-Google RBE guide documents a custom backend.star and the digest-pinned siso-chromium Linux image. BuildBuddy documents remote.buildbuddy.io as its managed REAPI endpoint, x-buildbuddy-api-key auth, and REAPI instance namespaces.
@@ -111,4 +111,5 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Validation criteria:** First run deterministic offline helper tests with fake credentials and URIs; then generate .sisoenv/backend.star using Chromium's pinned configure_siso.py in a temporary layout without network access. After explicit authorization, use pinned Siso auth-check (no compile) and then one measured, meaningful Chromium action. Only later consider a full APK build and the five-stage acceptance demonstrations.
 - **Rollback:** Keep remote execution disabled by default; remove the Sandium-specific runtime configuration or revert its isolated source patch without changing SANDFOX.
 - **Revisit when:** The pinned Siso/BuildBuddy connection and image pull have passed, or source/provider evidence requires a different backend config.
+- **Implementation evidence (2026-10-17):** Branch [review/sandium-buildbuddy-backend-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17), final commit 806f565ea44e256344f05cafe1b2b80b577aecfc. Fourteen offline tests pass; the pinned configure_siso.py generated expected settings in a temporary workspace. No PR, merge, Siso auth-check, REAPI request, source sync, compile or APK build has occurred.
 - **Related records:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md), [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md).
