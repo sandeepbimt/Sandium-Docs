@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-17  
-**Status:** CircleCI + BuildBuddy + Siso architecture reviewed against Brave Core; Sandium-only setup unconfigured; no browser build started  
+**Status:** Isolated Siso/BuildBuddy authentication check passed; no browser build started  
 **Repository:** https://github.com/sandeepbimt/Sandium
 
 ## Current state
@@ -17,7 +17,7 @@
 - [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
 - [x] Official Brave Android build feasibility is documented for a pinned revision; actual build remains untested.
 - [x] Sandium-only CI architecture is reviewed against the selected Brave revision at source level; runtime compatibility remains untested.
-- [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
+- [x] Isolated Sandium Siso/BuildBuddy authentication check passed for the configured endpoint and instance; remote execution/build behavior remains unvalidated.
 - [x] Brave-native Siso/REAPI integration points inspected; Sandium-only design documented.
 - [x] Pinned non-Google REAPI config override path, proposed BuildBuddy endpoint/instance, credential-helper contract, and a Chromium executor-image candidate investigated at source level; account-level connection remains pending.
 - [x] Disabled-by-default, no-build CircleCI preflight staged on [Sandium branch](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight); local YAML and shell syntax checks passed, but CircleCI server validation/execution are unverified.
@@ -36,11 +36,11 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-The isolated Siso authentication workflow exists on the Sandium review branch. Run 39037465682 attempt 1 stopped because GitHub Actions lacked the `BUILDBUDDY_API_KEY` repository secret; the user added it. Attempt 2 passed checkout but failed during Siso installation with `no such package: infra/tools/siso/linux-amd64`. The auth-check never executed, so BuildBuddy authorization remains untested. No Chromium sync, GN generation, compilation or APK build occurred. See EXP-SISO-002 and FAIL-SISO-002.
+The isolated Siso authentication workflow passed in run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), after correcting the CIPD package identifier to `build/siso/linux-amd64` while retaining revision `git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d`. The log explicitly reports `Siso authentication check succeeded` for `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`. Attempt 1 failed due to missing `BUILDBUDDY_API_KEY`; the first installation attempt failed with the wrong package identifier before correction. No Chromium sync, GN generation, compilation or APK build occurred. Remote action execution, cache/reuse and APK production remain unverified. See EXP-SISO-002 and FAIL-SISO-002.
 
 ## Single next action
 
-Inspect the exact pinned Chromium/Brave source and authoritative depot_tools/CIPD metadata to establish the correct Siso installation method for revision `c574896b272b40aac6e44c228ee0b471ea7e3d7d`. Make the smallest correction to the isolated auth workflow, then rerun only that workflow. Do not guess the package identifier, start Chromium sync/compilation, or touch SANDFOX.
+Preserve run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) as the successful auth-only baseline. Do not start a browser build yet; next work must first pass the charter’s feasibility/cost and explicit approval gates. Keep remote execution, cache/reuse and APK production marked unverified.
 
 ## Records
 
