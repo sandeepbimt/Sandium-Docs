@@ -59,3 +59,8 @@ Document persistence, keys, retention, invalidation and cost separately for each
 ## Current status
 
 No Sandium CI workflow or checkpoint implementation has been validated. This document is a proposal, not evidence of a working pipeline.
+
+
+## Recordkeeping workflow boundary
+
+The scheduled [project recordkeeper](.github/workflows/project-recordkeeper.yml) and [evidence recorder](.github/scripts/record_workflow_evidence.py) are separate from browser-build CI. They collect GitHub workflow metadata only and must never trigger a Brave/Chromium build. General workflow outcomes belong in the experiment log; build notes are updated only for build-related workflows; the clean-base ledger is reserved for relevant build/artifact candidates. End-to-end behavior is not yet verified. CircleCI ingestion is a separate future integration and must use Sandium-specific credentials/configuration only.
