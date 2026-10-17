@@ -109,3 +109,14 @@ Local static checks passed: YAML parsing and bash syntax parsing. This is not Ci
 ## Verdict
 
 **Architecture fit: promising, not validated for Sandium.** Account access, isolated cache namespace, CircleCI configuration, the generated Brave Siso settings, remote execution on the pinned revision, cost and full APK completion remain unverified. No source build or CI workflow has run for Sandium.
+
+
+## Source patch review branch (2026-10-17)
+
+After approval, a narrow source-only patch was applied to [review/googlechrome-config-opt-in-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/googlechrome-config-opt-in-2026-10-17). Commits:
+- [f748e2d](https://github.com/sandeepbimt/Sandium/commit/f748e2deec3bec90c9ed83cc210c2526f55af7b1): add default-false `siso_use_googlechrome_config` config and typed property.
+- [713e07e](https://github.com/sandeepbimt/Sandium/commit/713e07e5dd6bc0340e695e529e7bd7574390612d): emit `-config googlechrome` only when the option is explicitly true.
+
+GitHub compare confirms the branch is two commits ahead of master, zero behind, with only `build/commands/lib/config.ts` and `build/commands/lib/sisoUtils.ts` changed. Static assertions confirmed the option defaults false and the flag is conditional. No TypeScript typecheck/lint, Chromium checkout, CI run, REAPI request, or build was run.
+
+Important limit: this patch addresses only Brave's unconditional Google-specific Siso preset. It does **not** correct the separate `google.star` backend and `default` instance defaults in `config.ts`; Sandium-specific custom variables must override these before any BuildBuddy test. The patch is not a complete BuildBuddy integration and does not authorize remote cache access or writes.
