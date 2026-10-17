@@ -10,7 +10,7 @@
 - [x] Core project records and handoff protocol committed.
 - [x] Documentation-only GitHub Actions workflow and validator committed.
 - [x] Documentation validation workflow passes (run #4).
-- [x] Cross-platform clean-base ledger and CI run-naming convention committed.
+- [x] Cross-platform clean-base ledger and CI run-naming convention committed.\n- [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
@@ -22,7 +22,7 @@ Do not mark work complete without evidence.
 
 - Repository: sandeepbimt/Sandium, default branch main.
 - Documentation files and a documentation-only workflow exist on main.
-- The workflow is limited to documentation-related changes, pull requests, and manual dispatch; it has read-only repository permissions and does not build the browser.
+- The docs validator is read-only and does not build the browser. A separate scheduled recordkeeper has Actions read / repository contents write permission to record completed GitHub runs; it must be verified end-to-end.
 - No Sandium Android build result is established yet.
 - SANDFOX is reference-only, not a build dependency.
 
