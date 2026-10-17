@@ -15,10 +15,11 @@
 - [x] Five-stage, reuse-first CI acceptance criteria documented in the test plan and CI architecture; implementation and runtime behavior remain unvalidated.
 - [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).
 - [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
-- [ ] Official Brave Android build feasibility is documented for a pinned revision.
-- [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
+- [x] Official Brave Android build feasibility is documented for a pinned revision; actual build remains untested.
+- [x] Sandium-only CI architecture is reviewed against the selected Brave revision at source level; runtime compatibility remains untested.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
 - [x] Brave-native Siso/REAPI integration points inspected; Sandium-only design documented.
+- [x] Pinned non-Google REAPI config override path, proposed BuildBuddy endpoint/instance, credential-helper contract, and a Chromium executor-image candidate investigated at source level; account-level connection remains pending.
 - [x] Disabled-by-default, no-build CircleCI preflight staged on [Sandium branch](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight); local YAML and shell syntax checks passed, but CircleCI server validation/execution are unverified.
 - [ ] Reproducible Android APK is produced.
 
@@ -35,7 +36,7 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-The pinned source path is now understood: Chromium 156.0.8078.39 passes reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper into configure_siso.py; Brave's projects_chrome_custom_vars overlay can override its google.star/default defaults. The documented REAPI endpoint candidate is remote.buildbuddy.io:443; Chromium's official non-Google example includes a digest-pinned siso-chromium Linux image. Still unverified: the account's REAPI/auth/instance/image behavior, exact pinned Siso helper execution, broad googlechrome preset compatibility, and five-stage source/state handoff time. The staged backend lacks a container image and the current preflight only checks environment-value presence, so neither is final readiness proof. No REAPI call, source sync, CircleCI browser build or APK build was run in this investigation. Detailed findings are in SANDIUM_REMOTE_BUILD_DESIGN.md.
+The pinned source path is now understood: Chromium 156.0.8078.39 passes reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper into configure_siso.py; Brave's projects_chrome_custom_vars overlay can override its google.star/default defaults. The documented REAPI endpoint candidate is remote.buildbuddy.io:443; Chromium's official non-Google example includes a digest-pinned siso-chromium Linux image. Still unverified: the account's REAPI/auth/instance/image behavior, exact pinned Siso helper execution, broad googlechrome preset compatibility, and five-stage source/state handoff time. The staged backend lacks a container image and the current preflight only checks environment-value presence, so neither is final readiness proof. No REAPI call, source sync, CircleCI browser build or APK build was run in this investigation. Documentation-only GitHub Actions validation is separate from the browser build and is checked before handoff. Detailed findings are in SANDIUM_REMOTE_BUILD_DESIGN.md.
 
 ## Single next action
 
