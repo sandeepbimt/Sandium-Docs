@@ -56,6 +56,20 @@ Document persistence, keys, retention, invalidation and cost separately for each
 7. Prove same-workflow continuation before cross-workflow persistence.
 8. Require a reproducible, verified APK before baseline completion.
 
+## Brave-native Siso/BuildBuddy adaptation
+
+Detailed design: [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). The intended model is CircleCI orchestration/source workspace plus Brave-native Siso plus BuildBuddy REAPI, not an Afterbird build wrapper.
+
+Verified source-code findings at Sandium commit 06cd65a7e4fcea784e73c6deb9e4ce52889dc710:
+
+- Brave Core config.ts generates REAPI custom vars when rbe_service is set and defaults the backend to google.star. Sandium must override that path to its own BuildBuddy backend.
+- sisoUtils.ts adds Brave's -config googlechrome Siso flag whenever RBE is configured. Compatibility with BuildBuddy must be validated; do not remove or assume it works without evidence.
+- use_remoteexec defaults to false; the build CLI supports --use_remoteexec true. Keep remote execution opt-in.
+- The saved SANDFOX checkpoint proves only one real Chromium M151 remote C++ compile. It does not prove Sandium's Chromium 156 pin, cache hits, checkpoint restoration, or full APK production.
+- Use a Sandium-specific CircleCI project/secret and independently verified BuildBuddy instance/cache namespace. A separate API key alone is not proof of cache isolation.
+- Do not use SANDFOX workflows, credentials, caches, checkpoints, artifacts, or source checkout as Sandium dependencies.
+- No artificial 35/36-minute cap. Respect actual CircleCI plan limits; preserve diagnostics and add checkpoint logic only if measurement proves it necessary.
+
 ## Current status
 
 No Sandium CI workflow or checkpoint implementation has been validated. This document is a proposal, not evidence of a working pipeline.
