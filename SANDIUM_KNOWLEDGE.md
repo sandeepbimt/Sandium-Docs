@@ -45,3 +45,15 @@ ID; status; concise rule; conditions/scope; evidence links; originating experime
 - **Scope split:** GitHub can record workflow/run/job/artifact metadata. ChatGPT must record decisions, hypotheses, conclusions and user instructions from conversations because GitHub cannot access private ChatGPT history.
 - **CircleCI:** Not automated until a separately configured Sandium-only API/webhook integration is tested. Never borrow SANDFOX credentials or infrastructure.
 - **Safety:** Recorder workflows must never trigger browser builds. Do not add every successful workflow to the clean-base ledger; only relevant build/artifact candidates belong there. A candidate is not accepted without artifact integrity and test evidence.
+
+## Additional source-level findings: BuildBuddy compatibility (2026-10-17)
+
+- **VERIFIED:** Chromium 156.0.8078.39 passes reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper into configure_siso.py. The same revision pins Siso to c574896b272b40aac6e44c228ee0b471ea7e3d7d.
+- **VERIFIED:** Brave's EnvConfig merges projects_chrome_custom_vars after its rbe_service-derived defaults. This gives Sandium a supported way to override the Google backend defaults.
+- **VERIFIED:** The official Chromium non-Google RBE guide provides a custom backend.star example using the digest-pinned siso-chromium Linux image. BuildBuddy documents custom container-image platform properties.
+- **CANDIDATE, not tested:** REAPI host remote.buildbuddy.io:443; a stable BuildBuddy instance name such as sandium/android-arm64/ci; the official pinned image; and a host-scoped get credential helper emitting x-buildbuddy-api-key. The organization account's authentication, executor image pull and instance behavior remain unverified.
+- **SECURITY:** Keep the BuildBuddy API key only in a protected Sandium CircleCI secret. The helper must reject unexpected hosts/protocols and must never log the key. Do not enable insecure REAPI.
+- **SISO PRESET:** Chromium's googlechrome preset is specifically maintained for Google's RBE, separate from backend.star. Keep it opt-in during initial qualification; compare the broader remote action rules on BuildBuddy before enabling for speed.
+- **CAPACITY RISK:** CircleCI workspace data is workflow-scoped and is transferred to each downstream job; cross-run reuse needs cache or other persistent state. Full Chromium source snapshot packaging is not the default; source materialization and checkpoint times must be measured separately against the 50-minute stage target.
+- **NEXT GATE:** Prepare a source-only configuration/helper patch and deterministic offline tests; run Chromium's pinned configure_siso.py in a temporary layout without calling REAPI. No CI, network auth test, source sync or build has been performed for this investigation.
+- **Details and references:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
