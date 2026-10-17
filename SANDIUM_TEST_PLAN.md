@@ -75,6 +75,20 @@ These are release gates for the Sandium CI design. They describe required behavi
 - [ ] Artifact publication and the handoff marker are durable before the producer stage exits, so a downstream stage or later pipeline can find the artifact. A missing, corrupt, incomplete, or identity-mismatched APK must not activate the fast path.
 - [ ] A later pipeline with the same requested build identity checks for an already-published, verified APK and reusable state before doing expensive work; it reuses or short-circuits safely rather than rebuilding the same target from zero.
 
+### Siso, BuildBuddy and CircleCI performance acceptance
+
+This is an explicit acceptance requirement, not a claim that the current setup is already fast or correctly configured. Optimize the full path for minimum practical elapsed time while preserving build correctness, isolation, diagnostics and the five-stage contract.
+
+- [ ] **CircleCI orchestration:** use exactly five sequential jobs/stages with explicit dependencies and purpose-specific inputs/outputs; avoid duplicate checkout, dependency sync, hooks, GN generation, restore, packaging or verification when a compatible result already exists.
+- [ ] **Siso execution:** use the Brave/Chromium-pinned Siso version and a verified Sandium-compatible backend configuration. Keep remote execution opt-in until the endpoint, instance, authentication and isolation gates pass. Tune local/remote concurrency and transfer/cache options only from evidence and measured results; do not copy SANDFOX values or assume they are optimal for Brave.
+- [ ] **BuildBuddy remote execution/cache:** verify Sandium-specific REAPI endpoint, instance/cache namespace and credential-helper behavior before enabling remote execution or cache writes. Capture remote/local/cache action counters, cache-hit/miss evidence, transfer time, queue/execution time, failures and invocation IDs. A configured endpoint, successful authentication or a cache-hit label alone does not prove useful acceleration or isolation.
+- [ ] **Measured performance baseline:** for each eligible validation/build run, record wall time by stage and phase (checkout/sync, hooks/toolchain, GN/configuration, remote and local actions, packaging, checkpoint/artifact transfer, validation and handover), plus available CPU/RAM/disk/network and BuildBuddy invocation metrics. Report total pipeline elapsed time and preparation/handover time separately.
+- [ ] **Optimization decision:** after a measured baseline, identify the dominant bottleneck and make one evidence-backed change at a time. Compare against the same source/config/toolchain/target identity. Retain correctness and artifact checks; do not trade reproducibility or safe cache isolation for apparent speed.
+- [ ] **Time budget:** optimize each stage toward the 50-minute end-to-end target, including preparation and handover, with a hard requirement to stay under CircleCI's one-hour job limit. If evidence shows a stage cannot fit, stop and redesign before repeating a costly full run.
+- [ ] **Warm-run target:** with identical build identity, demonstrate actual cross-run reuse and report saved work/time; do not claim speedup based only on cache configuration or a successful archive upload.
+- [ ] **APK short-circuit target:** once a matching, integrity-verified APK is durably published, each downstream stage and later identical pipeline must check the ready marker before any expensive work and complete its job logic within 60 seconds after job start (queue wait excluded).
+- [ ] **Resource/cost guard:** before each expensive run, estimate expected wall time, source/dependency transfer, storage, remote execution usage and likely failure value. Do not launch overlapping runs or repeat a run unless its specific question, expected evidence and stop conditions are documented.
+
 ### Required acceptance demonstrations
 
 - [ ] **Cold run:** captures per-stage work, resource use, checkpoint/handover times, total elapsed time and artifact identity.
