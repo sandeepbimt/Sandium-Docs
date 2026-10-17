@@ -51,7 +51,5 @@ Configure the Sandium CircleCI project/context with a fresh Sandium-specific Bui
 The GitHub recordkeeper is committed but is not yet considered operational until a real end-to-end run and resulting commit are verified. ChatGPT owns conversation-derived updates; CircleCI evidence remains pending a Sandium-only integration. The user is not expected to maintain Markdown manually. See [automation contract](SANDIUM_AUTOMATION_RULES.md), [DEC-004](SANDIUM_DECISIONS.md), [EXP-AUTO-001](SANDIUM_EXPERIMENT_LOG.md) and [test plan](SANDIUM_TEST_PLAN.md).
 
 <!-- SANDIUM_AUTO_STATUS_START -->
-- No completed non-documentation workflow run has been verified as a project/build result yet.
-- Documentation-validation run #18 failed due to a malformed newline in the validator; source fix was committed at `63d0d723e5d8ee67e1725ab65bcf12dcb61f6223`, and later validation still needs inspection.
-- **Boundary:** Documentation runs are excluded from the latest project/build snapshot and clean-base ledger. CircleCI is not covered until a Sandium-only integration is configured and tested. ChatGPT must still record decisions and findings GitHub cannot observe.
+- No completed GitHub workflow run was available from the API.\n
 <!-- SANDIUM_AUTO_STATUS_END -->
