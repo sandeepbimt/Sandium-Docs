@@ -206,3 +206,28 @@ This source-only investigation and local test do not authorize a network/build g
 - **Gate 4 — not started:** No cache/checkpoint restoration or same-run/cross-run reuse has been tested.
 
 **Safe conclusion:** authentication is a necessary gate passed, not a build-feasibility or performance result. Keep remote execution opt-in and do not enable cache writes beyond the verified isolated Sandium namespace. The next step is to close the remaining no-build infrastructure/cost evidence gaps, not to run a compile or APK build.
+
+
+## No-build Gate 0/1 review — public plan evidence and wiring audit (2026-10-17)
+
+This review was intentionally limited to documentation, public vendor documentation and read-only inspection of the Sandium review branch. No workflow was triggered and no REAPI request was made.
+
+### Public plan facts (not account-specific entitlement)
+
+- BuildBuddy's current public pricing page lists the Personal plan as free, with remote execution up to 80 cores and 100 GB of cache transfer; Team is pay-as-you-go beyond the included transfer. Source: [BuildBuddy pricing](https://www.buildbuddy.io/pricing/).
+- BuildBuddy's RBE configuration page says configuring a self-hosted BuildBuddy deployment's remote execution requires Enterprise. This is not the same question as whether BuildBuddy's hosted Personal plan provides remote execution. Source: [BuildBuddy RBE configuration](https://www.buildbuddy.io/docs/config-rbe/).
+- CircleCI's current Free plan docs list 30,000 credits/month for personal use and included network/storage allowances; public Linux open-source projects may qualify for up to 400,000 credits/month. Whether Sandium's repo/project qualifies and which resource class the account can use must be checked in the actual CircleCI account. Source: [CircleCI credit usage](https://circleci.com/docs/guides/plans-pricing/credits/) and [CircleCI pricing](https://circleci.com/pricing/).
+- These public pages do **not** prove the user's BuildBuddy organization is on a plan with remote execution enabled, what usage remains, or whether any cache transfer overage will apply. No account billing/usage screen was accessible during this review.
+
+### Read-only wiring audit
+
+- **VERIFIED from source:** `ci/siso/write_buildbuddy_env.py` keeps `use_remoteexec=false`, `siso_use_googlechrome_config=false`, and writes the stable candidate instance `sandium/android-arm64/ci`; it points at the Sandium-owned credential helper and backend file.
+- **VERIFIED from source:** the helper only returns `x-buildbuddy-api-key` for secure `remote.buildbuddy.io` URI requests on the allowed port and rejects other hosts/schemes. The key is read from the protected environment and is not printed by the helper.
+- **VERIFIED from source:** backend image is digest-pinned to Chromium's published Siso Chromium Linux image; the file itself explicitly says image pullability and action compatibility have not been tested.
+- **NOT VERIFIED end-to-end:** The generated backend path is the relative value `../../../../brave/ci/siso/buildbuddy_backend.star`. Although the prior offline configure_siso generation test passed, the exact runtime resolution from Brave's actual workspace layout through gclient/configure_siso has not been observed in a real Sandium workspace. The backend path is therefore a specific remaining static/runtime integration question, not a reason to start a build.
+- **NOT PROVEN:** A stable-looking instance name is not proof of account-level namespace isolation. The successful auth check establishes authentication against the requested endpoint/instance but does not prove cache reads/writes, executor image pulls, remote actions, or a separate namespace boundary.
+- **Cost rule:** Do not infer "free" from a public Personal plan description. Before any remote action, inspect the actual BuildBuddy plan/usage and CircleCI plan/credit state; record the remaining allowance, resource class, expected action and cache transfer, and a hard stop threshold.
+
+### Gate decision
+
+Gate 0 remains **PARTIAL** pending account-specific plan/usage and runner-resource confirmation. Gate 1 remains **PARTIAL** pending confirmation of the actual resolved backend path and generated config in the intended workspace. No remote action, cache write, CircleCI pipeline, Chromium sync, GN generation, compilation or APK build is authorized by this review.
