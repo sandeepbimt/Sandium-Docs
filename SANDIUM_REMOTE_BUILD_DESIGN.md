@@ -120,3 +120,69 @@ After approval, a narrow source-only patch was applied to [review/googlechrome-c
 GitHub compare confirms the branch is two commits ahead of master, zero behind, with only `build/commands/lib/config.ts` and `build/commands/lib/sisoUtils.ts` changed. Static assertions confirmed the option defaults false and the flag is conditional. No TypeScript typecheck/lint, Chromium checkout, CI run, REAPI request, or build was run.
 
 Important limit: this patch addresses only Brave's unconditional Google-specific Siso preset. It does **not** correct the separate `google.star` backend and `default` instance defaults in `config.ts`; Sandium-specific custom variables must override these before any BuildBuddy test. The patch is not a complete BuildBuddy integration and does not authorize remote cache access or writes.
+
+## Pinned non-Google REAPI configuration investigation (2026-10-17)
+
+### Verified configuration chain
+
+The source-level gap is narrower than it first appeared. At Sandium's pinned Chromium 156.0.8078.39, Chromium DEPS defines reapi_address, reapi_instance, reapi_backend_config_path, and reapi_credential_helper, and pins Siso to git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d. Its configure_siso hook passes all four settings to build/config/siso/configure_siso.py. That script generates .sisoenv and installs the chosen backend configuration as build/config/siso/backend_config/backend.star. Source: [Chromium DEPS at the pinned revision](https://chromium.googlesource.com/chromium/src.git/+/8a02fdbdfd14beedbb001c49e39d4d8666488921/DEPS); [Chromium non-Google RBE guide](https://chromium.googlesource.com/chromium/src/+/main/docs/linux/build_instructions.md#non-Google-RBE).
+
+Brave Core config.ts sets Google defaults when rbe_service is nonempty: reapi_address=rbe_service, reapi_backend_config_path=google.star, and reapi_instance=default. This is not a hard-coded limitation: projects_chrome_custom_vars is merged after those defaults, and EnvConfig.getMergedObject() supports the corresponding .env prefix form (for example, projects_chrome_custom_vars_reapi_instance=...). Sandium can override the backend path, instance and credential helper without redesigning Brave's sync system. Relevant pinned files: [config.ts](https://github.com/brave/brave-core/blob/06cd65a7e4fcea784e73c6deb9e4ce52889dc710/build/commands/lib/config.ts), [syncUtils.ts](https://github.com/brave/brave-core/blob/06cd65a7e4fcea784e73c6deb9e4ce52889dc710/build/commands/lib/syncUtils.ts), and [Chromium configure_siso.py](https://github.com/chromium/chromium/blob/156.0.8078.39/build/config/siso/configure_siso.py).
+
+### Proposed values — still require controlled validation
+
+- **REAPI endpoint:** remote.buildbuddy.io:443. BuildBuddy's Bazel guide uses grpcs://remote.buildbuddy.io; Chromium's Siso non-Google example expects host:port in reapi_address, so use the scheme-less form in Brave/Chromium custom vars. Do not use sandium.buildbuddy.io, which is the organization web UI rather than the documented REAPI endpoint. [BuildBuddy RBE setup](https://www.buildbuddy.io/docs/rbe-setup/).
+- **Instance/cache namespace:** sandium/android-arm64/ci is a proposed stable name, not an account-tested value. BuildBuddy documents REAPI instance names as cache namespaces. Keep it identical across stages and future identical builds so caches can be reused; do not include workflow IDs or timestamps. A namespace is not by itself an authorization boundary. Sandium must use its own BuildBuddy organization/key; never use SANDFOX.
+- **Backend config path:** ../../../../brave/ci/siso/buildbuddy_backend.star is the candidate relative path when resolved from Chromium's build/config/siso/backend_config directory in the required workspace layout: <workspace>/src for Chromium and <workspace>/src/brave for Sandium. An absolute path is also supported. A no-build generation check should confirm the actual resolved path before any REAPI call.
+- **Credential helper:** point reapi_credential_helper at an absolute runtime path to a Sandium-owned executable, for example <workspace>/src/brave/ci/siso/buildbuddy-credential-helper. Generate the ignored runtime .env only after the working directory is established; do not hard-code CircleCI paths into source. The helper source itself must contain no key.
+- **Illustrative runtime-only .env settings (no secrets):**
+
+      rbe_service=remote.buildbuddy.io:443
+      projects_chrome_custom_vars_reapi_address=remote.buildbuddy.io:443
+      projects_chrome_custom_vars_reapi_instance=sandium/android-arm64/ci
+      projects_chrome_custom_vars_reapi_backend_config_path=../../../../brave/ci/siso/buildbuddy_backend.star
+      projects_chrome_custom_vars_reapi_credential_helper=<absolute-workspace-path>/src/brave/ci/siso/buildbuddy-credential-helper
+      siso_use_googlechrome_config=false
+
+  The last setting exists only on the unmerged review branch [review/googlechrome-config-opt-in-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/googlechrome-config-opt-in-2026-10-17); it has not been merged to master. Never put BUILDBUDDY_API_KEY in .env, source files or logs; it belongs only in a protected Sandium CircleCI secret.
+
+### Remote executor image: evidence-backed candidate
+
+The currently staged ci/siso/buildbuddy_backend.star only declares OSFamily=Linux; it does not select a container image. BuildBuddy's docs say its generic executor image is Ubuntu 16.04 with Java 8, and that custom container-image platform properties are supported. That generic environment is not shown to match Chromium 156's remote action requirements.
+
+The official Chromium non-Google RBE guide itself provides this digest-pinned image in its sample backend:
+docker://gcr.io/chops-public-images-prod/rbe/siso-chromium/linux@sha256:d7cb1ab14a0f20aa669c23f22c15a9dead761dcac19f43985bf9dd5f41fbef3a
+
+That is the strongest source-backed image candidate for an initial Sandium test. A Sandium backend should use the pinned image for both default and large action classes without copying Google's label:action_default or label:action_large worker-pool labels. BuildBuddy image pullability and action compatibility still require a controlled test; do not infer success from public docs alone. Sources: [Chromium non-Google RBE example](https://chromium.googlesource.com/chromium/src/+/main/docs/linux/build_instructions.md#non-Google-RBE), [BuildBuddy RBE platforms](https://www.buildbuddy.io/docs/rbe-platforms/).
+
+### Credential helper contract and security
+
+BuildBuddy documents x-buildbuddy-api-key as the authentication header/metadata and supports organization API keys. The credential-helper specification permits a get helper to read a JSON request containing a uri from stdin and emit JSON headers, so returning {"headers":{"x-buildbuddy-api-key":["..."]}} is protocol-plausible. The helper must fail closed unless the URI is for the expected secure BuildBuddy REAPI host, require BUILDBUDDY_API_KEY, emit no diagnostics containing secret values, and return the key only in the required JSON response. A script committed via GitHub's file contents API may not retain executable mode; CI must explicitly set executable permission or use another verified executable wrapper.
+
+Official references: [BuildBuddy authentication](https://www.buildbuddy.io/docs/guide-auth/), [Credential Helpers specification](https://github.com/EngFlow/credential-helper-spec/blob/main/spec.md), [Siso authentication guide](https://chromium.googlesource.com/build/+/siso/v1.5.9/siso/docs/auth.md). Pinned Chromium DEPS proves the helper path is passed into configure_siso.py; the exact Siso binary at the pinned commit was not independently exercised, so wire-level compatibility remains unproven. Do not use Siso insecure mode on a public cloud endpoint.
+
+### Google-specific Siso preset: keep it gated
+
+Chromium's pinned build/config/siso/config.star describes googlechrome as a preset for Chrome builds using Google's RBE, with remote rules tested/maintained by Google's build team. The preset changes action eligibility across Android, Mojo, Blink, V8, Rust, GRIT and TypeScript rules; it is separate from backend.star selection. The earlier review patch makes Brave's unconditional -config googlechrome opt-in. Keep it disabled for the first connection/action qualification. Once the generic remote path is proven, compare eligible action coverage and failures before enabling it for BuildBuddy. It may be required for broad remote parallelism, but compatibility and performance are not established yet. Source: [Chromium config.star at 156.0.8078.39](https://github.com/chromium/chromium/blob/156.0.8078.39/build/config/siso/config.star), [Brave Siso customization](https://github.com/brave/brave-core/blob/06cd65a7e4fcea784e73c6deb9e4ce52889dc710/docs/siso_customization.md).
+
+### Required workspace layout
+
+Brave Core's rootDir.cjs walks five parent directories from src/brave/build/commands/lib to infer the workspace root. The expected gclient layout is therefore Chromium at <workspace>/src and Sandium/Brave Core at <workspace>/src/brave, with .gclient at <workspace>. A standard CircleCI checkout directly into ~/project would put the code in the wrong location unless the job's working directory/checkout path is explicitly arranged. Establish this layout before generating .env or running Brave sync.
+
+### What this does not settle
+
+- The organization account's actual remote execution entitlement, quota, effective usage or image-pull success.
+- Authentication and cache RPC success using Sandium's API key and the pinned Siso binary.
+- Whether the proposed instance string is accepted by this organization's cloud endpoint; public docs establish namespace semantics, not account-specific permissions.
+- Whether googlechrome can safely expand all remote action types for BuildBuddy.
+- Five-stage cross-job source/state transfer time. CircleCI workspaces are scoped to one workflow and attach downloads all persisted contents; caches have a 15-day maximum retention and larger caches take longer to restore. Chromium's official docs say the Git cache alone is about 30 GB and a fast fetch can take about 30 minutes. Do not package the whole Chromium tree as a checkpoint by default. Measure a stable Git-object cache plus workspace/materialization strategy and the Siso output checkpoint separately. If the first stage or handover cannot stay within the 50-minute target, redesign before an APK run. References: [CircleCI workspaces](https://circleci.com/docs/guides/orchestrate/workspaces/), [CircleCI caching](https://circleci.com/docs/guides/optimize/caching/), [Chromium build instructions](https://chromium.googlesource.com/chromium/src/+/main/docs/linux/build_instructions.md).
+- No .env generation test, Siso auth check, REAPI call, source sync, CI run or build was performed in this investigation.
+
+### Required next gates
+
+1. Source-only patch review: add the Sandium backend image, runtime custom-var generation and credential helper; keep siso_use_googlechrome_config=false; add deterministic tests using fake credentials and URIs.
+2. No-build configuration check: use Chromium's exact pinned configure_siso.py in a small temporary layout, generate .sisoenv and backend.star, and assert endpoint, namespace, backend and helper paths. This must not call REAPI.
+3. After separate explicit approval, a lightweight job may fetch the pinned Siso binary and run its documented auth-check against BuildBuddy. This contacts REAPI but does not compile; stop on auth/endpoint/namespace mismatch and preserve redacted evidence.
+4. Only after Gate 3 passes and runtime/cost is approved, run one measured, meaningful Sandium Chromium action. Do not begin a full APK build first.
+
+This is an investigation result and rollout proposal, not authorization to run network/build gates.
