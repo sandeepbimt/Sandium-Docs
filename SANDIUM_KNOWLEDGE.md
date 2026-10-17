@@ -14,6 +14,7 @@ Read this before proposing technical changes. Detailed evidence belongs in linke
 8. Each consequential experiment records identity, cost, evidence, outcome and learning.
 9. End each work session with updated status and chat handoff.
 10. Never store secrets or token values in repository docs or logs.
+11. Sandium CI must use exactly five sequential, purpose-defined stages, avoid repeating completed work, include all handover preparation in per-stage runtime, prove same-run and cross-run reuse, and fast-skip downstream work after a valid matching APK is persisted. This is an acceptance requirement, not proof that CI has passed; see SANDIUM_TEST_PLAN.md and SANDIUM_CI_ARCHITECTURE.md.
 
 ## Verified state
 
