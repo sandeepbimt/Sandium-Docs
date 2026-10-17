@@ -68,3 +68,8 @@ No Sandium browser CI run has yet been executed or accepted as a clean base.
 | ID | Date | Candidate purpose | GitHub repo / commit | GitHub workflow/run | CircleCI workflow/pipeline | Config path + commit | Outcome / achievement | Artifact + SHA-256 | Decision |
 |---|---|---|---|---|---|---|---|---|---|
 | — | — | No browser CI run yet | — | — | — | — | — | — | No clean base established |
+
+
+## Automation classification rule
+
+The GitHub recorder may append an entry here only for a relevant build/artifact workflow that actually reports artifacts, and must label it CANDIDATE ONLY. Documentation validation, recordkeeper runs, generic CI checks and other non-build workflows must not be entered as clean-base candidates. An artifact alone does not establish a clean base: source/config identity, integrity/checksum, install or smoke-test evidence, and required test results must be present before acceptance. The recorder is committed but its end-to-end behavior remains unverified.
