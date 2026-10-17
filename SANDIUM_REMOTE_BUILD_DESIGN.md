@@ -176,7 +176,7 @@ Brave Core's rootDir.cjs walks five parent directories from src/brave/build/comm
 - Whether the proposed instance string is accepted by this organization's cloud endpoint; public docs establish namespace semantics, not account-specific permissions.
 - Whether googlechrome can safely expand all remote action types for BuildBuddy.
 - Five-stage cross-job source/state transfer time. CircleCI workspaces are scoped to one workflow and attach downloads all persisted contents; caches have a 15-day maximum retention and larger caches take longer to restore. Chromium's official docs say the Git cache alone is about 30 GB and a fast fetch can take about 30 minutes. Do not package the whole Chromium tree as a checkpoint by default. Measure a stable Git-object cache plus workspace/materialization strategy and the Siso output checkpoint separately. If the first stage or handover cannot stay within the 50-minute target, redesign before an APK run. References: [CircleCI workspaces](https://circleci.com/docs/guides/orchestrate/workspaces/), [CircleCI caching](https://circleci.com/docs/guides/optimize/caching/), [Chromium build instructions](https://chromium.googlesource.com/chromium/src/+/main/docs/linux/build_instructions.md).
-- No .env generation test, Siso auth check, REAPI call, source sync, CI run or build was performed in this investigation.
+- No .env generation test, Siso auth-check, REAPI call, source sync, CircleCI preflight/browser build, compile or APK build was run in this investigation. Documentation-only GitHub Actions validation is automatically triggered by edits to these docs; it does not build the browser.
 
 ### Required next gates
 
