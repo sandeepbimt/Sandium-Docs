@@ -9,19 +9,30 @@
 - Use purpose-oriented CircleCI workflow/job names; identify each run by workflow name plus pipeline number/ID and source commit. Do not create naming-only runs.
 
 - Establish reproducible Brave Android build within actual resource/cost constraints.
-- Use five sequential stages only if measured boundaries provide benefit.
+- Use exactly five sequential, purpose-defined stages. Stage boundaries must be measured and optimized, but the five-stage contract is mandatory; each stage must do definitive work without repeating completed actions.
 - Prove same-workflow checkpoint restoration before cross-run reuse.
 - Preserve diagnostics and avoid repeated work.
 
-## Proposed stage responsibilities
+## Required five-stage responsibilities
 
-1. **Preflight/source:** verify runner resources, pin source revisions, sync dependencies and record source identity.
-2. **Build graph/toolchain:** verify pinned toolchain, run required hooks and validate generated graph and Siso/remote configuration.
-3. **Compile/checkpoint:** run a bounded compile segment, collect progress metrics and save a compatible checkpoint.
-4. **Restore/continue:** restore and validate checkpoint, verify Siso state/journal reconciliation and forward progress.
-5. **Complete/verify:** finish compilation if possible, verify APK integrity and SHA-256, publish artifact and diagnostics.
+1. **Source and dependency readiness:** validate source/config identity, restore compatible persistent source/dependency state, and synchronize only missing or invalid inputs.
+2. **Toolchain and build graph:** reuse or generate the pinned toolchain/hook/GN/Siso configuration needed for this build identity without repeating Stage 1 work.
+3. **Compile/checkpoint:** execute only outstanding build-graph actions, persist compatible state and outputs, and detect a completed APK as soon as it exists.
+4. **Restore/continue:** validate and restore the prior state, then execute only remaining required actions. If a complete verified APK is available, skip expensive work.
+5. **Finalize/verify/publish:** when an acceptable APK is not already available, complete only remaining actions, verify source/config identity and APK integrity, and persist the artifact plus diagnostics.
 
-These responsibilities are a hypothesis to review against the selected Brave build graph. Do not preserve five stages just for appearance if evidence supports another structure.
+Each stage has one primary responsibility, explicit inputs/outputs and a handoff manifest. Stage responsibilities may be refined only to fit verified Brave build-graph dependencies; the five-stage requirement is not optional. A stage must not redo completed work unless inputs changed or state is missing, corrupt, stale or incompatible.
+
+## Mandatory execution, handover and reuse contract
+
+- **One-hour ceiling:** budget each stage for no more than 50 minutes end-to-end, leaving safety margin against the CircleCI one-hour job limit. The timed work includes preparation, restore/sync, build graph generation, compilation, checkpoint packaging, uploads/downloads, validation, artifact handover and diagnostics. Record handover time separately and measure total pipeline elapsed time as well. No planned stage may depend on the full 60-minute ceiling.
+- **Same-run continuity:** each stage consumes compatible outputs from its predecessor. Preserve source/dependency state, generated inputs, toolchain/configuration, build outputs and checkpoints with an identity/checksum manifest. Demonstrate forward progress with action/output counters and logs; an archive or cache-hit label alone is not proof.
+- **Cross-run reuse:** use persistent Sandium-specific storage and a remote action cache across runs. Keys must follow stable source/pin/platform/toolchain/GN/config identity rather than run ID or timestamp. Document retention, invalidation and cost for each cache layer and checkpoint. Test a second run with identical inputs and prove actual reuse; safely reject incompatible or corrupt state.
+- **Early APK fast path:** once any stage has produced a complete, integrity-checked APK that matches the requested build identity, that stage must persist the artifact and manifest before exiting. Every later stage checks the ready marker before expensive work, does not sync/restore/compile, and exits successfully within 60 seconds of job start (queue wait excluded). A later run with the same identity must check for that verified artifact and reusable state before rebuilding.
+- **Correctness precedes reuse:** artifact manifests carry source/config/toolchain identity, target, size and SHA-256. Missing, corrupt, incomplete or mismatched artifacts must never trigger a skip. Changed inputs invalidate only affected data where proven safe.
+- **No cross-project dependencies:** all persistent storage, action-cache namespace, checkpoints and artifacts are Sandium-specific. SANDFOX is reference-only.
+
+The detailed pass/fail checklist and required evidence are in [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md). These are design acceptance gates, not evidence that the implementation has passed and not authorization to start a build.
 
 ## Mandatory gates
 
