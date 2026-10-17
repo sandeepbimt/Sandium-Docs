@@ -87,7 +87,9 @@ def main():
         seen.add(rid)
     state["seen_run_ids"] = sorted(seen)[-500:]
     STATE_PATH.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-    latest = next((r for r in runs if r.get("status") == "completed" and "recordkeeper" not in (r.get("name") or "").lower()), None)
+    latest = next((r for r in runs if r.get("status") == "completed"
+                   and "recordkeeper" not in (r.get("name") or "").lower()
+                   and "documentation validation" not in (r.get("name") or "").lower()), None)
     if latest:
         latest_block = (
             "- **Latest observed completed GitHub run:** " + str(latest.get("name", "UNKNOWN")) + " / run #" + str(latest.get("run_number", "UNKNOWN")) + " (" + str(latest.get("conclusion", "UNKNOWN")) + ") — " + str(latest.get("html_url", "UNKNOWN")) + "\n"
