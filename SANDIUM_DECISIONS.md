@@ -67,3 +67,20 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Current limitation:** GitHub recordkeeper is committed but end-to-end operation is not yet verified; CircleCI integration is pending; ChatGPT must still write conversation-derived decisions.
 - **Validation criteria:** Demonstrate correct idempotent recording of a real completed run; correct failure classification; no docs-only run falsely entered as a clean base; valid commit and links; no idle-poll commit; no browser build trigger.
 - **Revisit when:** End-to-end tests expose a flaw or automation requires a safer architecture.
+
+
+### DEC-005 — Use CircleCI orchestration with Brave-native Siso and BuildBuddy REAPI
+
+- **Status:** ACCEPTED (architecture direction only; no CI build is authorized by this entry)
+- **Date:** 2026-10-17
+- **Problem:** Sandium needs a realistic Android build path within CircleCI runtime/storage constraints without making local Chromium compilation the default.
+- **Evidence:** Sandium source commit 06cd65a7e4fcea784e73c6deb9e4ce52889dc710; Brave Core 1.100.10; Chromium pin 156.0.8078.39; reviewed config.ts, syncUtils.ts, sisoUtils.ts and buildOptions.ts; SANDFOX M151 remote compile checkpoint; current CircleCI runtime/resource documentation.
+- **Prior learning reviewed:** SANDFOX's real remote compile proved one C++ action ran remotely, but counters showed cache:0. Its full APK flow was not proven complete inside the one-hour job ceiling. Checkpoint history showed that archive presence does not prove valid Siso restore or forward progress.
+- **Options considered:** Local compile on CircleCI; transplant Afterbird's pipeline; use Brave's native RBE path with a Sandium-owned backend override; stop pending a new provider.
+- **Decision and rationale:** Pursue CircleCI as orchestrator/source workspace, Brave-native Siso as build scheduler/client, and BuildBuddy REAPI as remote executor and possible action cache. Do not transplant the Afterbird pipeline wholesale because Brave has its own .env, gclient and Siso generation, and defaults to google.star. Keep remote execution opt-in.
+- **Trade-offs and risks:** Source/dependency sync, GN generation, local-only actions, packaging and tests still consume CircleCI time. Brave also adds -config googlechrome when RBE is configured; compatibility is unverified. The M156 pin and complete APK output are untested.
+- **Isolation requirements:** Use a Sandium-specific CircleCI project/context/key and independently verified BuildBuddy instance/cache namespace. Never reuse SANDFOX credentials, cache entries, checkpoints, artifacts, workflows, or source checkout as dependencies. A separate key does not prove cache isolation.
+- **Validation criteria:** Before any build, establish provider access, cache scope, costs, exact source/toolchain identity and test plan. An approved remote compile must capture remote/local/cache counters, output, invocation ID and diagnostics. Full APK success additionally requires artifact checksum/integrity, installation and smoke-test evidence.
+- **Rollback:** Keep remote execution disabled by default and revert only Sandium-specific configuration if remote behavior is unproven.
+- **Revisit when:** CircleCI project/resources and BuildBuddy account capabilities are verified or pinned Brave Siso behavior requires a different configuration.
+- **Related record:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
