@@ -39,7 +39,7 @@ The Brave-native Siso/REAPI route is source-supported but not validated end-to-e
 
 ## Single next action
 
-Continue the read-only compatibility review of the pinned Siso revision and BuildBuddy REAPI contract: confirm endpoint and instance semantics, the exact credential-helper request/response contract, and cache isolation requirements. Only after those are evidence-backed should the Sandium-only no-build preflight be considered; do not start source sync or an APK build yet, and do not reuse SANDFOX infrastructure.
+Review the source-only patch on [review branch](https://github.com/sandeepbimt/Sandium/tree/review/googlechrome-config-opt-in-2026-10-17). It makes Brave's `-config googlechrome` Siso flag opt-in via `siso_use_googlechrome_config=false` by default. The branch has two commits and only two source files changed. Static source assertions and GitHub diff checks passed; no TypeScript typecheck/lint or build was run. Do not trigger CI or enable remote execution yet. Remaining blockers include Brave's `google.star`/`default` backend defaults, endpoint and instance semantics, credential-helper compatibility, and cache isolation. Do not reuse SANDFOX infrastructure.
 
 ## Records
 
