@@ -1,6 +1,6 @@
 # SANDIUM — CircleCI + BuildBuddy + Siso Remote Build Design
 
-**Status:** Proposed only; no Sandium CI setup and no browser build run.
+**Status:** Proposed design; disabled-by-default preflight configuration staged on a Sandium branch. CircleCI project/context is not configured or validated, and no browser build has run.
 **Reviewed:** 2026-10-17
 
 ## Decision
@@ -72,6 +72,17 @@ Remote execution does not guarantee that the full build fits within the CircleCI
 - BuildBuddy remote execution: https://www.buildbuddy.io/docs/remote-build-execution/
 - BuildBuddy authentication: https://www.buildbuddy.io/docs/guide-auth/
 - Reference-only SANDFOX M151 remote compile checkpoint: https://github.com/sandeepbimt/Sandfox-Chromium/blob/afterbird/docs/SANDFOX_Siso_BuildBuddy_Remote_Build_Checkpoint_2026-10-09.md
+
+## Preflight configuration staged (2026-10-17)
+
+A no-build CircleCI preflight has been staged in [branch ci/sandium-buildbuddy-siso-preflight](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight), commit 3610ff348694d9cf923dbcffaf633017fade4edc:
+
+- [CircleCI config](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/.circleci/config.yml)
+- [BuildBuddy backend starting point](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/ci/siso/buildbuddy_backend.star)
+
+The config has one workflow parameter, run_sandium_rbe_preflight, defaulting to false. The only defined job is a lightweight metadata/configuration check. It does not check out the huge source tree, call BuildBuddy, run gclient, run GN, or compile. It fetches only package.json and the backend file at the exact CircleCI commit SHA. It requires protected CircleCI environment values for the address, explicit REAPI instance, API-key presence, and a cache-scope acknowledgment; it never prints the API key.
+
+Local static checks passed: YAML parsing and bash syntax parsing. This is not CircleCI server-side config validation, does not prove the CircleCI project is linked, does not authenticate the key, and cannot establish cache isolation by itself. The SANDIUM_CACHE_SCOPE_CONFIRMED flag is only an operator acknowledgment, not technical proof. The workflow has not been triggered. No build job exists in this preflight config.
 
 ## Verdict
 
