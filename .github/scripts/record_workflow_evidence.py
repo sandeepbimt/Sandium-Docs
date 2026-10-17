@@ -46,7 +46,9 @@ def main():
     for run in reversed(runs):
         rid, name = int(run["id"]), (run.get("name") or run.get("path") or "unknown-workflow")
         low_name = name.lower()
-        if rid in seen or "recordkeeper" in low_name or "documentation validation" in low_name:
+        if rid in seen or "recordkeeper" in low_name:
+            continue
+        if low_name.find("documentation validation") >= 0 and run.get("conclusion") == "success":
             continue
         if run.get("status") == "completed":
             fresh.append(run)
