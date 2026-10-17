@@ -193,3 +193,16 @@ Brave Core's rootDir.cjs walks five parent directories from src/brave/build/comm
 4. Do not merge this review branch, trigger CircleCI, call REAPI, sync Chromium or build an APK without the corresponding explicit gate approval.
 
 This source-only investigation and local test do not authorize a network/build gate.
+
+
+## Gate review after successful auth-only run (2026-10-17)
+
+**Decision: do not start remote execution or a browser build yet.** The isolated auth-only run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) verifies that the pinned Siso executable can complete the configured authentication check for the proposed BuildBuddy endpoint/instance. It does not close the separate cost, namespace-isolation, backend/image, or remote-action gates.
+
+- **Gate 0 — partially open:** A Sandium-specific GitHub secret exists and auth passed, but the available evidence does not establish BuildBuddy entitlement/quotas, effective pricing/usage limits, CircleCI project/context configuration, runner capacity, or a complete per-run cost estimate. Do not assume the remote execution plan is free or within budget.
+- **Gate 1 — partial only:** Offline tests and pinned configure_siso.py generation passed, and auth passed. Full Brave EnvConfig → gclient → configure_siso integration, generated config inspection from the actual workspace, and technical proof of cache isolation remain outstanding.
+- **Gate 2 — not started / requires separate approval:** No meaningful Sandium Chromium graph action has been executed. No image pull, worker compatibility, remote/local/cache action counts, or invocation evidence exists.
+- **Gate 3 — not authorized / not started:** No APK build is approved by this review. There is no measured end-to-end time or cost baseline for source sync, GN, local-only work, packaging, transfer and verification.
+- **Gate 4 — not started:** No cache/checkpoint restoration or same-run/cross-run reuse has been tested.
+
+**Safe conclusion:** authentication is a necessary gate passed, not a build-feasibility or performance result. Keep remote execution opt-in and do not enable cache writes beyond the verified isolated Sandium namespace. The next step is to close the remaining no-build infrastructure/cost evidence gaps, not to run a compile or APK build.
