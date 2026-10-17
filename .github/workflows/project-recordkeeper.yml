@@ -1,0 +1,36 @@
+name: Sandium project recordkeeper
+
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - "SANDIUM_*.md"
+      - ".sandium/**"
+      - ".github/scripts/record_workflow_evidence.py"
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: sandium-project-recordkeeper
+  cancel-in-progress: false
+
+jobs:
+  record-evidence:
+    name: Record completed workflow evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Sandium
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Collect completed GitHub workflow evidence
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 .github/scripts/record_workflow_evidence.py
