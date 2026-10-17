@@ -49,3 +49,22 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Learning / prevention rule:** Do not conflate committed code with working automation; validate the complete trigger → run → record update → commit path.
 - **Related failure / decision IDs:** OPS-001; DEC-004.
 - **Next action:** Inspect the recordkeeper workflow run, fix any errors, and verify the exact generated changes without starting a browser build.
+
+
+### EXP-AUTO-002 — Repair validator syntax regression
+
+- **Status:** RUNNING (fix committed; validation pending)
+- **Date:** 2026-10-17
+- **Question:** Does the documentation validator still parse after adding the automation contract to its required-file list?
+- **Hypothesis and falsification:** Correcting the malformed list newline restores Python syntax; falsified if the next workflow fails for syntax or document checks.
+- **Baseline:** Failed documentation workflow run #18 at commit f1738ad11f04457ca636dddc8b76b7d692b35985.
+- **Exact change / command:** Replaced the literal backslash-n in the REQUIRED list with a real newline; fix commit 63d0d723e5d8ee67e1725ab65bcf12dcb61f6223.
+- **Environment:** GitHub Actions documentation-validation workflow; no browser build.
+- **Expected / actual cost:** One lightweight documentation validation; actual runtime not yet available for the fix run.
+- **Evidence:** [Run #18 failure](https://github.com/sandeepbimt/Sandium/actions/runs/38997172822); fix commit [63d0d72](https://github.com/sandeepbimt/Sandium/commit/63d0d723e5d8ee67e1725ab65bcf12dcb61f6223).
+- **Observed result:** Fix committed; subsequent validation pending.
+- **Conclusion:** HYPOTHESIS pending.
+- **What it proves / unknowns:** A syntax error was found and corrected in source; successful validation is not yet proven.
+- **Learning / prevention rule:** Never equate a successful file-write API response with syntactically valid source.
+- **Related failure / decision IDs:** FAIL-AUTO-002; DEC-004.
+- **Next action:** Inspect the next docs validation run and only mark this experiment PASS when its logs confirm success.
