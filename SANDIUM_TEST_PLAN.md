@@ -60,7 +60,8 @@ Record test ID, date, source commit, run URL, command, expected/actual result, e
 - [ ] Recorder Python syntax passes the repository validator.
 - [ ] Scheduled/manual workflow starts and fetches GitHub workflow runs with the provided token.
 - [ ] It records a completed non-documentation run once, including run ID, source SHA, jobs, conclusion, artifact metadata and evidence URL.
-- [ ] A second poll creates no duplicate records and no commit when nothing has changed.\n- [ ] Recordkeeper excludes its own runs and successful docs-validation runs from the latest-project-run snapshot, preventing a workflow feedback loop.
+- [ ] A second poll creates no duplicate records and no commit when nothing has changed.
+- [ ] Recordkeeper excludes its own runs and successful docs-validation runs from the latest-project-run snapshot, preventing a workflow feedback loop.
 - [ ] Failure/cancelled outcomes are recorded without inventing a root cause.
 - [ ] Documentation-only runs are excluded from the clean-base ledger.
 - [ ] Build notes/clean-base ledger receive only relevant build/artifact candidates; artifact presence alone does not accept a clean base.
