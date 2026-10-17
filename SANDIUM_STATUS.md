@@ -17,7 +17,8 @@
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
 - [ ] Sandium-only CI architecture is reviewed against the selected Brave revision.
 - [ ] Sandium-specific CircleCI/BuildBuddy/Siso setup is independently validated.
-- [x] Brave-native Siso/REAPI integration points inspected; Sandium-only design documented (not implemented or tested).
+- [x] Brave-native Siso/REAPI integration points inspected; Sandium-only design documented.
+- [x] Disabled-by-default, no-build CircleCI preflight staged on [Sandium branch](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight); local YAML and shell syntax checks passed, but CircleCI server validation/execution are unverified.
 - [ ] Reproducible Android APK is produced.
 
 Do not mark work complete without evidence.
@@ -37,7 +38,7 @@ The Brave-native Siso/REAPI route is source-supported but not validated against 
 
 ## Single next action
 
-Complete Sandium-only infrastructure preflight without compiling: confirm CircleCI resource class/runtime/credits and arrange a protected Sandium-specific BuildBuddy key plus isolated cache namespace. Then prepare a disabled-by-default CircleCI configuration that validates pins and remote configuration before any expensive source sync or build. Do not launch an APK build or reuse SANDFOX infrastructure.
+Configure the Sandium CircleCI project/context with a fresh Sandium-specific BuildBuddy key, explicit REAPI endpoint and instance, and independently verified cache isolation; confirm plan, resource class and credits. Then manually trigger only the no-build preflight by setting run_sandium_rbe_preflight=true on branch ci/sandium-buildbuddy-siso-preflight. Do not launch source sync or an APK build yet, and do not reuse SANDFOX infrastructure.
 
 ## Records
 
