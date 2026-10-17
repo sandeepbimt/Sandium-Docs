@@ -12,6 +12,7 @@
 - [x] Documentation validation workflow passed historically (run #4).
 - [ ] Validator regression from run #18 is fixed in source; validation of the later fix commits has not yet been verified.
 - [x] Cross-platform clean-base ledger and CI run-naming convention committed.
+- [x] Five-stage, reuse-first CI acceptance criteria documented in the test plan and CI architecture; implementation and runtime behavior remain unvalidated.
 - [x] Evidence-driven automation contract and GitHub Actions run recorder committed (end-to-end run still needs verification).
 - [x] Automation decision, experiment record, operational risk and end-to-end acceptance checklist documented.
 - [ ] Official Brave Android build feasibility is documented for a pinned revision.
@@ -34,11 +35,11 @@ Do not mark work complete without evidence.
 
 ## Current blocker
 
-The Brave-native Siso/REAPI route is source-supported but not validated against Sandium's Chromium 156 pin. Sandium-specific CircleCI project/context, a protected BuildBuddy API key, isolated REAPI cache namespace, account quota/cost, and compatibility of Brave's generated google.star default plus -config googlechrome with BuildBuddy remain unresolved. CircleCI Free has a one-hour job cap; remote execution does not remove source-sync, GN, packaging or test costs. The docs recordkeeper's end-to-end operation is also unverified.
+The Brave-native Siso/REAPI route is source-supported but not validated end-to-end against Sandium's Chromium 156 pin. Chromium DEPS identifies the pinned Siso revision as c574896b272b40aac6e44c228ee0b471ea7e3d7d; BuildBuddy endpoint/instance semantics, credential-helper compatibility, isolated REAPI cache namespace, account quota/cost, and compatibility of Brave's generated google.star default plus -config googlechrome remain unresolved. The required five-stage, no-repeat, same-run/cross-run reuse and early-APK fast-skip contract is documented but not implemented or tested. CircleCI's one-hour job cap includes the practical constraints of source sync, GN generation, handover, packaging and tests. The docs recordkeeper's end-to-end operation is also unverified.
 
 ## Single next action
 
-Configure the Sandium CircleCI project/context with a fresh Sandium-specific BuildBuddy key, explicit REAPI endpoint and instance, and independently verified cache isolation; confirm plan, resource class and credits. Then manually trigger only the no-build preflight by setting run_sandium_rbe_preflight=true on branch ci/sandium-buildbuddy-siso-preflight. Do not launch source sync or an APK build yet, and do not reuse SANDFOX infrastructure.
+Continue the read-only compatibility review of the pinned Siso revision and BuildBuddy REAPI contract: confirm endpoint and instance semantics, the exact credential-helper request/response contract, and cache isolation requirements. Only after those are evidence-backed should the Sandium-only no-build preflight be considered; do not start source sync or an APK build yet, and do not reuse SANDFOX infrastructure.
 
 ## Records
 
