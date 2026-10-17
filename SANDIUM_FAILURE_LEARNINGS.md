@@ -518,3 +518,224 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **What remains unknown:** The user's actual BuildBuddy organization plan, remaining remote execution/cache allowance, overage behavior, CircleCI plan/credits and resource-class access.
 - **Prevention:** Before any remote action, inspect actual account usage/billing pages and define a hard stop. Never claim the service is free based only on public pricing pages.
 - **Scope:** No account billing screens, secrets, REAPI calls, CI runs, sync or builds were accessed/performed during this review.
+
+### Automated CI outcome — run 39032505190
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #68 (run ID `39032505190`)
+- **Branch/commit:** `main` / `e3b3a09935e0b7d39d7288c1ec2dd08cfb3db11d`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:26:09Z, last updated 2026-10-17T12:26:19Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39032505190
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033626055
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #71 (run ID `39033626055`)
+- **Branch/commit:** `main` / `c7784b2bc604fb484fe129de96d74ec901bb459e`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:42:58Z, last updated 2026-10-17T12:43:05Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033626055
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033629250
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #72 (run ID `39033629250`)
+- **Branch/commit:** `main` / `9db9c74252e4d2694e77f7d87dbc04ea694f8445`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:43:01Z, last updated 2026-10-17T12:43:06Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033629250
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033706213
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #75 (run ID `39033706213`)
+- **Branch/commit:** `main` / `3fbb7e1617e99a8ab571f0d1f506a3fe48eb2bb2`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:44:10Z, last updated 2026-10-17T12:44:16Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033706213
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033711031
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #76 (run ID `39033711031`)
+- **Branch/commit:** `main` / `a663baa5fb0c3a3d01e215f321c6553224e6ed6a`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:44:14Z, last updated 2026-10-17T12:44:18Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033711031
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033790861
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #78 (run ID `39033790861`)
+- **Branch/commit:** `main` / `6ba5cabaa648733470d39e474f3207c0b0b042c5`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:45:23Z, last updated 2026-10-17T12:45:31Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033790861
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39033795069
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #79 (run ID `39033795069`)
+- **Branch/commit:** `main` / `1dc66ee072aa0bda881bd1f096d725d467385ab3`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T12:45:27Z, last updated 2026-10-17T12:45:32Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39033795069
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39038484624
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #86 (run ID `39038484624`)
+- **Branch/commit:** `main` / `3100605cc88cc5f0caaa135310ed596bd50458a5`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T13:54:21Z, last updated 2026-10-17T13:54:29Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39038484624
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039157670
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #89 (run ID `39039157670`)
+- **Branch/commit:** `main` / `fb1fbc11a8c36184670c7236c8945cfd5f164d37`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:03:55Z, last updated 2026-10-17T14:04:03Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039157670
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039161345
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #90 (run ID `39039161345`)
+- **Branch/commit:** `main` / `edd50c7a8368bc2831932d972d3939fa2fd7fe74`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:03:58Z, last updated 2026-10-17T14:04:01Z
+- **Jobs:** UNKNOWN
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039161345
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039173776
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #92 (run ID `39039173776`)
+- **Branch/commit:** `main` / `5b0843d25cc2607fc3ffd77d35a588af1fb88f37`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:04:09Z, last updated 2026-10-17T14:04:17Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039173776
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039242318
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #94 (run ID `39039242318`)
+- **Branch/commit:** `main` / `299b693ce1281400f9f6ceb351c5c5e87f4e99fa`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:05:08Z, last updated 2026-10-17T14:05:14Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039242318
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039246772
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #95 (run ID `39039246772`)
+- **Branch/commit:** `main` / `f394a5e5c0dbc2863ce6298e18aa7541224e97a5`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:05:11Z, last updated 2026-10-17T14:05:15Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039246772
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039389359
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #97 (run ID `39039389359`)
+- **Branch/commit:** `main` / `ee05c25fc781821f334256e973dd696f30b26ed3`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:07:12Z, last updated 2026-10-17T14:07:19Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039389359
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039393309
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #98 (run ID `39039393309`)
+- **Branch/commit:** `main` / `d14268d004fb19917706ef4b44aba009cf5ec16d`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:07:16Z, last updated 2026-10-17T14:07:21Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039393309
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039396641
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #99 (run ID `39039396641`)
+- **Branch/commit:** `main` / `be18eb9030184635a08e62ca6e3569fa2fb7c4cd`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:07:19Z, last updated 2026-10-17T14:07:23Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039396641
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+### Automated CI outcome — run 39039426058
+
+- **Recorded:** 2026-10-17 14:27 UTC
+- **Workflow/run:** Sandium documentation validation / run #101 (run ID `39039426058`)
+- **Branch/commit:** `main` / `e62ba4e793d804304cbcb456ca6d46b60f4410a3`
+- **Conclusion:** **CANCELLED**; created 2026-10-17T14:07:45Z, last updated 2026-10-17T14:07:54Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/39039426058
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
