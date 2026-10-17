@@ -496,3 +496,16 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **Mitigation:** Inspect the pinned Chromium/Brave DEPS and configure/build scripts plus official depot_tools/CIPD package metadata. Correct only the installation mechanism; preserve pinned revision and auth-only scope. Then rerun the isolated workflow.
 - **Prevention rule:** Verify the exact package identifier and pin format from source or registry before spending a CI run. Keep setup errors distinct from network/auth failures.
 - **Scope guard:** No Chromium sync, GN, compilation, APK or SANDFOX action occurred.
+
+
+### FAIL-SISO-002 — Corrected Siso CIPD package; authentication check passed (2026-10-17)
+
+- **Status:** Initial installation failure resolved; auth-only validation passed.
+- **Evidence:** [Workflow run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), commit shown as `fd7411a`; successful run summary and expanded authentication step supplied by the user.
+- **Initial failure:** `infra/tools/siso/linux-amd64` returned `Error: no such package`. The auth step was skipped, so that run gave no evidence about BuildBuddy authorization.
+- **Fix:** Change the package identifier to `build/siso/linux-amd64` and retain the pinned revision `git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d`.
+- **Verified result:** Install step passed; authentication step reported `Siso authentication check succeeded.` against `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`.
+- **What this proves:** The isolated workflow installed the pinned Siso executable and completed its configured authentication check.
+- **What this does not prove:** Remote execution of a build action, executor image availability/compatibility, cache behavior, source/build-state reuse, complete build feasibility, or APK production.
+- **Scope:** No Chromium checkout, GN generation, compilation, APK build, master change, or SANDFOX infrastructure operation.
+- **Prevention rule:** Preserve this working package identifier and revision. Do not repeat the failed `infra/tools/siso/linux-amd64` guess. Do not promote auth success into a build-success claim.
