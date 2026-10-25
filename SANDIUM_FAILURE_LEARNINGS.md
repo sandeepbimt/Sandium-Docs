@@ -1523,3 +1523,43 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
 
 **Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+## FAIL-BARE-SYNC-001 — depot_tools fetch syncs before the custom Chromium pin
+
+**Date:** 2026-10-25  
+**Branch:** `fix/bare-stage-handoff-review`  
+**Status:** Corrective sequencing change committed; retry not yet run  
+**Evidence:** User-provided CircleCI driver, fetch, gclient-sync and status logs, plus a subsequent live screenshot
+
+### Observed facts
+
+- The source-only preflight passed before the approved five-stage attempt.
+- In the completed failure, `fetch android` returned exit 0 after 8m23s. The script then ran a separate `gclient sync --verbose --no-history --nohooks --revision src@1228231501697ff7a4a0150ea8ae6df37bb99331`. That sync was terminated at its 20-minute bound with exit 124.
+- The sync log repeated `Still working on: src` at 5, 10 and 15 minutes. The end-of-timeout process snapshot did not reveal a live Git child or an actionable lock. The exact transport error therefore remains **UNKNOWN** from that completed log.
+- A later live log showed a retry warning on `src/third_party/clang-format/script` for Git fetch of `9f796802e5d633c96dbe97e0b6683d5e625949f9`. It did not show the underlying RPC/HTTP failure in the screenshot.
+
+### Online references
+
+- depot_tools `fetch.py` calls `gclient config` and then invokes `gclient sync`; `--no-history` is explicitly the shallow-checkout option: https://github.com/columbia/depot_tools/blob/main/fetch.py
+- Chromium documents that `gclient` materializes Git dependencies pinned in `DEPS`: https://github.com/chromium/chromium/blob/main/docs/dependencies.md
+- Other Chromium-dev reports show this same generic “will retry after a short nap” warning can accompany an HTTP 400 shallow-info failure or a network reset/early EOF. Those reports establish plausible failure classes, not this run's exact cause: https://groups.google.com/a/chromium.org/g/chromium-dev/c/pRDAs6tm-Zs and https://groups.google.com/a/chromium.org/g/chromium-dev/c/UFZ7B19A1eM
+
+### Root-cause confidence
+
+**Confirmed sequencing flaw:** the old script used `fetch android`, which synchronizes dependencies at the source revision selected by that fetch, and only afterward tried to move `src` to Bare's pinned commit. The direct-pin code was therefore too late to affect the sync started inside `fetch`.  
+**Not confirmed:** whether the observed individual Git failure is caused by shallow-fetch server behavior, network interruption, or another condition. No raw RPC/fatal error was captured.
+
+### Fix applied
+
+- Replace `fetch android` with `gclient config --spec` only.
+- Initialize the Chromium Git working tree directly, fetch/check out the exact pinned Chromium commit, and verify its hash **before** dependency sync.
+- Run one bounded, verbose `gclient sync` against the pinned DEPS graph.
+- Initialize separate config/fetch/sync logs and a Git command trace; upload them as CircleCI artifacts.
+- Run cheap Bash/Python syntax checks before network setup.
+
+Relevant Sandium commits: [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1), [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6), [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877). The CircleCI artifact configuration is on the same review branch.
+
+### Next diagnostic rule
+
+If the pinned sync fails again, preserve the exact subcommand's stderr from the new sync log and Git trace before changing fetch mode or excluding any dependency. Do not assume the generic retry message identifies root cause. Do not mark the build successful unless the APK is produced and its manifest/checksum/signature checks pass.
+
