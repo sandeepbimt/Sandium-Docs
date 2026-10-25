@@ -1,6 +1,6 @@
 # SANDIUM — Bare Source Adapter and Existing CI Integration
 
-**Status:** No-build CircleCI source preflight adapted on `ci/sandium-buildbuddy-siso-preflight`; static validation pending; no build  
+**Status:** Bare-only source preflight and adapter tooling committed on `migration/bare-source-adapter`; full build fails closed; five-stage workflow not wired; no build  
 **Authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)  
 **Existing infrastructure:** Reuse; do not recreate
 
