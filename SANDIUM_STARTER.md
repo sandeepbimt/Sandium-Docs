@@ -1,74 +1,72 @@
-## SANDIUM — Android Browser Project Charter
+# SANDIUM — Android Browser Project Charter
 
 **Product:** SANDIUM Browser  
 **Platform:** Android  
-**Initial codebase:** Official Brave Android source  
-**Status:** Independent project; planning and source investigation first.
+**Authoritative browser source:** [Bare Browser](https://github.com/BareBrowser/bare-browser)  
+**Source boundary:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)  
+**Status:** Source migration to Bare; preserve the existing Sandium integration.
 
 ## Mission
 
-Build a polished, fast, privacy-conscious Android browser based initially on regular Brave. Understand the existing architecture before removing features or rebuilding components.
+Build a polished, fast, privacy-conscious Android browser with real extensions and uBlock Origin, reliable PWA installation and standalone behavior, excellent dark-page rendering, and maintainable updates. Use Bare's patch-based Chromium source model as the only browser-source reference.
 
-Long-term goals: fast launch and browsing; strong ad/tracker blocking; excellent dark-page rendering; reliable PWA installation and standalone behavior; privacy and stability; maintainable upstream changes.
+## Mandatory source boundary
+
+- Bare Browser and the Chromium revision pinned by the selected Bare snapshot are the **only** permitted browser-source references for current and future work.
+- Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) first. It overrides older source-specific notes, scripts, pins and designs.
+- Do not return to a superseded browser source or use its implementation, source-specific build scripts, patch machinery, Siso preset, pins or assumptions.
+- If old source-specific content remains in historical logs, treat it as historical evidence only. Do not use it to design or debug the Bare build.
+- Bare is a patch series, not a full Chromium checkout. Pin the Bare commit and its exact Chromium commit; apply the ordered patches reproducibly.
+
+## Preserve the existing Sandium environment
+
+The task is to replace the browser source, **not** to rebuild the integration.
+
+- Reuse the existing Sandium GitHub repository, CircleCI integration/project, BuildBuddy account/endpoint, Siso setup, secret assignments, webhooks, permissions and cache configuration.
+- Do not recreate projects, reassign or rotate tokens, reconnect integrations, create new contexts or clear caches.
+- Keep credential values secret. Reuse the existing secret references. If a required setting is missing or inaccessible, stop and report its name; do not silently create a replacement.
+- Keep old caches and checkpoints intact. Source-specific local checkpoints are not automatically compatible with Bare; preserve them and verify identity before any restore.
+- Change only source-dependent checkout, patch application, Chromium revision, Siso backend generation, build command and artifact verification.
 
 ## Mandatory project separation
 
-Sandium is a new, independent project, not a continuation or rename of SANDFOX.
+Sandium is independent from SANDFOX.
 
-- All Sandium source, development, CI workflows, builds, artifacts, logs, checkpoints and project documentation must live in the Sandium repository or infrastructure separately configured for Sandium.
-- SANDFOX may be inspected for lessons and reference only. Do not trigger or depend on its builds, workflows, credentials, caches, checkpoints, artifacts or source checkout.
-- Do not modify existing SANDFOX CircleCI, BuildBuddy or Siso configuration or infrastructure.
-- Independently review and implement any adopted idea; never assume old cache/checkpoint behavior works for Sandium.
+- Do not trigger or depend on SANDFOX workflows, credentials, caches, checkpoints, artifacts, source checkout or infrastructure.
+- Do not modify SANDFOX infrastructure.
+- Do not transplant its scripts or assume its cache/checkpoint behavior works for Sandium.
 
 ## Engineering method: DIRTFT
 
 UNDERSTAND → MINIMAL CHANGE → TEST → LEARN → PRESERVE → PROCEED.
 
-For each failure: inspect actual logs; classify the failure; record what is and is not proved; make the smallest justified fix; inspect the full diff; run one targeted validation; preserve the lesson. Never make speculative commits or launch overlapping expensive builds. Optimize information gained per test.
+Inspect actual files and logs, distinguish verified facts from hypotheses, make the smallest justified change, inspect the diff, run one targeted validation, and preserve the result. No speculative commits or overlapping expensive builds.
 
-## Resource constraints
+## Resource and build gates
 
 - No paid GitHub upgrade is planned.
 - Do not assume full Chromium checkout/build fits a CI budget without evidence.
-- Before any expensive run, document source pins, dependencies, storage, memory, bandwidth, cache persistence, remote execution needs, expected runtime, cost, success criteria and diagnostics.
-- Do not claim resumability or cross-run reuse until logs prove it.
-
-## Initial technical direction
-
-Official entry points:
-- Brave Core: https://github.com/brave/brave-core
-- Brave browser repository: https://github.com/brave/brave-browser
-- Brave Siso documentation: https://github.com/brave/brave-core/blob/master/docs/siso_customization.md
-
-These are investigation starting points, not proof of build feasibility. Select a revision based on reproducibility, security support, build feasibility and a clear update strategy. Do not start a build until the source-level feasibility audit is complete and reviewed.
-
-Establish which repositories provide Android app and core code, how Chromium is synchronized, exact toolchain/SDK/NDK/JDK requirements, official Android build flow, output APK and verification method, cache/remote execution behavior, resource needs and a reproducible path under constraints.
+- Do not trigger Chromium sync, compilation or APK builds during source migration.
+- Before any separately approved build, document exact source pins, ordered patches, dependencies, storage, memory, bandwidth, cache behavior, remote execution, expected runtime/cost, pass criteria and diagnostics.
+- Do not claim remote execution, resumability or cross-run reuse until logs prove it.
 
 ## Scope order
 
-1. Source/build feasibility.
-2. Reproducible baseline APK.
-3. Install and launch on a real Android device.
-4. Basic navigation and compatibility.
-5. Measure cold/warm launch and page loading.
-6. Verify built-in blocking.
-7. Investigate extension/uBlock compatibility.
-8. Verify PWA behavior.
-9. Investigate dark-page integration.
-10. Measure performance and memory.
-11. Make carefully scoped UI/privacy changes.
-12. Brand the working product as SANDIUM.
+1. Read-only inventory of the existing integration and Bare source adapter requirements.
+2. Static Bare source/configuration preflight with no Chromium sync or compile.
+3. Prove the existing Siso/BuildBuddy path is configured for the Bare-pinned Chromium revision.
+4. Explicitly approve one controlled baseline APK build.
+5. Install and launch on a real Android device.
+6. Verify navigation, extensions/uBlock, PWA behavior, dark rendering and performance.
+7. Make carefully scoped Sandium UI, privacy and branding changes.
+8. Maintain Bare/Chromium pins and patch compatibility through documented updates.
 
 Every stage needs explicit pass criteria and retained evidence.
 
-## Baseline measurements
+## Documentation and automation
 
-Once an APK exists, record device model, Android version, build revision, test conditions and method. Measure cold/warm launch, cold/warm navigation, first launch and process-death recovery, memory, blocking, PWA install/launch/navigation/back-forward/reload/external links, and dark rendering across native-dark, image/video, SVG, canvas, code and embedded content.
-
-## Documentation system and automation
-
-The user will not manually maintain project Markdown. The [SANDIUM_AUTOMATION_RULES.md](SANDIUM_AUTOMATION_RULES.md) contract defines decisive update triggers. GitHub workflow evidence must be ingested automatically into the clean-base ledger, experiment log, failure learnings, build notes, status and handoff. ChatGPT owns updating semantic records from each work session because GitHub cannot read private ChatGPT history. CircleCI evidence must be integrated separately if CircleCI is used. Unknown facts stay UNKNOWN; no guessed outcomes or false clean-base claims. Preserve history and label verified facts, hypotheses, rejected approaches and superseded decisions separately. Never store secrets. If any automation is not proven end-to-end, state the limitation and fix it rather than transferring the maintenance burden to the user.
+The user is not expected to maintain project Markdown manually. Follow [SANDIUM_AUTOMATION_RULES.md](SANDIUM_AUTOMATION_RULES.md); update the source-of-truth, decisions, experiments, failure learnings, build notes, status and handoff as evidence changes. Unknown facts stay UNKNOWN. Preserve history, label superseded decisions, and never store secrets. Documentation automation must never trigger a browser build.
 
 ## Definition of progress
 
-Progress means reducing uncertainty with reliable evidence, producing a reproducible baseline, preserving learning and moving toward a stable Android browser without wasting resources or entangling SANDFOX.
+Progress means reducing uncertainty with reliable evidence, preserving the existing working integration, producing a reproducible Bare-based Android browser, and avoiding wasted resources or source confusion.
