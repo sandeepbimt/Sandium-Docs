@@ -1,3 +1,7 @@
+> **HANDOFF OVERRIDE — 2026-10-25:** Current source is Bare Browser only. Follow [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) and [SANDIUM_BARE_BUILD_ADAPTER.md](SANDIUM_BARE_BUILD_ADAPTER.md); source-specific instructions below that conflict are superseded. Preserve the existing GitHub/CircleCI/BuildBuddy/Siso integration, credential assignments and cache namespace. Do not recreate tokens, clear caches, or start a browser build during migration. **Next action:** read-only inventory of existing integration wiring and source-dependent assumptions, then the smallest no-build Bare adapter diff.
+
+---
+
 # SANDIUM — Chat Handoff
 
 Purpose: resume from repository evidence without reconstructing history from chat memory.
