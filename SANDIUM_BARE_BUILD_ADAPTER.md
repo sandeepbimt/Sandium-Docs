@@ -61,6 +61,8 @@ Do not use old source-specific package scripts, source pins, patch application c
 
 ## Cache and checkpoint policy
 
+The new cache-identity writer produces `.sandium-bare-cache-identity.txt` from the Bare commit, Chromium pin, ordered patch digest, extension checksum, toolchain revision, GN arguments, backend configuration and credential-helper file. The future five-stage workflow must use this identity to form a **new Bare-specific cache-key namespace**. Existing cache objects must remain untouched; do not restore old source-specific checkpoints into this path. `checkpoint.py` independently validates the archive SHA-256 and source/build manifest, and rechecks the restored GN/build identity. A valid existing output is reused; replaced output is retained as a backup.
+
 - Preserve all existing cache objects and checkpoints. Do not purge, rename or recreate the cache namespace during migration.
 - A remote action cache may return valid hits only when the action key/input identity matches; prove useful hits for the Bare source.
 - Existing local build outputs/checkpoints must not be restored unless a manifest proves exact source, Chromium pin, patch digest, toolchain, GN args and target compatibility.
