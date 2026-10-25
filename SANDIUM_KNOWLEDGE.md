@@ -1,88 +1,45 @@
-> **CURRENT SOURCE BOUNDARY — 2026-10-25:** Bare Browser is the only active browser-source authority. Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) and [SANDIUM_BARE_BUILD_ADAPTER.md](SANDIUM_BARE_BUILD_ADAPTER.md) first. Older source-specific entries below are historical and superseded; do not use their source pins, scripts, Siso presets or build assumptions. Reuse the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, credential assignments and cache configuration. Do not recreate credentials or clear caches.
-
----
-
 # SANDIUM — Durable Knowledge Index
 
-Read this before proposing technical changes. Detailed evidence belongs in linked records. Do not treat hypotheses as facts.
+**Read first:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md). Bare Browser is the only active browser-source authority. Older source-specific implementation notes are superseded and must not guide current work.
 
 ## Governing rules
 
-1. All Sandium code, CI, builds, artifacts, logs and checkpoints use Sandium-owned repository configuration and separately configured infrastructure.
-2. SANDFOX is reference-only. Do not trigger or depend on its jobs, credentials, caches, Siso state, checkpoints, artifacts or source checkout.
-3. Do not start an expensive build until the question, cost, pass/fail signals and next decision are documented.
-4. A green job, cache hit, archive upload or increasing counter alone does not prove successful incremental resume.
-5. Never claim resume/cross-run reuse without evidence of restored state and useful forward progress.
-6. Preserve history; correct records by linking new entries rather than erasing old conclusions.
-7. Separate VERIFIED, HYPOTHESIS, REJECTED and SUPERSEDED findings.
-8. Each consequential experiment records identity, cost, evidence, outcome and learning.
-9. End each work session with updated status and chat handoff.
-10. Never store secrets or token values in repository docs or logs.
-11. Sandium CI must use exactly five sequential, purpose-defined stages, avoid repeating completed work, include all handover preparation in per-stage runtime, prove same-run and cross-run reuse, and fast-skip downstream work after a valid matching APK is persisted. This is an acceptance requirement, not proof that CI has passed; see SANDIUM_TEST_PLAN.md and SANDIUM_CI_ARCHITECTURE.md.
+1. Current source is exclusively Bare Browser plus the exact Chromium revision pinned by the selected Bare snapshot.
+2. Preserve the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, credentials, endpoint/instance assignments, webhooks, contexts and cache configuration.
+3. Do not recreate or rotate tokens, reconnect projects, recreate contexts, or clear caches.
+4. Keep `run_sandium_bare_source_ready=false` until all source-dependent pipeline steps are adapted and reviewed.
+5. Do not trigger Chromium sync, GN generation, compilation or APK packaging during migration.
+6. Do not claim remote execution, cache reuse, checkpoint restoration or APK success without logs and artifact evidence.
+7. Preserve history; label older source-specific records superseded rather than treating them as current implementation guidance.
+8. Never write credentials or token values to repository docs/logs.
+9. ChatGPT owns session-level decisions and handoff updates; automated workflows capture machine-observable evidence.
+10. SANDFOX is separate and must never be used as a build dependency.
 
-## Verified state
+## Verified Bare source state
 
-- Repository: https://github.com/sandeepbimt/Sandium
-- Product: Android browser initially based on official Brave Android.
-- No Sandium-specific build, cache or checkpoint behavior is proven yet.
+- Repository: https://github.com/BareBrowser/bare-browser
+- Reviewed Bare commit: `a5a7ef74f3b77d45720b8c502cbacc30f2f3dbd5`
+- Chromium commit: `1228231501697ff7a4a0150ea8ae6df37bb99331`
+- Chromium version: `156.0.8078.25`
+- Bare is a patch series over Chromium Desktop Android; apply patches in deterministic order and provide the separately versioned/checksummed uBlock Origin CRX input.
+- Bare's published local builder is not proof that the same Docker builder can be used unchanged in CircleCI.
 
-## Brave-native Siso/BuildBuddy integration (2026-10-17)
+## Verified integration state
 
-- **VERIFIED:** Sandium master commit 06cd65a7e4fcea784e73c6deb9e4ce52889dc710 pins Brave Core 1.100.10 and Chromium 156.0.8078.39.
-- **VERIFIED from source code:** Brave Core supports REAPI through .env/gclient custom vars and Siso; --use_remoteexec true is available and remote execution defaults off.
-- **Critical adapter detail:** With rbe_service, Brave initially sets reapi_backend_config_path=google.star; Sandium must override that to a Sandium-owned BuildBuddy backend. Brave sisoUtils.ts also writes -config googlechrome; compatibility with BuildBuddy must be validated, not assumed.
-- **Reference-only proof:** SANDFOX's Chromium M151 checkpoint reports one successful real C++ remote action with remote:1, local:0, cache:0. This validates the concept for that action only; it does not prove cache hits, checkpoint restore, Chromium M156 behavior or a complete APK.
-- **Architecture direction:** CircleCI orchestrates and hosts the source workspace; Siso drives the build; BuildBuddy executes eligible remote actions. Remote execution does not remove source sync, GN generation, local-only actions, packaging or tests.
-- **Isolation:** A new API key alone does not guarantee cache isolation. Verify a Sandium-specific REAPI instance/namespace or a separate BuildBuddy project; otherwise disable remote-cache writes until scope is clear. Never copy SANDFOX credentials, caches, checkpoints, artifacts or workflows.
-- **No build yet:** Account/project configuration, quotas/cost, actual resource class, generated .sisoenv/.sisorc, remote execution at the pinned revision and APK completion remain unverified.
-- **Detailed record:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
+- Existing BuildBuddy endpoint/instance recorded in Sandium CI: `remote.buildbuddy.io:443` / `sandium/android-arm64/ci`.
+- Existing GitHub Actions authentication check: [run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), successful for authentication only.
+- Existing full five-stage CI integration is preserved on the migration branch; source-dependent steps are currently gated off.
+- A separate no-build source preflight was adapted on `ci/sandium-buildbuddy-siso-preflight`; static YAML parsing and shell syntax checks passed. The CircleCI workflow has not been executed.
+- No Bare remote action, cache hit, full APK build, install or device smoke test is proven.
 
-## Lesson entry format
+## Active branches
 
-ID; status; concise rule; conditions/scope; evidence links; originating experiment/decision; date. Add entries only when evidence supports them. Keep narrative in detailed records.
+- Migration workspace: [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter). The closed readiness gate must stay false.
+- No-build source metadata prototype: [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight).
+- Do not use historical build branches as current source guidance.
 
-## Automation is a project requirement
+## Required next technical work
 
-- **User constraint (2026-10-17):** The user will not manually update any ledger or Markdown record. ChatGPT owns session-level updates; automated workflows own machine-observable evidence.
-- **Automation contract:** [SANDIUM_AUTOMATION_RULES.md](SANDIUM_AUTOMATION_RULES.md) is authoritative for event triggers and trust boundaries.
-- **Implemented but not yet proven end-to-end:** A scheduled GitHub Actions recordkeeper and evidence recorder exist. They must be tested against real workflow metadata and verified commits before being considered operational.
-- **Scope split:** GitHub can record workflow/run/job/artifact metadata. ChatGPT must record decisions, hypotheses, conclusions and user instructions from conversations because GitHub cannot access private ChatGPT history.
-- **CircleCI:** Not automated until a separately configured Sandium-only API/webhook integration is tested. Never borrow SANDFOX credentials or infrastructure.
-- **Safety:** Recorder workflows must never trigger browser builds. Do not add every successful workflow to the clean-base ledger; only relevant build/artifact candidates belong there. A candidate is not accepted without artifact integrity and test evidence.
+Adapt source-dependent checkout, patch application, Chromium pin, GN/Siso config, cache keys/manifests, checkpoint validation, artifact naming and tests on the migration branch. Keep all workflows gated, preserve existing credentials and cache namespace, and validate statically before requesting approval for any build.
 
-## Additional source-level findings: BuildBuddy compatibility (2026-10-17)
-
-- **VERIFIED:** Chromium 156.0.8078.39 passes reapi_address, reapi_instance, reapi_backend_config_path and reapi_credential_helper into configure_siso.py. The same revision pins Siso to c574896b272b40aac6e44c228ee0b471ea7e3d7d.
-- **VERIFIED:** Brave's EnvConfig merges projects_chrome_custom_vars after its rbe_service-derived defaults. This gives Sandium a supported way to override the Google backend defaults.
-- **VERIFIED:** The official Chromium non-Google RBE guide provides a custom backend.star example using the digest-pinned siso-chromium Linux image. BuildBuddy documents custom container-image platform properties.
-- **CANDIDATE, not tested:** REAPI host remote.buildbuddy.io:443; a stable BuildBuddy instance name such as sandium/android-arm64/ci; the official pinned image; and a host-scoped get credential helper emitting x-buildbuddy-api-key. The organization account's authentication, executor image pull and instance behavior remain unverified.
-- **SECURITY:** Keep the BuildBuddy API key only in a protected Sandium CircleCI secret. The helper must reject unexpected hosts/protocols and must never log the key. Do not enable insecure REAPI.
-- **SISO PRESET:** Chromium's googlechrome preset is specifically maintained for Google's RBE, separate from backend.star. Keep it opt-in during initial qualification; compare the broader remote action rules on BuildBuddy before enabling for speed.
-- **CAPACITY RISK:** CircleCI workspace data is workflow-scoped and is transferred to each downstream job; cross-run reuse needs cache or other persistent state. Full Chromium source snapshot packaging is not the default; source materialization and checkpoint times must be measured separately against the 50-minute stage target.
-- **NEXT GATE:** The source-only adapter patch and deterministic offline tests are complete on review/sandium-buildbuddy-backend-2026-10-17. Fourteen unit tests passed and pinned configure_siso.py generated the expected local config. Next, obtain separate explicit approval for Siso auth-check; no CI, REAPI request, sync or build has been performed.
-- **Details and references:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md).
-
-
-## Offline adapter evidence (2026-10-17)
-
-- Branch: [review/sandium-buildbuddy-backend-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17); final commit 806f565ea44e256344f05cafe1b2b80b577aecfc. Four commits ahead of master, zero behind, no PR/merge.
-- 14 local tests pass for fake credential-helper requests, rejected hosts/protocols/ports, missing credentials, malformed input, runtime env idempotence and secret exclusion, endpoint/namespace guards, helper chmod, and backend image/property checks.
-- Chromium 156.0.8078.39 configure_siso.py blob SHA cb0ce6aadd79bf1e0fa88f3da6b0b82ffee366e5 matched exactly and generated the expected .sisoenv plus byte-identical backend.star in a temporary workspace.
-- This is offline configuration evidence only. Actual Siso helper invocation, BuildBuddy auth/instance/image behavior, remote cache, source-state reuse, speed and APK production remain unverified.
-
-
-## Siso/BuildBuddy auth check — verified update (2026-10-17)
-
-- **VERIFIED:** Isolated workflow run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) succeeded after changing the CIPD package identifier from `infra/tools/siso/linux-amd64` to `build/siso/linux-amd64`.
-- **VERIFIED from workflow log:** Siso revision pin `git_revision:c574896b272b40aac6e44c228ee0b471ea7e3d7d` installed successfully; the auth-only command reported success for `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`.
-- **VERIFIED scope:** No Chromium checkout, GN generation, compilation or APK build occurred.
-- **NOT PROVEN:** Remote execution, executor image compatibility, remote cache operation, same-run/cross-run reuse, five-stage CI performance, or APK production.
-- **Record:** See [EXP-SISO-002](SANDIUM_EXPERIMENT_LOG.md) and [FAIL-SISO-002](SANDIUM_FAILURE_LEARNINGS.md).
-
-
-## Public cost/plan evidence and wiring audit (2026-10-17)
-
-- BuildBuddy's public pricing page lists the hosted Personal plan as free, up to 80 remote-build cores and 100 GB cache transfer; Team is pay-as-you-go beyond included transfer. The self-hosted RBE configuration guide states remote execution configuration requires Enterprise. These pages describe different contexts and do not verify the user's account entitlement. [Pricing](https://www.buildbuddy.io/pricing/) · [RBE configuration](https://www.buildbuddy.io/docs/config-rbe/).
-- CircleCI public documentation lists 30,000 credits/month for Free personal use and up to 400,000 credits for qualifying public Linux open-source builds. The user's eligibility, remaining balance and resource-class access are unknown. [Credits](https://circleci.com/docs/guides/plans-pricing/credits/) · [Pricing](https://circleci.com/pricing/).
-- Read-only source inspection confirms the runtime generator keeps remote execution and Google's Siso preset disabled, the helper scopes credentials to the secure BuildBuddy REAPI host, and the backend image is digest-pinned. These are source properties, not runtime proof.
-- Remaining unknowns: account-specific entitlements/usage; exact backend-path resolution through Brave's runtime workspace/config chain; technical cache isolation; image pull and remote action behavior. No remote action or build is authorized.
+Detailed requirements: [Bare adapter](SANDIUM_BARE_BUILD_ADAPTER.md), [remote build design](SANDIUM_REMOTE_BUILD_DESIGN.md), [CI architecture](SANDIUM_CI_ARCHITECTURE.md), [automation contract](SANDIUM_AUTOMATION_RULES.md).
