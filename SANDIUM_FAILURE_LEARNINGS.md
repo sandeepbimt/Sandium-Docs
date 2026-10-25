@@ -1556,6 +1556,7 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 - Bound the direct pinned-source fetch at 15 minutes (plus 60 seconds to terminate) and run one bounded, verbose `gclient sync` against the pinned DEPS graph.
 - Initialize separate config/fetch/sync logs and a Git command trace; upload them as CircleCI artifacts.
 - Run cheap Bash/Python syntax checks before network setup.
+- Do not save the compiled Chromium output/checkpoint in CircleCI cache: the Sandium source-of-truth requires only small ledgers in CircleCI. The stage runner now expects BuildBuddy/Siso remote action cache to provide cross-stage compiled-action reuse, and a final gate rejects a five-stage run without a verified APK. This path still requires runtime validation.
 
 Relevant Sandium commits: [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1), [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6), [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877), and [`f0cb6c7`](https://github.com/sandeepbimt/Sandium/commit/f0cb6c7cd055fb4c9b4686ab6c23bea70a1a7add). The CircleCI artifact configuration is on the same review branch.
 
