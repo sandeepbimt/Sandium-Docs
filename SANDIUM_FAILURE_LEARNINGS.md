@@ -1553,11 +1553,11 @@ SANDFOX history included costly build experiments and uncertainty around checkpo
 
 - Replace `fetch android` with `gclient config --spec` only.
 - Initialize the Chromium Git working tree directly, fetch/check out the exact pinned Chromium commit, and verify its hash **before** dependency sync.
-- Run one bounded, verbose `gclient sync` against the pinned DEPS graph.
+- Bound the direct pinned-source fetch at 15 minutes (plus 60 seconds to terminate) and run one bounded, verbose `gclient sync` against the pinned DEPS graph.
 - Initialize separate config/fetch/sync logs and a Git command trace; upload them as CircleCI artifacts.
 - Run cheap Bash/Python syntax checks before network setup.
 
-Relevant Sandium commits: [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1), [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6), [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877). The CircleCI artifact configuration is on the same review branch.
+Relevant Sandium commits: [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1), [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6), [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877), and [`f0cb6c7`](https://github.com/sandeepbimt/Sandium/commit/f0cb6c7cd055fb4c9b4686ab6c23bea70a1a7add). The CircleCI artifact configuration is on the same review branch.
 
 ### Next diagnostic rule
 
