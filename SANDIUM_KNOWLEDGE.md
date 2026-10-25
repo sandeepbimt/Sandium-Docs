@@ -5,7 +5,7 @@
 ## Governing rules
 
 1. Current source is exclusively Bare Browser plus the exact Chromium revision pinned by the selected Bare snapshot.
-2. Preserve the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, credentials, endpoint/instance assignments, webhooks, contexts and cache configuration.
+2. Preserve the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, credentials, endpoint/instance assignments, webhooks, contexts and cache service. Keep all existing cache objects intact, but use a new Bare-specific key namespace for new source/build state.
 3. Do not recreate or rotate tokens, reconnect projects, recreate contexts, or clear caches.
 4. Keep `run_sandium_bare_source_ready=false` until all source-dependent pipeline steps are adapted and reviewed.
 5. Do not trigger Chromium sync, GN generation, compilation or APK packaging during migration.
@@ -28,7 +28,7 @@
 
 - Existing BuildBuddy endpoint/instance recorded in Sandium CI: `remote.buildbuddy.io:443` / `sandium/android-arm64/ci`.
 - Existing GitHub Actions authentication check: [run 39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682), successful for authentication only.
-- Existing full five-stage CI integration is preserved on the migration branch; source-dependent steps are currently gated off.
+- The migration branch's active CircleCI config is Bare-only: opt-in source preflight plus a fail-closed full-build stub. The five-stage build is not yet wired.
 - A separate no-build source preflight was adapted on `ci/sandium-buildbuddy-siso-preflight`; static YAML parsing and shell syntax checks passed. The CircleCI workflow has not been executed.
 - No Bare remote action, cache hit, full APK build, install or device smoke test is proven.
 
@@ -40,6 +40,6 @@
 
 ## Required next technical work
 
-Adapt source-dependent checkout, patch application, Chromium pin, GN/Siso config, cache keys/manifests, checkpoint validation, artifact naming and tests on the migration branch. Keep all workflows gated, preserve existing credentials and cache namespace, and validate statically before requesting approval for any build.
+Implement five stages using the pinned Bare source and existing BuildBuddy/Siso remote action cache; pass only small source-bound stage ledgers through CircleCI. Keep all build workflows fail-closed, preserve credentials and old cache objects, use a new Bare-specific key namespace, and request separate approval before any remote-execution/cache proof or browser build.
 
 Detailed requirements: [Bare adapter](SANDIUM_BARE_BUILD_ADAPTER.md), [remote build design](SANDIUM_REMOTE_BUILD_DESIGN.md), [CI architecture](SANDIUM_CI_ARCHITECTURE.md), [automation contract](SANDIUM_AUTOMATION_RULES.md).
