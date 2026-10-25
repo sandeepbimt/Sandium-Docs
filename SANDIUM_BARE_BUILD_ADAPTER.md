@@ -23,8 +23,8 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 
 - Added [`ci/bare/prepare_source.sh`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/prepare_source.sh) on the migration branch. Its `inspect` mode fetches the pinned Bare patch repository and validates the Chromium pin/version, expected patch count/digest and uBlock CRX checksum without checking out Chromium. Its explicit `apply` mode requires an existing clean Chromium checkout at the exact pin and aborts a failed patch application. Bash syntax validation passed; the script has not been executed against source.
 
-- Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the existing five-stage integration branch. A closed `run_sandium_bare_source_ready=false` gate now blocks all workflows there until source-dependent steps are migrated.
-- The inherited five-stage config still contains old source-specific commands and cache/artifact paths. **Do not enable the gate.** The branch is a protected migration workspace, not a build-ready Bare pipeline.
+- Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) as an isolated branch. Its active CircleCI config is now Bare-only: an opt-in source preflight plus a fail-closed full-build stub. The five-stage build is intentionally not wired until the account's persistence limits are proven.
+- The previous five-stage config is retained in Git history/default branch only as historical state. Do not use it as implementation guidance. The migration branch's full-build workflow cannot run a build; it exits before source sync. The branch is not a build-ready pipeline.
 
 - Modified `.circleci/config.yml` on branch [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/.circleci/config.yml), commit `851c944a714012118e0bb9406b3cb7414f437848`.
 - The existing opt-in parameter name is preserved to avoid reconfiguring existing API triggers. The default remains `false`.
