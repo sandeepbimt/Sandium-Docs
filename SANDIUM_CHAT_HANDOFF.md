@@ -3,7 +3,7 @@
 **Updated:** 2026-10-25  
 **Current source:** Bare Browser only  
 **Current branch:** [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter)  
-**Status:** Source migration in progress; all inherited build workflows are blocked by a closed readiness gate.
+**Status:** Bare-only source preflight is opt-in; full build fails closed. Five-stage compile/restore/publish is not wired pending proof of source/output persistence.
 
 ## Read these first
 
@@ -37,4 +37,4 @@
 
 ## Single next action
 
-Adapt the source-dependent steps, cache keys/manifests, checkpoint paths and artifact verification on `migration/bare-source-adapter`, while keeping the readiness gate closed. Then validate statically and inspect the diff; no build.
+Prove where Chromium source and build output can persist within the existing CircleCI account. Then wire the new identity/checkpoint scripts into five stages with new Bare-specific cache keys. Keep the full-build gate closed; no pipeline, sync, compile or APK build.
