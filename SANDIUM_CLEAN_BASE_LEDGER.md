@@ -1,3 +1,7 @@
+> **SOURCE BOUNDARY — 2026-10-25:** Current browser source is Bare Browser only. Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) before interpreting this historical record. Older source-specific experiments, pins, cache identities and build assumptions are superseded; preserve them as history but do not reuse them as current technical guidance. The existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration and credential assignments must be preserved. Do not clear caches or trigger builds during source migration.
+
+---
+
 # SANDIUM — Clean-Base Ledger
 
 **Purpose:** Authoritative, append-only record of every CI run proposed as a clean base, whether it runs through GitHub Actions, CircleCI, or both. A green run is not automatically a clean base; it must satisfy the declared scope and evidence gates.
