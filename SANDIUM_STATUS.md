@@ -66,3 +66,7 @@ Wire the five stages around the pinned source, existing BuildBuddy/Siso remote a
 ## Safety
 
 No browser build, Chromium sync, credential mutation, cache deletion or SANDFOX infrastructure change was performed for this source pivot.
+
+<!-- SANDIUM_AUTO_STATUS_START -->
+- No completed GitHub workflow run was available from the API.\n
+<!-- SANDIUM_AUTO_STATUS_END -->

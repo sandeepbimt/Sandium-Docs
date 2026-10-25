@@ -38,3 +38,7 @@
 ## Single next action
 
 Prove where Chromium source and build output can persist within the existing CircleCI account. Then wire the new identity/checkpoint scripts into five stages with new Bare-specific cache keys. Keep the full-build gate closed; no pipeline, sync, compile or APK build.
+
+<!-- SANDIUM_AUTO_STATUS_START -->
+- No completed GitHub workflow run was available from the API.\n
+<!-- SANDIUM_AUTO_STATUS_END -->
