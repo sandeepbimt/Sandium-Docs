@@ -1680,3 +1680,30 @@ If the pinned sync fails again, preserve the exact subcommand's stderr from the 
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
 
 **Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+## FAIL-CI-RUNNER-001 — Missing newline concatenated a command onto the PREV_STATUS assignment
+
+**Date:** 2026-10-25  
+**Evidence:** User-provided CircleCI screenshot from `sandium-bare-stage-1`.
+
+### Observed failure
+
+Stage 1 exited in 0 seconds with code 127:
+`/home/circleci/project/sandium-control/ci/bare/run_stage.sh: line 7: -p: command not found`
+
+### Root cause — confirmed from the exact branch file
+
+A follow-up edit inserted `mkdir -p "$ROOT/sandium-output"` without a newline after the `PREV_STATUS=...` assignment. The file therefore contained one physical line ending with:
+
+`PREV_STATUS="$ROOT/ci-handoff/stage-$((STAGE-1))/status.txt"mkdir -p "$ROOT/sandium-output"`
+
+Bash interpreted the `mkdir` token as part of that assignment and attempted to execute `-p` as a command, yielding exit 127. This was a code-edit formatting bug, not a Chromium/Git/network failure. It prevented source setup from starting.
+
+### Fix applied
+
+Added the missing newline so `mkdir -p "$ROOT/sandium-output"` is its own command. Verified the latest GitHub file begins with separate physical lines for `PREV_STATUS`, `mkdir -p`, and diagnostic log initialization. Latest fix commit: [`3559f41`](https://github.com/sandeepbimt/Sandium/commit/3559f41d610e8c30e1302d55f5f1f0aaf1b73f34).
+
+### Validation and next step
+
+- Static source inspection confirms the corrupted concatenation is gone and the five-stage CircleCI workflow still has its final APK gate.
+- This does **not** establish that `bash -n`, CircleCI configuration validation, Chromium sync, remote execution or APK compilation has passed.
+- Rerun the isolated workflow only after confirming the latest commit is selected. The first expected evidence is the runner's diagnostic start and `SANDIUM_STATIC_CHECK=PASS`; if the script fails before that marker, stop and inspect the first error rather than spending more stages.
