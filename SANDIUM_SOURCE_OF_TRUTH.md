@@ -36,9 +36,9 @@ This is a source migration inside the existing Sandium environment, not an infra
 
 ## Active migration branch
 
-- Canonical work branch: [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter), created from the existing five-stage integration branch.
-- Its CircleCI config has a new `run_sandium_bare_source_ready` safety gate, default `false`. All existing workflows must remain blocked until the source migration is complete and reviewed.
-- The separate [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight) branch contains a Bare-only no-build preflight prototype; it is not the full build pipeline.
+- Canonical work branch: [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter). It is isolated from the default branch.
+- Its active CircleCI config is Bare-only: the source preflight is opt-in/default off, and the full-build workflow is fail-closed. No five-stage build is enabled.
+- The separate [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight) branch is an earlier source-metadata prototype; use the canonical migration branch for current adapter work.
 - Historical build branches are not valid current source guidance. Do not enable a workflow on any branch until the Bare source boundary and pin checks pass.
 
 ## Required migration order
