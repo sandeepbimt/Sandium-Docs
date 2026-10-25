@@ -24,6 +24,10 @@ The migration branch contains the existing five-stage orchestration and cache/ch
 
 Each stage must have explicit inputs/outputs and prove forward progress. A stage must not repeat completed work unless its inputs changed or state is invalid.
 
+## Current Bare adapter implementation
+
+The migration branch now includes `ci/bare/source-pin.txt`, `gn_args.gn`, `prepare_source.sh`, `configure_siso.py`, `write_cache_identity.py`, `build_identity.py`, `checkpoint.py`, `bootstrap_chromium.sh`, and `package_artifact.sh`. The no-build preflight is opt-in and defaults off. These scripts are not yet wired into a runnable five-stage build because the existing account's ability to persist the full Chromium source and output state has not been proven. Keep `run_sandium_bare_source_ready=false`.
+
 ## Reuse and performance requirements
 
 - Preserve the existing remote-execution endpoint, instance, protected credential assignment, cache namespace and CircleCI project.
