@@ -23,13 +23,13 @@ If an existing secret or setting is inaccessible, report its name and stop. Do n
 
 ## Architecture
 
-- **CircleCI:** retain the existing project and five-stage orchestration; use it for source preparation, validation, dependency/toolchain setup, GN generation, packaging, evidence and artifact handover.
+- **CircleCI:** retain the existing project and orchestration service. The five-stage workflow is a target design and is not yet wired in the migration branch; current config only exposes the opt-in source preflight and a fail-closed build stub.
 - **Bare:** the pinned patch series and build/version instructions.
 - **Chromium/depot_tools:** checkout and dependency graph at the exact revision declared by the pinned Bare snapshot.
 - **Siso:** use the Siso version and configuration contract from that exact Chromium revision. Do not hardcode a Siso version from an older source workflow.
 - **BuildBuddy:** keep the existing REAPI service, endpoint, instance and authentication assignment. Adapt the generated Chromium-native Siso/REAPI configuration to the pinned Chromium revision.
 - **Remote execution:** enable only after the generated config is verified and a meaningful action proves it. A successful auth check is not proof of remote execution.
-- **Cache:** preserve the existing cache service and namespace configuration. Use new source-identity keys/manifests for Bare; do not restore old source-specific build outputs or checkpoints without exact identity compatibility proof.
+- **Cache:** preserve the existing cache service and all existing cache objects. Use a new Bare-specific key namespace for new build state; never clear old cache data or restore incompatible entries. Avoid uploading the full Chromium source/output tree to CircleCI Free storage; use the BuildBuddy/Siso remote action cache for compiled-action reuse and small source-bound stage ledgers for continuity.
 
 ## Source adapter requirements
 
@@ -63,7 +63,7 @@ If an existing secret or setting is inaccessible, report its name and stop. Do n
 
 ## No-build gates
 
-The migration branch has `run_sandium_bare_source_ready=false`. Keep it false until every source-dependent command, test, cache key, checkpoint path, artifact name and verification rule has been adapted and reviewed.
+The migration branch's full-build workflow fails closed. Keep `run_sandium_bare_source_ready=false` until the five stages are wired to the Bare adapters, new source-identity key namespace, small stage ledgers and artifact verifier, and actual remote execution/cache behavior is separately proven.
 
 Before a build is considered:
 - validate YAML and shell syntax;
