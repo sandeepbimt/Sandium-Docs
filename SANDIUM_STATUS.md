@@ -26,7 +26,7 @@
 - [x] Established a strict source-of-truth rule and a Bare adapter design.
 - [x] Adapted `.circleci/config.yml` on `ci/sandium-buildbuddy-siso-preflight` to verify the pinned Bare patch repository and existing integration settings without compiling.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
-- [ ] Static syntax validation and diff review of the modified CircleCI config remain outstanding; the workflow has not been executed.
+- [x] Static YAML parsing and `bash -n` validation passed for the modified CircleCI preflight command. This was a local syntax check only; the workflow has not been executed.
 
 ## Still unverified
 
