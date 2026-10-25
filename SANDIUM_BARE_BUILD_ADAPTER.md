@@ -21,6 +21,8 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 
 ## Current implementation checkpoint
 
+- Added [`ci/bare/prepare_source.sh`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/prepare_source.sh) on the migration branch. Its `inspect` mode fetches the pinned Bare patch repository and validates the Chromium pin/version, expected patch count/digest and uBlock CRX checksum without checking out Chromium. Its explicit `apply` mode requires an existing clean Chromium checkout at the exact pin and aborts a failed patch application. Bash syntax validation passed; the script has not been executed against source.
+
 - Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the existing five-stage integration branch. A closed `run_sandium_bare_source_ready=false` gate now blocks all workflows there until source-dependent steps are migrated.
 - The inherited five-stage config still contains old source-specific commands and cache/artifact paths. **Do not enable the gate.** The branch is a protected migration workspace, not a build-ready Bare pipeline.
 
