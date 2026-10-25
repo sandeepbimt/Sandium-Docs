@@ -26,7 +26,13 @@ Each stage must have explicit inputs/outputs and prove forward progress. A stage
 
 ## Current Bare adapter implementation
 
-The migration branch now includes `ci/bare/source-pin.txt`, `gn_args.gn`, `prepare_source.sh`, `configure_siso.py`, `write_cache_identity.py`, `build_identity.py`, `checkpoint.py`, `bootstrap_chromium.sh`, and `package_artifact.sh`. The no-build preflight is opt-in and defaults off. These scripts are not yet wired into five compile stages because the existing account's ability to persist the full Chromium source and output state has not been proven. Keep `run_sandium_bare_source_ready=false`.
+The migration branch now includes source pins, GN args, source preparation, Siso configuration, cache identity, build identity, checkpoint, stage-ledger, guarded bootstrap and artifact packaging scripts. The no-build preflight is opt-in and defaults off. The five compile stages must use remote action-cache reuse and small ledgers rather than CircleCI storage for the full source/output tree. Keep the full-build gate false until remote execution/cache behavior is proven.
+
+## Storage and cross-stage reuse strategy
+
+CircleCI official Free-plan pricing currently includes 2 GB of storage; storage beyond the included allowance consumes credits. Public open-source projects may qualify for up to 400,000 credits/month, but this account's eligibility is unverified ([pricing](https://circleci.com/pricing/), [persisting data](https://circleci.com/docs/guides/optimize/persist-data/)). Do not upload the full Chromium checkout or output tree to CircleCI caches/workspaces. Each stage should recreate the exact pinned source/build graph and use the existing BuildBuddy/Siso remote action cache to recover completed action outputs. Persist only small stage-ledger JSON and diagnostic summaries through CircleCI workspaces/artifacts. This strategy is viable only if a controlled test proves useful cache hits and real remote execution.
+
+The full-output checkpoint helper can create a compressed output archive, but do not use it for CircleCI Free-plan persistence; reserve it for an explicitly provisioned external/local store. The intended CircleCI stage-to-stage proof is the small source-bound stage ledger, which requires Siso remote-execution/cache metrics.
 
 ## Reuse and performance requirements
 
