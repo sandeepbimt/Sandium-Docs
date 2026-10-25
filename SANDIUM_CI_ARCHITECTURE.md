@@ -12,7 +12,7 @@ Bare is the only active browser source. The pinned Bare commit declares the Chro
 
 ## Existing workflow safety
 
-The migration branch contains the existing five-stage orchestration and cache/checkpoint infrastructure, but source-specific commands remain to be adapted. A closed `run_sandium_bare_source_ready=false` gate blocks every workflow. Do not enable it until the criteria below pass. The separate no-build preflight branch is a source metadata prototype, not a build-ready pipeline.
+The migration branch's active config is now Bare-only: an opt-in source preflight plus a fail-closed full-build stub. The five-stage compile/restore/publish workflow is not yet wired because persistent source/output storage under the existing CircleCI account has not been proven. The prior workflow remains only in Git history/default branch and must not be used as current source guidance.
 
 ## Five-stage responsibilities
 
@@ -26,7 +26,7 @@ Each stage must have explicit inputs/outputs and prove forward progress. A stage
 
 ## Current Bare adapter implementation
 
-The migration branch now includes `ci/bare/source-pin.txt`, `gn_args.gn`, `prepare_source.sh`, `configure_siso.py`, `write_cache_identity.py`, `build_identity.py`, `checkpoint.py`, `bootstrap_chromium.sh`, and `package_artifact.sh`. The no-build preflight is opt-in and defaults off. These scripts are not yet wired into a runnable five-stage build because the existing account's ability to persist the full Chromium source and output state has not been proven. Keep `run_sandium_bare_source_ready=false`.
+The migration branch now includes `ci/bare/source-pin.txt`, `gn_args.gn`, `prepare_source.sh`, `configure_siso.py`, `write_cache_identity.py`, `build_identity.py`, `checkpoint.py`, `bootstrap_chromium.sh`, and `package_artifact.sh`. The no-build preflight is opt-in and defaults off. These scripts are not yet wired into five compile stages because the existing account's ability to persist the full Chromium source and output state has not been proven. Keep `run_sandium_bare_source_ready=false`.
 
 ## Reuse and performance requirements
 
