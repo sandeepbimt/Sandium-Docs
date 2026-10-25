@@ -31,6 +31,18 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 - The job fetches the pinned Bare patch repository and checks the Chromium pin, version, patch presence and ordered patch digest. It only checks that existing integration settings are present; it does not reveal the credential or alter settings.
 - Static YAML parsing and `bash -n` validation passed using the fetched config content. This was not CircleCI server validation. The workflow has not been executed and no CircleCI pipeline was manually triggered; no Chromium sync, compile or APK build occurred.
 
+## Implemented Bare-specific tooling
+
+- [`source-pin.txt`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/source-pin.txt) pins the Bare commit, exact Chromium commit/version, ARM64 Debug target and Sandium artifact name.
+- [`gn_args.gn`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/gn_args.gn) makes the intended Android ARM64/Siso GN settings reviewable and fingerprintable.
+- [`write_cache_identity.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/write_cache_identity.py) computes a stable pre-build identity from the pinned Bare patch series, extension checksum, toolchain revision, GN arguments, backend configuration and credential-helper file; it never reads the API key.
+- [`build_identity.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/build_identity.py) records and validates source/build identity independent of the CI commit SHA. APK acceptance requires ZIP integrity, Android manifest and DEX presence, a passing `apksigner` verification, and matching size/SHA-256.
+- [`checkpoint.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/checkpoint.py) binds a compressed Android output checkpoint to its source/build identity and archive hash. It validates before restore and revalidates after restore; a pre-existing output tree is preserved as a backup.
+- [`package_artifact.sh`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/package_artifact.sh) copies the built APK to the Sandium artifact name and writes/validates the manifest and checksum.
+- [`bootstrap_chromium.sh`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/bootstrap_chromium.sh) describes the source bootstrap path. Its full sync mode is fail-closed unless `SANDIUM_ALLOW_CHROMIUM_SYNC=true` is separately supplied. It has not been run.
+
+The opt-in `sandium-bare-source-preflight` CircleCI workflow now includes script syntax checks, unit tests, pinned source metadata checks and extension checksum validation. It defaults off and has not been executed.
+
 ## Required source adapter behavior
 
 - Added [`ci/bare/configure_siso.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/configure_siso.py) to inspect or write the existing BuildBuddy REAPI settings into the generated Chromium `.gclient` file. It uses the already configured endpoint/instance and existing credential-helper path, never reads or prints the API key, and does not run `gclient sync`, Siso or a build. Python syntax compilation and a local fixture test passed; no real `.gclient` file, credential, Siso process or build was used.
