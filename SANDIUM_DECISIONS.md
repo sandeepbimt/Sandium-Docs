@@ -1,4 +1,4 @@
-> **CURRENT SOURCE BOUNDARY — 2026-10-25:** Bare Browser is the only active browser-source authority. [DEC-006](SANDIUM_SOURCE_OF_TRUTH.md) supersedes source-specific parts of earlier decisions. Preserve earlier entries as history only; do not use their old pins, source scripts or build instructions. Reuse the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration and credential assignments without recreation or rotation.
+> **CURRENT SOURCE BOUNDARY — 2026-10-25:** Bare Browser is the only active browser-source authority. [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) and DEC-006 in this register supersedes source-specific parts of earlier decisions. Preserve earlier entries as history only; do not use their old pins, source scripts or build instructions. Reuse the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration and credential assignments without recreation or rotation.
 
 ---
 
