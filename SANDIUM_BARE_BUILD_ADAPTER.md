@@ -21,6 +21,9 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 
 ## Current implementation checkpoint
 
+- Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the existing five-stage integration branch. A closed `run_sandium_bare_source_ready=false` gate now blocks all workflows there until source-dependent steps are migrated.
+- The inherited five-stage config still contains old source-specific commands and cache/artifact paths. **Do not enable the gate.** The branch is a protected migration workspace, not a build-ready Bare pipeline.
+
 - Modified `.circleci/config.yml` on branch [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/.circleci/config.yml), commit `851c944a714012118e0bb9406b3cb7414f437848`.
 - The existing opt-in parameter name is preserved to avoid reconfiguring existing API triggers. The default remains `false`.
 - The job fetches the pinned Bare patch repository and checks the Chromium pin, version, patch presence and ordered patch digest. It only checks that existing integration settings are present; it does not reveal the credential or alter settings.
