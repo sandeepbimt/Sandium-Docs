@@ -24,7 +24,7 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 - Modified `.circleci/config.yml` on branch [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/.circleci/config.yml), commit `851c944a714012118e0bb9406b3cb7414f437848`.
 - The existing opt-in parameter name is preserved to avoid reconfiguring existing API triggers. The default remains `false`.
 - The job fetches the pinned Bare patch repository and checks the Chromium pin, version, patch presence and ordered patch digest. It only checks that existing integration settings are present; it does not reveal the credential or alter settings.
-- The config has not been run or syntax-validated yet. No CircleCI pipeline was manually triggered; no Chromium sync, compile or APK build occurred.
+- Static YAML parsing and `bash -n` validation passed using the fetched config content. This was not CircleCI server validation. The workflow has not been executed and no CircleCI pipeline was manually triggered; no Chromium sync, compile or APK build occurred.
 
 ## Required source adapter behavior
 
