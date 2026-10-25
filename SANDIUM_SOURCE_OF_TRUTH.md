@@ -49,4 +49,4 @@ At minimum, a build/cache manifest must include Bare repository commit, Chromium
 
 ## Current single next action
 
-Perform a read-only inventory of the existing Sandium integration and source-specific assumptions, then prepare the smallest Bare adapter diff. Do not start a browser build or reconfigure credentials.
+Review the no-build CircleCI preflight diff on branch `ci/sandium-buildbuddy-siso-preflight`, validate its YAML/shell logic without executing a pipeline, and inspect the diff for any changed secret references. Do not start a browser build or reconfigure credentials.
