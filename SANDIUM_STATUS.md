@@ -38,7 +38,7 @@
 - [x] Replaced the migration branch's active CircleCI config with a Bare-only, opt-in source preflight and an explicit fail-closed full-build workflow. The five-stage build is not advertised as runnable until its source/output persistence path is proven.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
 - [ ] The new Bare bootstrap, identity, checkpoint and packaging scripts have not been executed against a real Chromium workspace; the preflight workflow has not been run.
-- [ ] The five-stage compile/restore/publish workflow still needs to be designed around the new identity/checkpoint scripts and source-specific cache keys; no build stages are enabled.
+- [ ] The five-stage compile/restore/publish workflow still needs to be wired around the new identity/stage-ledger scripts and a new Bare-specific cache-key namespace; no build stages are enabled.
 - [x] Checked current CircleCI official pricing/docs: Free includes 2 GB of storage; storage beyond the allowance consumes credits. Public open-source projects may qualify for up to 400,000 monthly credits, but account eligibility is not verified. See [CircleCI pricing](https://circleci.com/pricing/) and [persisting data](https://circleci.com/docs/guides/optimize/persist-data/).
 - [x] Decided not to persist the full Chromium source or build-output tree in CircleCI caches/workspaces. Keep only small identity/ledger metadata there; actual cross-stage reuse must come from proven BuildBuddy/Siso remote action-cache hits.
 - [ ] BuildBuddy/Siso remote action execution and useful cache hits are not yet proven for the pinned Bare build. The full-build safety gate must remain false.
@@ -53,7 +53,7 @@
 
 ## Single next action
 
-Design the five stages to re-check out the pinned source and reuse work through the existing BuildBuddy/Siso remote action cache, persisting only small source-bound stage ledgers in CircleCI. Before enabling any build, obtain explicit approval for a small remote-execution/cache proof. Keep the full-build gate false; no pipeline, Chromium sync, compilation or APK build.
+Wire the five stages around the pinned source, existing BuildBuddy/Siso remote action cache and small source-bound stage ledgers. Before enabling any build, obtain explicit approval for a small remote-execution/cache proof. Keep the full-build gate false; no pipeline, Chromium sync, compilation or APK build.
 
 ## Records
 
