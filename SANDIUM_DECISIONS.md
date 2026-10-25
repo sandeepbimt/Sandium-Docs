@@ -69,9 +69,9 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Revisit when:** End-to-end tests expose a flaw or automation requires a safer architecture.
 
 
-### DEC-005 — Use CircleCI orchestration with Brave-native Siso and BuildBuddy REAPI
+### DEC-005 — Previous source-specific remote-build architecture (historical)
 
-- **Status:** ACCEPTED (architecture direction only; no CI build is authorized by this entry)
+- **Status:** SUPERSEDED BY DEC-006 for all source-specific design; only generic infrastructure lessons remain historical context
 - **Date:** 2026-10-17
 - **Problem:** Sandium needs a realistic Android build path within CircleCI runtime/storage constraints without making local Chromium compilation the default.
 - **Evidence:** Sandium source commit 06cd65a7e4fcea784e73c6deb9e4ce52889dc710; Brave Core 1.100.10; Chromium pin 156.0.8078.39; reviewed config.ts, syncUtils.ts, sisoUtils.ts and buildOptions.ts; SANDFOX M151 remote compile checkpoint; current CircleCI runtime/resource documentation.
