@@ -39,7 +39,9 @@
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
 - [ ] The new Bare bootstrap, identity, checkpoint and packaging scripts have not been executed against a real Chromium workspace; the preflight workflow has not been run.
 - [ ] The five-stage compile/restore/publish workflow still needs to be designed around the new identity/checkpoint scripts and source-specific cache keys; no build stages are enabled.
-- [ ] CircleCI's current storage/persistence limits have not been proven sufficient for the Chromium source and build output. The full-build safety gate must remain false.
+- [x] Checked current CircleCI official pricing/docs: Free includes 2 GB of storage; storage beyond the allowance consumes credits. Public open-source projects may qualify for up to 400,000 monthly credits, but account eligibility is not verified. See [CircleCI pricing](https://circleci.com/pricing/) and [persisting data](https://circleci.com/docs/guides/optimize/persist-data/).
+- [x] Decided not to persist the full Chromium source or build-output tree in CircleCI caches/workspaces. Keep only small identity/ledger metadata there; actual cross-stage reuse must come from proven BuildBuddy/Siso remote action-cache hits.
+- [ ] BuildBuddy/Siso remote action execution and useful cache hits are not yet proven for the pinned Bare build. The full-build safety gate must remain false.
 
 ## Still unverified
 
@@ -51,7 +53,7 @@
 
 ## Single next action
 
-Resolve how the existing CircleCI account can persist the Chromium source and build output without exceeding its current limits. Only then wire the new identity/checkpoint scripts into five build stages with a new Bare-specific cache-key namespace. Keep the full-build gate false; do not run a pipeline, Chromium sync, compilation or APK build.
+Design the five stages to re-check out the pinned source and reuse work through the existing BuildBuddy/Siso remote action cache, persisting only small source-bound stage ledgers in CircleCI. Before enabling any build, obtain explicit approval for a small remote-execution/cache proof. Keep the full-build gate false; no pipeline, Chromium sync, compilation or APK build.
 
 ## Records
 
