@@ -1,0 +1,63 @@
+# SANDIUM — Bare Source Adapter and Existing CI Integration
+
+**Status:** Design from read-only source inspection; not yet implemented or build-validated  
+**Authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)  
+**Existing infrastructure:** Reuse; do not recreate
+
+## Source inputs
+
+- Bare repository: https://github.com/BareBrowser/bare-browser
+- Reviewed Bare commit: `a5a7ef74f3b77d45720b8c502cbacc30f2f3dbd5`
+- Chromium commit: `1228231501697ff7a4a0150ea8ae6df37bb99331`
+- Chromium version: `156.0.8078.25`
+- Target ABIs documented by Bare: `arm64` and `arm`; Android 10+; no x86 build.
+- Bare's patch series is the product-specific delta. Keep the ordered patch list and its digest in every build manifest.
+
+## Existing integration to retain
+
+Use the existing Sandium GitHub repository and branch/workflow wiring, existing CircleCI project and configured contexts, existing BuildBuddy endpoint and instance, existing Siso integration, and existing secret names/values. Do not create a new project, rotate or reassign credentials, or clear any cache.
+
+The Sandium record for GitHub Actions run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) reports that an isolated Siso authentication check succeeded against `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`. This does not prove that CircleCI can read the same-named secret, nor that a build action executes remotely. Verify access without displaying values; if a setting is absent, stop and report its name rather than creating a replacement.
+
+## Required source adapter behavior
+
+1. Resolve the exact Bare commit and verify the expected Chromium pin from that commit's build notes.
+2. Check out the exact Chromium commit in the existing persistent source workspace. Do not run a source updater for any other browser project.
+3. Fetch the patch series from the pinned Bare commit, verify patch count/order and compute a digest, then apply the ordered series with `git am`. Stop on any mismatch or patch conflict.
+4. Provide the uBlock Origin CRX as the separately versioned/checksummed build input required by Bare. Do not put the binary in the patch series or log secrets.
+5. Use Chromium's native Siso setup and the existing Sandium BuildBuddy REAPI endpoint, instance and authentication secret. Generate the backend configuration required by the pinned Chromium/Siso revision; verify the generated `.gclient` custom vars, `.sisoenv`, credential-helper path and runtime config.
+6. Keep source checkout, patch application, dependency synchronization, GN generation, local-only actions, packaging and artifact verification as explicit phases. Remote execution only accelerates eligible actions; it does not remove the other phases.
+7. Emit a manifest containing Bare SHA, Chromium SHA/version, patch digest, uBlock input digest/version, Siso revision, toolchain, target ABI, GN args, backend-config digest, build mode, artifact path, size and SHA-256.
+
+## Do not carry over source-specific machinery
+
+Do not use old source-specific package scripts, source pins, patch application commands, override directories, custom Siso presets or generated config assumptions. Bare is a patch series over Chromium; use its patch series and the Chromium revision it pins. Keep only infrastructure-level wiring that remains compatible: existing CircleCI orchestration, BuildBuddy service/authentication, Siso client path, secret references and cache configuration.
+
+## Cache and checkpoint policy
+
+- Preserve all existing cache objects and checkpoints. Do not purge, rename or recreate the cache namespace during migration.
+- A remote action cache may return valid hits only when the action key/input identity matches; prove useful hits for the Bare source.
+- Existing local build outputs/checkpoints must not be restored unless a manifest proves exact source, Chromium pin, patch digest, toolchain, GN args and target compatibility.
+- Use stable identity keys; never use only run IDs or timestamps.
+- Record cache keys, restored state, action counts, local/remote/cache counters, elapsed time and output identity. A cache-hit label alone is not proof.
+- A changed Bare or Chromium pin invalidates source-dependent state; it must not silently fall back to a previous source.
+
+## No-build preflight pass criteria
+
+- Existing GitHub/CircleCI/BuildBuddy/Siso integration identifiers and secret references are unchanged.
+- No token value is printed, rotated, recreated or copied.
+- Bare and Chromium pins match the pinned Bare source metadata.
+- Patch order/count/digest and extension input are verified.
+- Generated Siso/REAPI configuration points to the existing configured endpoint and instance, and uses the expected credential helper without exposing its output.
+- YAML, shell and source-adapter checks pass without Chromium sync, GN generation, compilation or APK packaging.
+- The run is explicitly identified as `FAST — BARE SOURCE PREFLIGHT`, and a full build is impossible unless separately enabled and approved.
+
+## Known unknowns
+
+- Whether the existing CircleCI context exposes every required secret under the same variable names.
+- Whether the current BuildBuddy instance, executor image and cache namespace support Bare's exact Chromium/Siso pin.
+- Whether the current runner has sufficient persistent source/build storage and runtime for the Bare workflow.
+- Whether remote action execution and useful action-cache hits occur for this source.
+- Whether a complete APK can be produced within current limits.
+
+Do not resolve these unknowns by recreating the integration. Inspect the existing configuration and stop safely if access or compatibility is unproven.
