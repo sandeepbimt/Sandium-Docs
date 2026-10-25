@@ -1,3 +1,7 @@
+> **SOURCE BOUNDARY — 2026-10-25:** Current browser source is Bare Browser only. Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) before interpreting this historical record. Older source-specific experiments, pins, cache identities and build assumptions are superseded; preserve them as history but do not reuse them as current technical guidance. The existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration and credential assignments must be preserved. Do not clear caches or trigger builds during source migration.
+
+---
+
 # SANDIUM — Experiment Ledger
 
 Append one record per consequential experiment, including failed, interrupted and inconclusive runs. IDs are never reused. Link exact commits, workflow runs, logs and artifacts.
