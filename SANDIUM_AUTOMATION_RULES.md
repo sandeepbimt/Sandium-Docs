@@ -1,3 +1,7 @@
+> **MANDATORY SOURCE BOUNDARY — 2026-10-25:** Bare Browser is the only active browser-source authority. Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) before using any historical source-specific record. Reuse the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, protected credential assignments and cache configuration. Never recreate/rotate tokens or clear caches. The migration branch readiness gate must remain false until every source-dependent step is adapted and reviewed. Documentation automation must not trigger a browser build.
+
+---
+
 # SANDIUM — Documentation Automation Contract
 
 **Policy:** Human-maintained Markdown is not an acceptable operating model. The owner is not expected to edit project records. The repository and CI evidence are the source of truth; ChatGPT must update the repository records during work sessions when the conversation contains decisions or evidence that GitHub cannot observe.
