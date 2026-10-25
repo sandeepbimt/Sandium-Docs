@@ -43,6 +43,15 @@ If an existing secret or setting is inaccessible, report its name and stop. Do n
 8. Keep source checkout, hooks, GN generation, local-only actions, compilation, packaging and verification as separate measured phases.
 9. Record Bare SHA, Chromium SHA/version, patch digest, extension digest, toolchain/Siso revision, target ABI, GN args, backend config digest, artifact identity and cache evidence.
 
+## Current adapter artifacts
+
+- Source pin and GN args: `ci/bare/source-pin.txt`, `ci/bare/gn_args.gn`.
+- Pre-build cache identity: `ci/bare/write_cache_identity.py`.
+- Source/build identity and APK verification: `ci/bare/build_identity.py`.
+- Identity-checked checkpoint pack/verify/restore: `ci/bare/checkpoint.py`.
+- Artifact naming and checksum: `ci/bare/package_artifact.sh`.
+- Guarded source bootstrap: `ci/bare/bootstrap_chromium.sh`; it was not executed.
+
 ## Cache/checkpoint policy
 
 - Preserve existing cache objects and settings; do not clear them.
