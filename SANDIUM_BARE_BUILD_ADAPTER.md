@@ -33,6 +33,8 @@ The Sandium record for GitHub Actions run [39037465682](https://github.com/sande
 
 ## Required source adapter behavior
 
+- Added [`ci/bare/configure_siso.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/configure_siso.py) to inspect or write the existing BuildBuddy REAPI settings into the generated Chromium `.gclient` file. It uses the already configured endpoint/instance and existing credential-helper path, never reads or prints the API key, and does not run `gclient sync`, Siso or a build. Static Python syntax and fixture testing are still pending.
+
 1. Resolve the exact Bare commit and verify the expected Chromium pin from that commit's build notes.
 2. Check out the exact Chromium commit in the existing persistent source workspace. Do not run a source updater for any other browser project.
 3. Fetch the patch series from the pinned Bare commit, verify patch count/order and compute a digest, then apply the ordered series with `git am`. Stop on any mismatch or patch conflict.
