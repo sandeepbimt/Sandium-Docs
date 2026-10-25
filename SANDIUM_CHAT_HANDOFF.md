@@ -19,8 +19,8 @@
 
 - Bare source snapshot reviewed: `a5a7ef74f3b77d45720b8c502cbacc30f2f3dbd5`; Chromium pin `1228231501697ff7a4a0150ea8ae6df37bb99331`, version `156.0.8078.25`.
 - The authoritative source boundary and Bare-specific adapter/design docs are committed in Sandium-Docs.
-- The existing five-stage integration branch was preserved by creating `migration/bare-source-adapter` from it.
-- Every workflow on that migration branch is gated by `run_sandium_bare_source_ready=false`. The inherited source-specific commands are not yet Bare-compatible.
+- `migration/bare-source-adapter` is isolated from the default branch. Its active CircleCI config is Bare-only: an opt-in source preflight and a fail-closed full-build stub.
+- The five-stage compile/restore/publish workflow is not yet wired because the existing CircleCI account's persistence capacity for Chromium source and build output has not been proven.
 - The separate no-build preflight branch verifies the pinned Bare patch repository and keeps the existing protected credential name; it does not run Chromium sync or compilation.
 - Static YAML parsing and shell syntax checks passed for the no-build preflight content. CircleCI server validation/execution has not been run.
 - Existing recorded Siso authentication check passed at `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`; remote action execution, cache hits and APK production remain unverified.
