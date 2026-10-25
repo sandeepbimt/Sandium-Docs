@@ -1,3 +1,7 @@
+> **CURRENT SOURCE BOUNDARY — 2026-10-25:** Bare Browser is the only active browser-source authority. Read [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md) and [SANDIUM_BARE_BUILD_ADAPTER.md](SANDIUM_BARE_BUILD_ADAPTER.md) first. Older source-specific entries below are historical and superseded; do not use their source pins, scripts, Siso presets or build assumptions. Reuse the existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration, credential assignments and cache configuration. Do not recreate credentials or clear caches.
+
+---
+
 # SANDIUM — Durable Knowledge Index
 
 Read this before proposing technical changes. Detailed evidence belongs in linked records. Do not treat hypotheses as facts.
