@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-25  
-**Status:** Source pivot accepted; Bare source adapter design recorded; no browser build triggered  
+**Status:** Bare-only source boundary committed; existing CircleCI no-build preflight adapted; no browser build triggered  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -24,7 +24,9 @@
 - [x] Read the current project charter and existing source/build integration records.
 - [x] Verified the Bare README and build notes at source level.
 - [x] Established a strict source-of-truth rule and a Bare adapter design.
+- [x] Adapted `.circleci/config.yml` on `ci/sandium-buildbuddy-siso-preflight` to verify the pinned Bare patch repository and existing integration settings without compiling.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
+- [ ] Static syntax validation and diff review of the modified CircleCI config remain outstanding; the workflow has not been executed.
 
 ## Still unverified
 
@@ -36,7 +38,7 @@
 
 ## Single next action
 
-Perform a read-only inventory of the existing integration and source-dependent assumptions, then prepare the smallest Bare source-adapter diff. Keep credentials and cache namespace unchanged. No Chromium sync, compilation or APK build.
+Statically validate and review the Bare-only no-build preflight diff on `ci/sandium-buildbuddy-siso-preflight`. Keep credentials and cache namespace unchanged. Do not execute the workflow or run Chromium sync, compilation or APK build.
 
 ## Records
 
