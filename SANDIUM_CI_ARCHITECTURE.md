@@ -1,3 +1,7 @@
+> **SOURCE PIVOT — 2026-10-25:** This file contains the prior source-specific design. Its browser-source assumptions are superseded. Do not use its old source pins, source scripts, custom Siso presets, override handlers, patch workflow or build commands. The only current browser-source authority is [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md), and the current adapter design is [SANDIUM_BARE_BUILD_ADAPTER.md](SANDIUM_BARE_BUILD_ADAPTER.md). Reuse only verified infrastructure-level integration details. Do not recreate credentials or clear caches.
+
+---
+
 # SANDIUM — CI Architecture
 
 **Status:** PROPOSED; not implemented or validated.  
