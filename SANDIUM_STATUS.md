@@ -1,9 +1,18 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-25  
-**Status:** Bare-only source boundary committed; migration branch has a source-only preflight and a fail-closed full-build gate; five-stage build is not yet wired; no browser build triggered  
+**Status:** Bare source preflight passed; an explicitly user-approved five-stage APK experiment is wired on `fix/bare-stage-handoff-review`; stage 1 has hit Chromium dependency-sync stalls; no APK produced  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
+
+## Latest controlled build investigation — 2026-10-25
+
+- Source-only CircleCI preflight on `fix/bare-stage-handoff-review` passed: adapter syntax/tests, 164 Bare patch files, pinned Chromium commit/version and uBlock CRX checksum/cache identity checks.
+- The first full attempt completed the initial `fetch android` command in 8m23s, then its separate pinned `gclient sync --verbose --no-history --nohooks --revision src@1228231501697ff7a4a0150ea8ae6df37bb99331` hit the 20-minute timeout (exit 124). Available logs showed repeated `Still working on: src`, but did not include the underlying Git transport error. No GN generation, Siso compile or APK resulted.
+- A later live log showed a Git fetch retry warning for `src/third_party/clang-format/script` at commit `9f796802e5d633c96dbe97e0b6683d5e625949f9`. That warning alone does not prove whether the cause was transport failure or shallow-fetch/server behavior.
+- Online evidence: depot_tools’ `fetch` flow runs `gclient config` followed by `gclient sync`, and `--no-history` requests shallow clones. Chromium’s official dependency docs confirm dependencies are pinned by hashes in `DEPS`. A Chromium-dev report of the same retry pattern describes HTTP 400 shallow-info failures; another reports connection reset/early EOF. These are relevant failure modes, **not proof of this run’s exact cause**: [depot_tools fetch source](https://github.com/columbia/depot_tools/blob/main/fetch.py), [Chromium dependency documentation](https://github.com/chromium/chromium/blob/main/docs/dependencies.md), [Chromium-dev HTTP 400 case](https://groups.google.com/a/chromium.org/g/chromium-dev/c/pRDAs6tm-Zs), [Chromium-dev connection-reset case](https://groups.google.com/a/chromium.org/g/chromium-dev/c/UFZ7B19A1eM).
+- Code change: bypass `fetch android` because its internal dependency sync occurs **before** the later pin step. The script now configures `.gclient` only, fetches and checks out the exact Chromium pin, then runs one dependency sync against that pinned source. Git command tracing and separate config/fetch/sync artifacts are enabled. The source sequencing fix is commit [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1); log-initialization and pre-network syntax-check follow-ups are [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6) and [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877).
+- **Status of fix:** committed but not yet tested by a new CircleCI run. No APK has been produced. This branch remains experimental and is not an accepted clean base.
 
 ## Current source of truth
 
@@ -36,13 +45,13 @@
 - [x] Added `ci/bare/package_artifact.sh` and unit tests for source-pin parsing and APK integrity.
 - [x] Added `ci/bare/bootstrap_chromium.sh`; full Chromium sync is fail-closed unless `SANDIUM_ALLOW_CHROMIUM_SYNC=true` is explicitly supplied. It was not executed.
 - [x] Added the opt-in `sandium-bare-source-preflight` CircleCI workflow (default off) to run syntax checks, unit tests, pinned-source checks and extension checksum validation without Chromium sync or compilation.
-- [x] Replaced the migration branch's active CircleCI config with a Bare-only, opt-in source preflight and an explicit fail-closed full-build workflow. The five-stage build is not advertised as runnable until its source/output persistence path is proven.
-- [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
+- [x] Kept the Bare source preflight opt-in and wired a separate, explicitly user-approved experimental five-stage APK lane on `fix/bare-stage-handoff-review`; it is branch- and parameter-gated, and ordinary pushes do not select it.
+- [x] Preserved existing integrations; no credentials were changed, no caches were cleared and no SANDFOX infrastructure was touched. A user-approved experimental build ran on the review branch; no APK has been produced.
 - [ ] The new Bare bootstrap, identity, checkpoint and packaging scripts have not been executed against a real Chromium workspace; the preflight workflow has not been run.
-- [ ] The five-stage compile/restore/publish workflow still needs to be wired around the new identity/stage-ledger scripts and a new Bare-specific cache-key namespace; no build stages are enabled.
+- [ ] The five-stage runner has not completed a successful full run; source sync, stage handoff, remote-cache reuse, compilation and APK publication remain unverified.
 - [x] Checked current CircleCI official pricing/docs: Free includes 2 GB of storage; storage beyond the allowance consumes credits. Public open-source projects may qualify for up to 400,000 monthly credits, but account eligibility is not verified. See [CircleCI pricing](https://circleci.com/pricing/) and [persisting data](https://circleci.com/docs/guides/optimize/persist-data/).
 - [x] Decided not to persist the full Chromium source or build-output tree in CircleCI caches/workspaces. Keep only small identity/ledger metadata there; actual cross-stage reuse must come from proven BuildBuddy/Siso remote action-cache hits.
-- [ ] BuildBuddy/Siso remote action execution and useful cache hits are not yet proven for the pinned Bare build. The full-build safety gate must remain false.
+- [ ] BuildBuddy/Siso remote action execution and useful cache hits are not yet proven for the pinned Bare build. The current explicitly approved attempt is experimental; do not claim success until logs prove remote execution/cache hits and a verified APK.
 
 ## Still unverified
 
@@ -54,7 +63,7 @@
 
 ## Single next action
 
-Wire the five stages around the pinned source, existing BuildBuddy/Siso remote action cache and small source-bound stage ledgers. Before enabling any build, obtain explicit approval for a small remote-execution/cache proof. Keep the full-build gate false; no pipeline, Chromium sync, compilation or APK build.
+Test the latest pin-first, single-sync change on `fix/bare-stage-handoff-review`. Confirm `SANDIUM_CHROMIUM_DIRECT_PIN_PASS`; then inspect the one pinned `gclient sync` result. If it fails, use the Git trace and sync log to identify the transport error before changing code again.
 
 ## Records
 
@@ -65,7 +74,7 @@ Wire the five stages around the pinned source, existing BuildBuddy/Siso remote a
 
 ## Safety
 
-No browser build, Chromium sync, credential mutation, cache deletion or SANDFOX infrastructure change was performed for this source pivot.
+An explicitly approved experimental Chromium source-sync build was attempted on the review branch. No APK was produced. No credentials were mutated, no cache was deleted and no SANDFOX infrastructure was changed.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
 - No completed GitHub workflow run was available from the API.\n
