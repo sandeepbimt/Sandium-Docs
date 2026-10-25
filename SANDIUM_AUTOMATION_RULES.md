@@ -69,3 +69,5 @@
 - The status/handoff "latest workflow" snapshot must exclude both recordkeeper and documentation-validation workflows. Otherwise each generated documentation commit can trigger validation, which can trigger another status commit indefinitely.
 - When no relevant non-documentation workflow exists, record that fact instead of substituting a docs-only run as the latest project/build result.
 - Idempotency means both no duplicate run entries and no idle commits. A scheduled timestamp alone must not change tracked files.
+11. **Immutable source boundary.** Since 2026-10-25, Bare Browser and its pinned Chromium revision are the only active browser-source authority. Source-specific historical records are superseded and must not guide current implementation. The existing Sandium GitHub/CircleCI/BuildBuddy/Siso integration and credential assignments must be reused; recordkeeping must never trigger a browser build or recreate credentials.
+
