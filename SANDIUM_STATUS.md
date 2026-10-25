@@ -31,7 +31,8 @@
 - [x] Added `ci/bare/source-pin.txt` and `gn_args.gn` as explicit source and build-target pins.
 - [x] Added `ci/bare/write_cache_identity.py` to fingerprint the pinned patch series, extension input, toolchain, GN args, backend and credential-helper configuration.
 - [x] Added `ci/bare/build_identity.py` for source/build manifests and APK ZIP, DEX/manifest, signature, size and SHA-256 verification.
-- [x] Added `ci/bare/checkpoint.py` to verify archive hashes and source/build identity before restore, then recheck after restore; existing output is preserved as a backup if replaced.
+- [x] Added `ci/bare/checkpoint.py` for identity-bound output archives; documented that large archives must not be stored in CircleCI Free storage.
+- [x] Added `ci/bare/stage_ledger.py` to bind small stage records to the exact source/build identity and require Siso remote-execution/cache evidence.
 - [x] Added `ci/bare/package_artifact.sh` and unit tests for source-pin parsing and APK integrity.
 - [x] Added `ci/bare/bootstrap_chromium.sh`; full Chromium sync is fail-closed unless `SANDIUM_ALLOW_CHROMIUM_SYNC=true` is explicitly supplied. It was not executed.
 - [x] Added the opt-in `sandium-bare-source-preflight` CircleCI workflow (default off) to run syntax checks, unit tests, pinned-source checks and extension checksum validation without Chromium sync or compilation.
