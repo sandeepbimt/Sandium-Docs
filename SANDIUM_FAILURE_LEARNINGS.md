@@ -1707,3 +1707,16 @@ Added the missing newline so `mkdir -p "$ROOT/sandium-output"` is its own comman
 - Static source inspection confirms the corrupted concatenation is gone and the five-stage CircleCI workflow still has its final APK gate.
 - This does **not** establish that `bash -n`, CircleCI configuration validation, Chromium sync, remote execution or APK compilation has passed.
 - Rerun the isolated workflow only after confirming the latest commit is selected. The first expected evidence is the runner's diagnostic start and `SANDIUM_STATIC_CHECK=PASS`; if the script fails before that marker, stop and inspect the first error rather than spending more stages.
+
+### Automated CI outcome — run 40219367969
+
+- **Recorded:** 2026-10-25 20:48 UTC
+- **Workflow/run:** Sandium documentation validation / run #172 (run ID `40219367969`)
+- **Branch/commit:** `main` / `95297de4f3f7f048e717f4fb9c90e92be69e241b`
+- **Conclusion:** **FAILURE**; created 2026-10-25T18:02:50Z, last updated 2026-10-25T18:02:57Z
+- **Jobs:** Validate Sandium documentation: failure
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40219367969
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+**Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
