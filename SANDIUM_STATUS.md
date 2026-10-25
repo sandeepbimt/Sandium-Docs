@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-25  
-**Status:** Bare-only source boundary committed; full five-stage integration isolated on a gated migration branch; no browser build triggered  
+**Status:** Bare-only source boundary committed; migration branch has a source-only preflight and a fail-closed full-build gate; five-stage build is not yet wired; no browser build triggered  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -25,7 +25,7 @@
 - [x] Verified the Bare README and build notes at source level.
 - [x] Established a strict source-of-truth rule and a Bare adapter design.
 - [x] Adapted `.circleci/config.yml` on `ci/sandium-buildbuddy-siso-preflight` to verify the pinned Bare patch repository and existing integration settings without compiling; static YAML and shell syntax checks passed.
-- [x] Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the most complete existing five-stage integration branch.
+- [x] Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) as an isolated migration branch; the existing default branch and its infrastructure were not changed.
 - [x] Added `ci/bare/prepare_source.sh` to verify the pinned Bare commit, Chromium pin/version, ordered patch count/digest and uBlock CRX checksum; Bash syntax check passed. It was not executed against a checkout.
 - [x] Added `ci/bare/configure_siso.py` to inspect/write the existing REAPI endpoint, instance, backend and credential-helper paths in the generated `.gclient`; it never reads the API key or runs sync/build.
 - [x] Added `ci/bare/source-pin.txt` and `gn_args.gn` as explicit source and build-target pins.
@@ -35,10 +35,10 @@
 - [x] Added `ci/bare/package_artifact.sh` and unit tests for source-pin parsing and APK integrity.
 - [x] Added `ci/bare/bootstrap_chromium.sh`; full Chromium sync is fail-closed unless `SANDIUM_ALLOW_CHROMIUM_SYNC=true` is explicitly supplied. It was not executed.
 - [x] Added the opt-in `sandium-bare-source-preflight` CircleCI workflow (default off) to run syntax checks, unit tests, pinned-source checks and extension checksum validation without Chromium sync or compilation.
-- [x] Added a closed `run_sandium_bare_source_ready=false` gate to all inherited build/test workflows. The separate Bare-only source preflight is independently opt-in and defaults off.
+- [x] Replaced the migration branch's active CircleCI config with a Bare-only, opt-in source preflight and an explicit fail-closed full-build workflow. The five-stage build is not advertised as runnable until its source/output persistence path is proven.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
 - [ ] The new Bare bootstrap, identity, checkpoint and packaging scripts have not been executed against a real Chromium workspace; the preflight workflow has not been run.
-- [ ] The five-stage compile/restore/publish workflow still needs to be rewired to the new scripts and source-identity cache keys.
+- [ ] The five-stage compile/restore/publish workflow still needs to be designed around the new identity/checkpoint scripts and source-specific cache keys; no build stages are enabled.
 - [ ] CircleCI's current storage/persistence limits have not been proven sufficient for the Chromium source and build output. The full-build safety gate must remain false.
 
 ## Still unverified
@@ -51,7 +51,7 @@
 
 ## Single next action
 
-Wire the Bare source identity and checkpoint scripts into the five-stage workflow using a new, source-specific cache-key namespace while preserving existing cache data and credentials. First resolve persistent source/output storage limits. Keep the full-build gate false; do not run a pipeline, Chromium sync, compilation or APK build.
+Resolve how the existing CircleCI account can persist the Chromium source and build output without exceeding its current limits. Only then wire the new identity/checkpoint scripts into five build stages with a new Bare-specific cache-key namespace. Keep the full-build gate false; do not run a pipeline, Chromium sync, compilation or APK build.
 
 ## Records
 
