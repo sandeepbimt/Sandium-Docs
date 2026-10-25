@@ -26,6 +26,7 @@
 - [x] Established a strict source-of-truth rule and a Bare adapter design.
 - [x] Adapted `.circleci/config.yml` on `ci/sandium-buildbuddy-siso-preflight` to verify the pinned Bare patch repository and existing integration settings without compiling; static YAML and shell syntax checks passed.
 - [x] Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the most complete existing five-stage integration branch.
+- [x] Added `ci/bare/prepare_source.sh` to verify the pinned Bare commit, Chromium pin/version, ordered patch count/digest and uBlock CRX checksum; Bash syntax check passed. It was not executed against a checkout.
 - [x] Added a closed `run_sandium_bare_source_ready=false` gate to every workflow in the migration branch so inherited source-specific jobs cannot run accidentally.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
 - [ ] Full five-stage source-dependent steps, checkpoint/cache manifests, artifact names and tests still need Bare adaptation and review. The safety gate must remain false.
@@ -40,7 +41,7 @@
 
 ## Single next action
 
-Adapt the source-dependent steps and cache/artifact identities in [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) to Bare while keeping all workflows gated. Preserve credentials and cache namespace; do not execute the workflow or run Chromium sync, compilation or APK build.
+Continue adapting the five-stage config to use `ci/bare/prepare_source.sh` and Bare/Chromium source identity throughout cache, checkpoint, compile and artifact paths while keeping all workflows gated. Preserve credentials and cache namespace; do not execute the workflow or run Chromium sync, compilation or APK build.
 
 ## Records
 
