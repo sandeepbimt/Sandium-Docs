@@ -34,6 +34,13 @@ This is a source migration inside the existing Sandium environment, not an infra
 - The existing Sandium records show a successful isolated Siso authentication check against `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`, in GitHub Actions run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682). This proves authentication for that check only—not CircleCI secret visibility, remote action execution, cache reuse or APK production.
 - Existing CircleCI and BuildBuddy settings must be reused, not re-created. Their current values must be read from the already-configured services without exposing secret contents.
 
+## Active migration branch
+
+- Canonical work branch: [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter), created from the existing five-stage integration branch.
+- Its CircleCI config has a new `run_sandium_bare_source_ready` safety gate, default `false`. All existing workflows must remain blocked until the source migration is complete and reviewed.
+- The separate [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/tree/ci/sandium-buildbuddy-siso-preflight) branch contains a Bare-only no-build preflight prototype; it is not the full build pipeline.
+- Historical build branches are not valid current source guidance. Do not enable a workflow on any branch until the Bare source boundary and pin checks pass.
+
 ## Required migration order
 
 1. Read this file and [SANDIUM_STARTER.md](SANDIUM_STARTER.md) before any Sandium task.
@@ -49,4 +56,4 @@ At minimum, a build/cache manifest must include Bare repository commit, Chromium
 
 ## Current single next action
 
-Review the no-build CircleCI preflight diff on branch `ci/sandium-buildbuddy-siso-preflight`, validate its YAML/shell logic without executing a pipeline, and inspect the diff for any changed secret references. Do not start a browser build or reconfigure credentials.
+Continue the migration on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter), based on the most complete existing five-stage integration branch. Its `run_sandium_bare_source_ready` gate must remain false until every source-dependent step, cache identity, artifact check and test has been adapted to Bare. Do not run the pipeline or reconfigure credentials.
