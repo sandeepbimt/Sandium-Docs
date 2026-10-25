@@ -56,4 +56,4 @@ At minimum, a build/cache manifest must include Bare repository commit, Chromium
 
 ## Current single next action
 
-Continue the migration on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter), based on the most complete existing five-stage integration branch. Its `run_sandium_bare_source_ready` gate must remain false until every source-dependent step, cache identity, artifact check and test has been adapted to Bare. Do not run the pipeline or reconfigure credentials.
+Continue the migration on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter). Before implementing five compile stages, prove a compliant persistence path for the Chromium source and build output using the existing CircleCI account. Keep `run_sandium_bare_source_ready=false`; do not run a pipeline or browser build.
