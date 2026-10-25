@@ -27,6 +27,7 @@
 - [x] Adapted `.circleci/config.yml` on `ci/sandium-buildbuddy-siso-preflight` to verify the pinned Bare patch repository and existing integration settings without compiling; static YAML and shell syntax checks passed.
 - [x] Created [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) from the most complete existing five-stage integration branch.
 - [x] Added `ci/bare/prepare_source.sh` to verify the pinned Bare commit, Chromium pin/version, ordered patch count/digest and uBlock CRX checksum; Bash syntax check passed. It was not executed against a checkout.
+- [x] Added `ci/bare/configure_siso.py` to inspect/write the existing REAPI endpoint, instance, backend and credential-helper paths in the generated `.gclient`; it never reads the API key or runs sync/build. Static Python tests are pending.
 - [x] Added a closed `run_sandium_bare_source_ready=false` gate to every workflow in the migration branch so inherited source-specific jobs cannot run accidentally.
 - [x] Preserved existing infrastructure; no secrets changed and no browser build triggered.
 - [ ] Full five-stage source-dependent steps, checkpoint/cache manifests, artifact names and tests still need Bare adaptation and review. The safety gate must remain false.
