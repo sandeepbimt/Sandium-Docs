@@ -113,3 +113,17 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Revisit when:** The pinned Siso/BuildBuddy connection and image pull have passed, or source/provider evidence requires a different backend config.
 - **Implementation evidence (2026-10-17):** Branch [review/sandium-buildbuddy-backend-2026-10-17](https://github.com/sandeepbimt/Sandium/tree/review/sandium-buildbuddy-backend-2026-10-17), final commit 806f565ea44e256344f05cafe1b2b80b577aecfc. Fourteen offline tests pass; the pinned configure_siso.py generated expected settings in a temporary workspace. No PR, merge, Siso auth-check, REAPI request, source sync, compile or APK build has occurred.
 - **Related records:** [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md), [SANDIUM_TEST_PLAN.md](SANDIUM_TEST_PLAN.md).
+
+## DEC-006 — Bare is the only active browser source; preserve existing integration
+
+- **Status:** ACCEPTED
+- **Date:** 2026-10-25
+- **Problem:** The project needs one unambiguous browser-source authority without recreating its existing GitHub/CircleCI/BuildBuddy/Siso setup.
+- **Evidence:** Read-only inspection of [Bare Browser](https://github.com/BareBrowser/bare-browser) README and BUILDING.md; pinned snapshot `a5a7ef74f3b77d45720b8c502cbacc30f2f3dbd5`; Chromium commit `1228231501697ff7a4a0150ea8ae6df37bb99331`, version `156.0.8078.25`; existing Sandium record of authentication check [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682).
+- **Decision:** Bare Browser and the Chromium revision it pins are the only current browser-source reference. Reuse the existing Sandium repository, CircleCI integration, BuildBuddy account/endpoint, Siso wiring, secret assignments and cache configuration. Adapt only source-dependent checkout, patch application, Chromium pin and generated Siso/REAPI configuration.
+- **Explicit prohibitions:** Do not return to superseded source-specific technical guidance. Do not recreate projects, rotate/reassign tokens, recreate contexts, clear caches, or start a browser build during migration.
+- **Risks/unknowns:** Existing infrastructure credentials may be stored separately by service; availability must be checked without printing values. Existing local checkpoints may be incompatible with the new source identity. Remote execution/cache behavior at the Bare pin is unverified.
+- **Validation criteria:** A no-build source preflight confirms pinned Bare/Chromium identities, ordered patch digest, extension input, existing secret references, generated Siso config, stable cache namespace, and no source-specific legacy path. Then seek separate approval for one controlled build.
+- **Rollback:** Revert the source adapter only; preserve all existing credentials, caches and historical records.
+- **Revisit when:** The selected Bare pin changes or a new explicit source decision is committed.
+
