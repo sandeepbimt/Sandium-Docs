@@ -1,6 +1,6 @@
 # SANDIUM — Bare Source Adapter and Existing CI Integration
 
-**Status:** Design from read-only source inspection; not yet implemented or build-validated  
+**Status:** No-build CircleCI source preflight adapted on `ci/sandium-buildbuddy-siso-preflight`; static validation pending; no build  
 **Authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)  
 **Existing infrastructure:** Reuse; do not recreate
 
@@ -18,6 +18,13 @@
 Use the existing Sandium GitHub repository and branch/workflow wiring, existing CircleCI project and configured contexts, existing BuildBuddy endpoint and instance, existing Siso integration, and existing secret names/values. Do not create a new project, rotate or reassign credentials, or clear any cache.
 
 The Sandium record for GitHub Actions run [39037465682](https://github.com/sandeepbimt/Sandium/actions/runs/39037465682) reports that an isolated Siso authentication check succeeded against `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`. This does not prove that CircleCI can read the same-named secret, nor that a build action executes remotely. Verify access without displaying values; if a setting is absent, stop and report its name rather than creating a replacement.
+
+## Current implementation checkpoint
+
+- Modified `.circleci/config.yml` on branch [`ci/sandium-buildbuddy-siso-preflight`](https://github.com/sandeepbimt/Sandium/blob/ci/sandium-buildbuddy-siso-preflight/.circleci/config.yml), commit `851c944a714012118e0bb9406b3cb7414f437848`.
+- The existing opt-in parameter name is preserved to avoid reconfiguring existing API triggers. The default remains `false`.
+- The job fetches the pinned Bare patch repository and checks the Chromium pin, version, patch presence and ordered patch digest. It only checks that existing integration settings are present; it does not reveal the credential or alter settings.
+- The config has not been run or syntax-validated yet. No CircleCI pipeline was manually triggered; no Chromium sync, compile or APK build occurred.
 
 ## Required source adapter behavior
 
