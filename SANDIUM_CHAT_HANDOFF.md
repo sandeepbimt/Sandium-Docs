@@ -3,7 +3,7 @@
 **Updated:** 2026-10-27  
 **Current source:** Bare Browser only  
 **Current branch:** [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter)  
-**Status:** Bare-only source preflight is opt-in; full build fails closed. Pinned-bootstrap correction is source-tested; five-stage compile/restore/publish remains blocked on ledger semantics and durable state transfer.
+**Status:** Bare-only source preflight is opt-in; full build fails closed. Stage-ledger schema 2 has been redesigned in source; five-stage build remains blocked on durable source/build-state transfer and resource feasibility.
 
 ## Read these first
 
@@ -25,6 +25,7 @@
 - The separate no-build preflight branch verifies the pinned Bare patch repository and keeps the existing protected credential name; it does not run Chromium sync or compilation.
 - Static YAML parsing and shell syntax checks passed for the no-build preflight content. CircleCI server validation/execution has not been run.
 - Existing recorded Siso authentication check passed at `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`; remote action execution, cache hits and APK production remain unverified.
+- Stage-ledger schema 2 has stage-specific evidence: Stage 1 source-preparation marker; Stage 2 generated GN args/build graph; Stage 3 uncached remote Siso execution; Stage 4 remote-cache hit; Stage 5 direct APK/signature verification. Stable pre-build identity is separated from the generated GN fingerprint. Commits: [`b430976`](https://github.com/sandeepbimt/Sandium/commit/b430976590588cac211dd3321a8459dfe5cabe85), [`25f4347`](https://github.com/sandeepbimt/Sandium/commit/25f43470e9f383a53f2907092b7a5839c341316a). The latest no-build run must be confirmed before claiming the tests passed.
 - No token/secret was changed, no cache was cleared, and no browser build was triggered.
 
 ## Non-negotiable continuity rules
@@ -38,8 +39,13 @@
 
 ## Single next action
 
-Redesign the stage-ledger contract so source/dependency and toolchain/graph stages can record progress without pretending to have Siso action evidence, while preserving one stable pre-build identity that remains compatible after GN generation. Then revise the persistence plan. Keep `run_sandium_bare_source_ready=false`; do not run CircleCI, Chromium sync, GN generation, compilation or APK build.
+Prove a safe, durable source/build-state transfer mechanism and sufficient existing runner/storage entitlements for the Bare workflow without creating or clearing caches, changing credentials, or launching a build. Keep `run_sandium_bare_source_ready=false`; do not run CircleCI, Chromium sync, GN generation, compilation or APK build.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
 - No completed GitHub workflow run was available from the API.\n
 <!-- SANDIUM_AUTO_STATUS_END -->
+
+
+## Stage-ledger schema 2 update — 2026-10-27
+
+The source-level mismatch between five-stage responsibilities and ledger requirements has been corrected. The stable source/toolchain identity does not include generated GN state; the GN fingerprint is established at Stage 2 and enforced thereafter. Stage-local Siso counters are not summed. Stage 5 checks artifact identity and invokes direct APK/signature verification rather than relying only on manifest flags. This does not wire the five-stage workflow or prove persistence feasibility. No-build test results must be checked; no Chromium sync, GN generation, Siso compile or APK job was launched for this redesign.
