@@ -1471,3 +1471,47 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Persistence assessment:** Bare documents roughly 50 GB source, 100 GB free disk and 32 GB VM memory requirements. CircleCI's included storage/credits and suitable runner capacity are not proven for this workload; BuildBuddy action cache alone is not a source-workspace persistence solution.
 - **Result:** Bootstrap correction accepted at source level; five-stage pipeline feasibility remains blocked/unproven. No clean base or APK is claimed.
 - **Next action:** Redesign the stage-ledger/pre-build identity contract; keep the full-build gate false.
+
+### GitHub Actions run 40442616191
+
+- **Recorded:** 2026-10-27 07:48 UTC
+- **Workflow/run:** Sandium documentation validation / run #173 (run ID `40442616191`)
+- **Branch/commit:** `main` / `22634942ce4b9bf7f6892d0b99f9d27aed431825`
+- **Conclusion:** **FAILURE**; created 2026-10-27T03:09:50Z, last updated 2026-10-27T03:09:59Z
+- **Jobs:** Validate Sandium documentation: failure
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40442616191
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+### GitHub Actions run 40445207877
+
+- **Recorded:** 2026-10-27 07:48 UTC
+- **Workflow/run:** Sandium documentation validation / run #187 (run ID `40445207877`)
+- **Branch/commit:** `main` / `0ddec5ff1f8006f416010fa213b8b73a653789bf`
+- **Conclusion:** **CANCELLED**; created 2026-10-27T03:37:33Z, last updated 2026-10-27T03:37:40Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40445207877
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+### GitHub Actions run 40446952889
+
+- **Recorded:** 2026-10-27 07:48 UTC
+- **Workflow/run:** Sandium documentation validation / run #190 (run ID `40446952889`)
+- **Branch/commit:** `main` / `274f306044d82c1ddb9af258372ee914f376024e`
+- **Conclusion:** **CANCELLED**; created 2026-10-27T03:56:28Z, last updated 2026-10-27T03:56:36Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40446952889
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+### GitHub Actions run 40449459180
+
+- **Recorded:** 2026-10-27 07:48 UTC
+- **Workflow/run:** Sandium documentation validation / run #192 (run ID `40449459180`)
+- **Branch/commit:** `main` / `4bf3d1996b8c6be54a5ed3cf7184626537d86b98`
+- **Conclusion:** **CANCELLED**; created 2026-10-27T04:23:23Z, last updated 2026-10-27T04:23:29Z
+- **Jobs:** Validate Sandium documentation: cancelled
+- **Artifacts:** No artifacts reported by GitHub.
+- **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40449459180
+- **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
