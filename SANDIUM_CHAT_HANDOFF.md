@@ -39,7 +39,7 @@
 
 ## Single next action
 
-Prove a safe, durable source/build-state transfer mechanism and sufficient existing runner/storage entitlements for the Bare workflow without creating or clearing caches, changing credentials, or launching a build. Keep `run_sandium_bare_source_ready=false`; do not run CircleCI, Chromium sync, GN generation, compilation or APK build.
+Inspect the existing CircleCI account's Plan/Usage, Network/Storage, resource-class access and runtime cap, then assess whether the actual entitlements support durable state transfer. Do not change settings or launch a build. Keep `run_sandium_bare_source_ready=false`.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
 - No completed GitHub workflow run was available from the API.\n
@@ -49,3 +49,8 @@ Prove a safe, durable source/build-state transfer mechanism and sufficient exist
 ## Stage-ledger schema 2 update — 2026-10-27
 
 The source-level mismatch between five-stage responsibilities and ledger requirements has been corrected. The stable source/toolchain identity does not include generated GN state; the GN fingerprint is established at Stage 2 and enforced thereafter. Stage-local Siso counters are not summed. Stage 5 checks artifact identity and invokes direct APK/signature verification rather than relying only on manifest flags. This does not wire the five-stage workflow or prove persistence feasibility. No-build test results must be checked; no Chromium sync, GN generation, Siso compile or APK job was launched for this redesign.
+
+
+## CircleCI Free feasibility — public review completed, account check still required
+
+The public plan documentation shows Free at 30,000 credits/month, 1 GB included network transfer and 2 GB-months storage; Bare documents roughly 50 GB Chromium source, 100 GB free disk and 32 GB RAM. Public resource tables list a possible Linux VM class with 32 GB RAM/150 GB disk, but whether the existing account can use it and has sufficient credits is not exposed by the connected tools. Details and official citations are in [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). No CircleCI setting, cache, credential, or build was touched. Next, inspect the current account's Plan/Usage, Network/Storage, available resource classes, and effective timeout; keep the full-build gate false.
