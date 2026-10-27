@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Stage-ledger schema 2 redesign committed; public CircleCI Free limits reviewed; actual account usage/resource entitlements remain unverified  
+**Status:** Stage-ledger schema 2 and current no-build tests pass; Bare five-stage APK workflow is not wired; full-build gate remains false  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -64,7 +64,7 @@
 
 ## Current blocker
 
-The Bare five-stage pipeline is not yet wired. The source-level ledger contract has been redesigned in schema 2: Stage 1 requires source-preparation evidence; Stage 2 requires generated GN args and a Ninja graph; Stage 3 requires an uncached remote Siso action; Stage 4 requires both a current-stage remote-cache hit and additional uncached remote action execution in that same invocation; Stage 5 verifies artifact identity and reruns APK/signature checks. The stable source/toolchain identity no longer changes when the GN fingerprint first appears, and Siso counters remain invocation-local. The updated no-build workflow must be confirmed green before claiming test validation. The remaining major blocker is persistence/resource feasibility: Bare describes roughly 50 GB of Chromium source, 100 GB free disk and 32 GB allocated VM, while the existing CircleCI config is a small Python preflight and account entitlements/state-transfer are not proven. Keep `run_sandium_bare_source_ready=false`.
+The Bare five-stage pipeline is not yet wired. The schema 2 ledger contract is implemented: Stage 1 requires source-preparation evidence; Stage 2 requires generated GN args and a Ninja graph; Stage 3 requires an uncached remote Siso action; Stage 4 requires a current-stage remote-cache hit plus additional uncached remote action execution in that same invocation; Stage 5 verifies artifact identity and reruns APK/signature checks. Stable pre-build identity is separated from the GN fingerprint, and Siso counters remain invocation-local. The latest no-build workflow passed on commit [`f369449`](https://github.com/sandeepbimt/Sandium/commit/f3694497db2cfe43cc079f3ff49c740a8ac80738): 15 ledger tests, 5 bootstrap-contract tests and 3 source-identity/APK-integrity tests passed, along with Python compilation and shell syntax checks. The logs confirm no Chromium sync, GN generation, Siso build or APK build occurred. Treat the user's previously successful Afterbird APK workflow on the existing CircleCI plan as the operational precedent; do not revisit plan constraints unless a concrete Bare build failure makes them relevant. The remaining blocker is wiring and validating the Bare-specific five-stage handoff and proving remote execution/cache reuse for the pinned Bare source. Keep `run_sandium_bare_source_ready=false` until that validation and separate build approval.
 
 ## Still unverified
 
@@ -76,7 +76,7 @@ The Bare five-stage pipeline is not yet wired. The source-level ledger contract 
 
 ## Single next action
 
-Read the existing CircleCI account's Plan/Usage, Network/Storage, resource-class access and runtime cap, then compare the actual values with the documented Bare source/build requirements. Do not change settings or launch a build. Keep `run_sandium_bare_source_ready=false`.
+Wire and source-review the Bare-specific five-stage runner using the existing successful Afterbird workflow only as an operational reference. Keep source identity, stage-local Siso evidence and artifact verification fail-closed; do not investigate plan limits absent a concrete failure, do not clear or recreate caches, and do not launch a build without separate explicit approval. Keep `run_sandium_bare_source_ready=false`.
 
 ## Records
 
@@ -96,9 +96,9 @@ An explicitly approved experimental Chromium source-sync build was attempted on 
 
 ## Stage-ledger redesign recorded — 2026-10-27
 
-The active [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) branch now carries schema 2 stage-specific ledger evidence in commits [`b430976`](https://github.com/sandeepbimt/Sandium/commit/b430976590588cac211dd3321a8459dfe5cabe85), [`25f4347`](https://github.com/sandeepbimt/Sandium/commit/25f43470e9f383a53f2907092b7a5839c341316a), Stage 4 forward-progress check [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538), pre-GN identity fix [`a344207`](https://github.com/sandeepbimt/Sandium/commit/a344207e970e43562397067d14a9c01c87190be8), and stale-GN regression test [`440aaa9`](https://github.com/sandeepbimt/Sandium/commit/440aaa98980e498d5bea551d0097a51fac68f31f). This is source-level work only. The latest no-build workflow outcome still needs explicit confirmation; there is no claim that a full build, remote action, or APK has been produced. The build gate remains false while state persistence and resource feasibility are unresolved.
+The active [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) branch now carries schema 2 stage-specific ledger evidence in commits [`b430976`](https://github.com/sandeepbimt/Sandium/commit/b430976590588cac211dd3321a8459dfe5cabe85), [`25f4347`](https://github.com/sandeepbimt/Sandium/commit/25f43470e9f383a53f2907092b7a5839c341316a), Stage 4 forward-progress check [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538), pre-GN identity fix [`a344207`](https://github.com/sandeepbimt/Sandium/commit/a344207e970e43562397067d14a9c01c87190be8), and stale-GN regression test [`440aaa9`](https://github.com/sandeepbimt/Sandium/commit/440aaa98980e498d5bea551d0097a51fac68f31f). This is source-level work only. The latest no-build workflow outcome is confirmed green at [run 40449280006](https://github.com/sandeepbimt/Sandium/actions/runs/40449280006), with the one failing test-call fixed in [`f369449`](https://github.com/sandeepbimt/Sandium/commit/f3694497db2cfe43cc079f3ff49c740a8ac80738). This is test-only validation: no full build, remote action or APK is claimed. The build gate remains false until the Bare five-stage runner is wired and reviewed.
 
 
 ## CircleCI persistence feasibility check — 2026-10-27
 
-Read-only public-doc review recorded in [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). CircleCI Free publicly lists 30,000 monthly credits, 1 GB included network transfer and 2 GB-months storage. Bare documents roughly 50 GB source, 100 GB free disk and 32 GB RAM. Public Linux VM resource tables list an xlarge class with 32 GB RAM and 150 GB disk, but current project entitlement, remaining credits, actual usage, and effective runtime cap cannot be read through connected tools. The current config is only a Docker/Python preflight. No build or account settings were changed. The exact remaining task is to inspect the existing CircleCI UI's Plan/Usage, Network/Storage, project resource-class access and runtime cap, then assess the transfer budget. Keep `run_sandium_bare_source_ready=false`.
+Historical read-only public-doc review is recorded in [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). Its proposed follow-up to inspect Plan/Usage, account entitlements and limits is superseded by the project direction: do not pursue plan constraints merely in theory, because the existing plan has already produced an Afterbird APK. Revisit only if a concrete Bare-specific failure implicates a resource limit. No build or account settings were changed. Keep `run_sandium_bare_source_ready=false`.
