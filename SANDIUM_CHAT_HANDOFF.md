@@ -42,7 +42,7 @@
 Review and wire the Bare-specific five-stage source/output handoff using current evidence and the existing Afterbird success as the operational precedent. Do not investigate plan limits absent a concrete failure; do not clear/recreate caches; keep `run_sandium_bare_source_ready=false` and require separate approval before any full build.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
-- No completed GitHub workflow run was available from the API.\n
+- Latest no-build GitHub Actions run [40449280006](https://github.com/sandeepbimt/Sandium/actions/runs/40449280006) passed on commit `f3694497db2cfe43cc079f3ff49c740a8ac80738`: 23 tests, Python compilation and shell syntax checks passed; no Chromium sync, GN generation, Siso build or APK build ran.\n
 <!-- SANDIUM_AUTO_STATUS_END -->
 
 
