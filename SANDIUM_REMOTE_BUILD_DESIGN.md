@@ -118,3 +118,46 @@ The stable identity excludes only the not-yet-generated GN fingerprint; the fing
 ### Required next action
 
 Inspect the existing CircleCI project/account's actual storage/network-credit usage and available runner/resource classes, then establish whether one existing workspace can retain at least the required source plus build state with sufficient disk, RAM, and runtime across the proposed jobs. Do this as a read-only feasibility check; do not trigger a build, change credentials, clear caches, or create a new infrastructure project. If current entitlements cannot support that state, explicitly re-scope the stage strategy instead of pretending it can.
+
+
+## Read-only CircleCI feasibility assessment — 2026-10-27
+
+### Publicly verified plan limits
+
+- CircleCI's current [pricing page](https://circleci.com/pricing/) and [credit documentation](https://circleci.com/docs/guides/plans-pricing/credits/) list Free as **30,000 credits/month**, **1 GB included network transfer** and **2 GB-months included storage**. Excess storage/network usage consumes credits; when personal Free credits reach zero, builds are blocked until the monthly refill.
+- The public [resource class documentation](https://circleci.com/docs/guides/execute/resource-class-overview/) lists a Linux VM `xlarge` class with 8 vCPU, 32 GB RAM and 150 GB disk in the resource tables. Resource-class access is plan-dependent. The current Sandium migration config uses `cimg/python:3.12` in a Docker executor and does not request this VM class; it is only a source-preflight job, not a Chromium builder.
+- CircleCI [workspaces](https://circleci.com/docs/guides/orchestrate/workspaces/) are per-workflow, additive-only data transfer between jobs, stored off-executor and unpacked into downstream jobs. Default/max retention is 15 days. They do not create a durable shared checkout for a later, newly triggered workflow.
+- CircleCI's [persistence guide](https://circleci.com/docs/guides/optimize/persist-data/) confirms workspaces, caches and artifacts use stored data; usage can be inspected in the web UI under Plan → Usage, with storage and network detail on the Network/Storage views.
+
+### Size comparison against Bare's published requirement
+
+Bare's [official build documentation](https://github.com/BareBrowser/bare-browser/blob/main/BUILDING.md) says the Chromium checkout is roughly 50 GB, recommends at least 100 GB free disk, and 32 GB allocated VM memory.
+
+Using the uncompressed source size as a planning baseline:
+- 50 GB is **25×** the 2 GB-month included storage amount.
+- 50 GB is **50×** the 1 GB included network-transfer amount.
+
+These ratios are not a prediction of billable usage for a compressed archive: actual transfer depends on compression, cache deduplication and how CircleCI meters the object. They do show that persisting the raw source tree through CircleCI-managed storage cannot be assumed free. Build outputs and repeated workspace restores would add more.
+
+### What could work in principle, and what is not proven
+
+A single CircleCI Linux VM job could, in principle, have a resource class whose published disk/RAM fit Bare's stated baseline. That does **not** establish that the user's current Free organization can select that class, that it has enough remaining monthly credits, or that the current runtime limits allow a Chromium build. The current CircleCI account's plan, remaining credits, usage, job-level resource-class access, configured runtime cap, storage/network usage and retention settings were not accessible through the connected tools. No account values are inferred.
+
+A multi-job five-stage workflow can use a workspace to transfer state within one workflow, but it must upload and later download/unpack the source/build tree. That transfer is large, and the workspace does not persist across newly triggered workflows. A small ledger alone does not transfer the actual source checkout or generated build graph. BuildBuddy/Siso action cache is useful for compatible action outputs, but does not substitute for the local source, dependencies, GN graph and toolchain needed by later jobs.
+
+### Assessment
+
+**Current verdict: not demonstrated feasible within the user's actual account constraints.** The public Free limits show that a raw 50 GB handoff would greatly exceed included storage/network allotments; public resource-class tables show a possible RAM/disk class but do not prove entitlement. Because the account-level usage and class access could not be read, this is a conditional assessment, not a categorical claim that CircleCI cannot do the build.
+
+### Exact read-only checks still required in the CircleCI UI
+
+1. Open **Organization → Plan / Usage** and record the plan name, remaining credits for this month, monthly credit allowance, and any usage caps.
+2. Open **Usage → Network / Storage** and inspect storage volume, storage activity, and network transfer for the Sandium project; note whether excess use is already drawing credits.
+3. Open the existing Sandium project settings/configuration and verify which executor/resource classes are actually available to this project, whether a Linux VM `xlarge` class is selectable, and the effective job timeout/runtime limit.
+4. Review the existing workspace/cache retention controls and the actual cache/workspace usage. Do not clear, recreate, or overwrite any existing cache.
+
+Record the results without changing settings. Do not launch a build as a way to discover limits.
+
+### Decision and next action
+
+Do not wire the five-stage pipeline yet. First obtain those account-specific values and calculate the expected cost/transfer for the chosen state-transfer mechanism. If the existing plan cannot support a durable workspace and adequate builder resources, re-scope the workflow rather than introducing repeated cold syncs or assuming a large archive will be affordable. Keep `run_sandium_bare_source_ready=false`.
