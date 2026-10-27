@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Pinned-bootstrap source fix committed and no-build tests passed; five-stage design remains blocked on stage-ledger contract and durable source/build state  
+**Status:** Stage-ledger schema 2 redesign committed; five-stage build remains blocked on durable source/build-state persistence and unproven resource entitlements  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -64,7 +64,7 @@
 
 ## Current blocker
 
-The Bare five-stage pipeline is not yet wired. Two blockers were found in source review: the stage-ledger currently requires Siso remote-execution evidence in Stage 1 even though the charter defines Stage 1 as source/dependency readiness, and the build identity currently requires generated GN state, so pre-build stages cannot safely share one identity without a stable pre-build identity contract. Separately, Bare documents a roughly 50 GB Chromium checkout, 100 GB free disk and 32 GB allocated VM, while the current CircleCI config is only a small Python Docker preflight and CircleCI Free's included storage allowance is far below the source-tree size. Cross-stage cache reuse and APK production remain unverified. Keep `run_sandium_bare_source_ready=false`.
+The Bare five-stage pipeline is not yet wired. The source-level ledger contract has been redesigned in schema 2: Stage 1 requires source-preparation evidence; Stage 2 requires generated GN args and a Ninja graph; Stage 3 requires an uncached remote Siso action; Stage 4 requires a current-stage remote-cache hit; Stage 5 verifies artifact identity and reruns APK/signature checks. The stable source/toolchain identity no longer changes when the GN fingerprint first appears, and Siso counters remain invocation-local. The updated no-build workflow must be confirmed green before claiming test validation. The remaining major blocker is persistence/resource feasibility: Bare describes roughly 50 GB of Chromium source, 100 GB free disk and 32 GB allocated VM, while the existing CircleCI config is a small Python preflight and account entitlements/state-transfer are not proven. Keep `run_sandium_bare_source_ready=false`.
 
 ## Still unverified
 
@@ -76,7 +76,7 @@ The Bare five-stage pipeline is not yet wired. Two blockers were found in source
 
 ## Single next action
 
-Redesign the stage-ledger contract around the five documented responsibilities, with a stable pre-build identity and explicit Siso-evidence requirements only for stages that actually execute build actions; then update the persistence design without enabling the build gate. Keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging.
+Prove a safe, durable source/build-state transfer and sufficient existing runner/storage entitlements for the Bare workflow without creating or clearing caches, changing credentials, or launching a build. Keep `run_sandium_bare_source_ready=false`; no Chromium sync, GN generation, compilation or APK packaging.
 
 ## Records
 
@@ -92,3 +92,8 @@ An explicitly approved experimental Chromium source-sync build was attempted on 
 <!-- SANDIUM_AUTO_STATUS_START -->
 - No completed GitHub workflow run was available from the API.\n
 <!-- SANDIUM_AUTO_STATUS_END -->
+
+
+## Stage-ledger redesign recorded — 2026-10-27
+
+The active [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) branch now carries schema 2 stage-specific ledger evidence in commits [`b430976`](https://github.com/sandeepbimt/Sandium/commit/b430976590588cac211dd3321a8459dfe5cabe85) and [`25f4347`](https://github.com/sandeepbimt/Sandium/commit/25f43470e9f383a53f2907092b7a5839c341316a). This is source-level work only. The latest no-build workflow outcome still needs explicit confirmation; there is no claim that a full build, remote action, or APK has been produced. The build gate remains false while state persistence and resource feasibility are unresolved.
