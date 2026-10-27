@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Stage-ledger schema 2 redesign committed; five-stage build remains blocked on durable source/build-state persistence and unproven resource entitlements  
+**Status:** Stage-ledger schema 2 redesign committed; public CircleCI Free limits reviewed; actual account usage/resource entitlements remain unverified  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -76,7 +76,7 @@ The Bare five-stage pipeline is not yet wired. The source-level ledger contract 
 
 ## Single next action
 
-Prove a safe, durable source/build-state transfer and sufficient existing runner/storage entitlements for the Bare workflow without creating or clearing caches, changing credentials, or launching a build. Keep `run_sandium_bare_source_ready=false`; no Chromium sync, GN generation, compilation or APK packaging.
+Read the existing CircleCI account's Plan/Usage, Network/Storage, resource-class access and runtime cap, then compare the actual values with the documented Bare source/build requirements. Do not change settings or launch a build. Keep `run_sandium_bare_source_ready=false`.
 
 ## Records
 
@@ -97,3 +97,8 @@ An explicitly approved experimental Chromium source-sync build was attempted on 
 ## Stage-ledger redesign recorded — 2026-10-27
 
 The active [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter) branch now carries schema 2 stage-specific ledger evidence in commits [`b430976`](https://github.com/sandeepbimt/Sandium/commit/b430976590588cac211dd3321a8459dfe5cabe85), [`25f4347`](https://github.com/sandeepbimt/Sandium/commit/25f43470e9f383a53f2907092b7a5839c341316a), Stage 4 forward-progress check [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538), pre-GN identity fix [`a344207`](https://github.com/sandeepbimt/Sandium/commit/a344207e970e43562397067d14a9c01c87190be8), and stale-GN regression test [`440aaa9`](https://github.com/sandeepbimt/Sandium/commit/440aaa98980e498d5bea551d0097a51fac68f31f). This is source-level work only. The latest no-build workflow outcome still needs explicit confirmation; there is no claim that a full build, remote action, or APK has been produced. The build gate remains false while state persistence and resource feasibility are unresolved.
+
+
+## CircleCI persistence feasibility check — 2026-10-27
+
+Read-only public-doc review recorded in [SANDIUM_REMOTE_BUILD_DESIGN.md](SANDIUM_REMOTE_BUILD_DESIGN.md). CircleCI Free publicly lists 30,000 monthly credits, 1 GB included network transfer and 2 GB-months storage. Bare documents roughly 50 GB source, 100 GB free disk and 32 GB RAM. Public Linux VM resource tables list an xlarge class with 32 GB RAM and 150 GB disk, but current project entitlement, remaining credits, actual usage, and effective runtime cap cannot be read through connected tools. The current config is only a Docker/Python preflight. No build or account settings were changed. The exact remaining task is to inspect the existing CircleCI UI's Plan/Usage, Network/Storage, project resource-class access and runtime cap, then assess the transfer budget. Keep `run_sandium_bare_source_ready=false`.
