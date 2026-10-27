@@ -90,7 +90,7 @@ Wire and source-review the Bare-specific five-stage runner using the existing su
 An explicitly approved experimental Chromium source-sync build was attempted on the review branch. No APK was produced. No credentials were mutated, no cache was deleted and no SANDFOX infrastructure was changed.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
-- No completed GitHub workflow run was available from the API.\n
+- Latest no-build GitHub Actions run [40449280006](https://github.com/sandeepbimt/Sandium/actions/runs/40449280006) passed on commit `f3694497db2cfe43cc079f3ff49c740a8ac80738`: 23 tests, Python compilation and shell syntax checks passed; no Chromium sync, GN generation, Siso build or APK build ran.\n
 <!-- SANDIUM_AUTO_STATUS_END -->
 
 
