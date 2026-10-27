@@ -90,6 +90,31 @@ CircleCI's [cache guide](https://circleci.com/docs/guides/optimize/caching/) say
 
 BuildBuddy/Siso remote action cache can reuse outputs only for compatible action keys. It does not, by itself, prove that a later CircleCI job has the local Chromium source checkout, dependencies, generated GN graph and toolchain state needed to continue. A five-job workflow that uploads the whole source/output tree is not accepted; a five-job workflow that re-syncs/re-generates from scratch at every stage is not accepted either.
 
-### Required next design change
+### Stage-ledger contract update — source-only, 2026-10-27
 
-Before wiring any build job, redesign the stage ledger so stages 1 (source/dependencies) and 2 (toolchain/graph) do not require Siso action counts they cannot generate, and so a stable source/build identity survives the transition from planned GN args to verified effective GN args. Then identify a durable source/output state-transfer mechanism within existing account entitlements, or explicitly conclude that the five-stage requirement cannot be met under current constraints. Keep `run_sandium_bare_source_ready=false`; no build is authorized.
+Schema 2 has been implemented in the active Bare adapter. Current source commits include [`7307a08`](https://github.com/sandeepbimt/Sandium/commit/7307a08495facb2d5e2fd1be302d9d74157184b3) and [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538).
+
+- **Stage 1:** requires successful source/dependency preparation evidence; no Siso counters are fabricated.
+- **Stage 2:** requires effective GN arguments and a generated `build.ninja` graph.
+- **Stage 3:** requires actual uncached remote Siso action execution.
+- **Stage 4:** requires both a remote-cache hit and additional uncached remote action execution in the same invocation. A cache hit alone is not forward progress.
+- **Stage 5:** validates the prior source/GN identity chain and directly reruns APK structure/content and `apksigner` verification, checking the manifest's size/hash.
+
+The stable identity excludes only the not-yet-generated GN fingerprint; the fingerprint is established at Stage 2 and must remain unchanged thereafter. Siso progress counters are invocation-local and are not summed across stages. These source changes are not wired to build jobs, and the no-build test result must be confirmed before describing the implementation as test-passing.
+
+### Persistence feasibility reassessment — 2026-10-27
+
+**Verified public constraints:**
+
+- Bare's [official README](https://github.com/BareBrowser/bare-browser) states that the Chromium checkout is about 50 GB, recommends about 100 GB free disk and at least 32 GB allocated to the Docker VM; full builds take hours.
+- CircleCI's [current pricing page](https://circleci.com/pricing/) lists the Free plan with 30,000 monthly credits, 1 GB included network transfer and 2 GB-months of storage. The [Free-plan credit guide](https://circleci.com/docs/guides/plans-pricing/credits/) confirms that excess network/storage usage draws from the monthly credit allotment.
+- CircleCI [cache guidance](https://circleci.com/docs/guides/optimize/caching/) says caches are immutable by key, a cache miss continues with work instead of restoring, and large cache restores can cost more time than regenerating data. CircleCI [persistence guidance](https://circleci.com/docs/guides/optimize/persist-data/) describes workspaces as data passed to downstream jobs through a workflow, not a durable cross-workflow source tree.
+- BuildBuddy/Siso remote action cache can reuse compatible action results. It does not independently provide the later job with the local Chromium checkout, DEPS dependencies, generated GN graph, toolchain, and output directory.
+
+**Assessment:** a raw 50 GB source checkout is 25 times the Free storage allotment and 50 times the included network-transfer allotment, before GN/build outputs or any transfer retries. Compression could reduce transferred bytes, but there is no measured archive size, restore duration, or account-level credit budget for this exact source/build state. Nor is there evidence that the current account provides a persistent runner disk with Bare's required capacity. It would be unjustified to assume that a full source/output archive can be handed between stages within the user's current entitlements. It is equally unjustified to declare the architecture categorically impossible without account-level usage and runner details.
+
+**Conclusion:** the five-stage approach is **not demonstrated feasible under the known constraints**. Do not wire it based on a small-ledger handoff alone, and do not replace it with a cold Chromium sync in each stage. Keep `run_sandium_bare_source_ready=false`.
+
+### Required next action
+
+Inspect the existing CircleCI project/account's actual storage/network-credit usage and available runner/resource classes, then establish whether one existing workspace can retain at least the required source plus build state with sufficient disk, RAM, and runtime across the proposed jobs. Do this as a read-only feasibility check; do not trigger a build, change credentials, clear caches, or create a new infrastructure project. If current entitlements cannot support that state, explicitly re-scope the stage strategy instead of pretending it can.
