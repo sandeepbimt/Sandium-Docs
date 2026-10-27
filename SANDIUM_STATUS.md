@@ -1,9 +1,23 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Ledger fix `75f2c9b` passed GitHub Actions no-Chromium validation (workflow run #126); Bare five-stage APK build and remote/cache reuse remain unverified; full-build gate remains false  
+**Status:** Controlled Stage 2 attempt failed after a 40-minute compile window because local compiled-output reuse was not proven. Corrective preflight changes are committed on `build/bare-apk-once-20261025` at `b9ce560`; runtime reuse and APK production remain unverified.  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
+
+## Latest Stage 2 failure and reuse repair — 2026-10-27
+
+- CircleCI build #663 on workflow `d7cd3777-82ae-4e71-a678-e9defe97cbdc`, control commit `75f2c9b8fc8a44a0f360c97fb38801cac93a8db7`, failed in Stage 2 after approximately 48 minutes. The status artifact says `BUILD_FINISHED=false`, `STAGE=2`, `FAILURE_EXIT_CODE=1`; no verified APK was produced.
+- The Stage 1 checkpoint **was not empty**: identity-validated output tree restored, 39,361 object/library outputs inventory-verified, about 3.44 GB of compiled objects. That is distinct from proving Siso actually skips those actions.
+- The Stage 2 report had 24 unchanged prior object samples but **0 verified local reuses**. In the current invocation, 22 sampled paths were seen in remote/action-cache results and 2 in uncached executions. The final guard therefore rejected the continuation; it did so only after the long compile window.
+- The Siso log explicitly reran GN's `build.ninja.stamp`/`build.ninja` action after the checkpoint restore (`[0/2] Regenerating ninja files`, around 16 seconds). This is the key runtime signal: a large restore alone did not preserve an up-to-date generator/Siso state.
+- Corrective code is committed on [the dedicated build branch](https://github.com/sandeepbimt/Sandium/tree/build/bare-apk-once-20261025):
+  - [`ac49d41`](https://github.com/sandeepbimt/Sandium/commit/ac49d41b6903518226ba1da3bb88fd5748a3fccb) adds the Siso-input timestamp/reuse preflight; [`c70f7b7`](https://github.com/sandeepbimt/Sandium/commit/c70f7b7905183102eec8da978c8ea90d6a528ac9) adds initial regression tests.
+  - [`0f78bee`](https://github.com/sandeepbimt/Sandium/commit/0f78bee7ea122967203a4952ec91193b393f413c) samples only preceding-stage outputs from actual local compile actions, not cache/no-exec outputs; [`3172ee4`](https://github.com/sandeepbimt/Sandium/commit/3172ee48b1cd3a452a9fa1cd6dc345da59a6931e) adds its regression test.
+  - [`e87b069`](https://github.com/sandeepbimt/Sandium/commit/e87b06924d0051512e02c1621ad331f3b5d5dc76) stabilizes generated `.sisoenv`/`.sisorc` mtimes after GN configuration and inserts a bounded target-only dry-run before the expensive compile window; [`7a17147`](https://github.com/sandeepbimt/Sandium/commit/7a17147fa2f695238727a40db5a5a7930fba6500) wires the tests into no-Chromium validation.
+  - The preflight was tightened to detect hash/size/mtime changes in both `build.ninja` and `build.ninja.stamp`, including timestamp-only GN regeneration ([`392ad2e`](https://github.com/sandeepbimt/Sandium/commit/392ad2e9601702f4cce75c133416edb9f32ef0a0), [`641cf82`](https://github.com/sandeepbimt/Sandium/commit/641cf829df320b2313ea93d30e1a4e81490703d9), [`b9ce560`](https://github.com/sandeepbimt/Sandium/commit/b9ce560ed92955485d2ec6b671b58036e644456f)).
+- The offline preflight fixture now passes **7/7 tests** on the matching local implementation, including unchanged-input timestamps, no-work targets, dirty sample rejection, graph mutation, timestamp-only stamp mutation, missing checkpoint rejection and unsafe config rejection. This is **not yet a remote CI pass** and does not prove the next live run will reuse outputs.
+- **Next gate:** run only the lightweight CircleCI source preflight on the above branch with `run_sandium_bare_source_preflight=true`; leave the full APK parameter false. Do not start another five-stage build until this validation is green. Then perform a single controlled five-stage attempt and require runtime proof of local reuse plus a verified `Sandium-debug-arm64.apk`.
 
 ## Latest ledger-fix validation — 2026-10-27
 
@@ -82,7 +96,7 @@ The Bare five-stage pipeline is not yet wired. The schema 2 ledger contract is i
 
 ## Single next action
 
-Wire and source-review the Bare-specific five-stage runner using the existing successful Afterbird workflow only as an operational reference. Keep source identity, stage-local Siso evidence and artifact verification fail-closed; do not investigate plan limits absent a concrete failure, do not clear or recreate caches, and do not launch a build without separate explicit approval. Keep `run_sandium_bare_source_ready=false`.
+Run only the opt-in lightweight source preflight on `build/bare-apk-once-20261025` (`run_sandium_bare_source_preflight=true`; all full-build parameters false). The new pre-build reuse check must pass before authorizing another full five-stage run. Keep verified output/cache evidence, do not clear or recreate caches, and do not claim runtime reuse or APK success until a live build proves both.
 
 ## Records
 
