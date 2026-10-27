@@ -1720,3 +1720,39 @@ Added the missing newline so `mkdir -p "$ROOT/sandium-output"` is its own comman
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
 
 **Diagnosis:** Not inferred automatically. Inspect linked job logs before assigning root cause.
+
+
+## FAIL-LEDGER-002 — Stage-local Siso progress was added to a prior-stage baseline
+
+**Date:** 2026-10-27  
+**Classification:** Historical five-stage-run failure; preserve as evidence, not as current workflow guidance.  
+**Historical run identity:** CircleCI build #657; branch `build/bare-apk-once-20261025`; control head `a8617078ceda724451e474a7bd09eacafdb1a92a`; workflow ID `108d3c92-8a0b-4bd0-a368-22fdeef3936e`.  
+**Evidence:** User-uploaded artifact `build_657_step_110_container_0.txt` and the Stage 2 CircleCI screenshot.
+
+### Observed evidence
+
+- The log records a source-cache hit and validation: `SANDIUM_SOURCE_CACHE=HIT_VALIDATED`.
+- The Stage 1 output checkpoint was restored and reported `SANDIUM_OUTPUT_CHECKPOINT_LOCAL_COMPILED_OUTPUTS=RESTORED`, with an archive size of `11320374898` bytes and build identity `1c9148f66f75e0a53656ed382f60957e40edda715214f647a571bccc4b8f8f8f`.
+- Stage 2's last visible Siso progress was around `55453/65273`. The final accounting lines were `previous=109040 observed=108181`, with the prior graph total retained as the normalized denominator, followed by `baseline=103735 current_stage=55453 total=109040`.
+- The runner exited 1 with `Cumulative completed-action estimate exceeds graph total`. No verified APK was produced by this run.
+
+### Root cause — high confidence in the ledger defect
+
+The ledger added the previous-stage baseline (103,735) to the current Stage 2 invocation's finished-action count (55,453), yielding an estimate larger than the total (109,040). The two values do not describe disjoint sets of globally unique actions. A restored build may skip many outputs, the graph denominator may be normalized from a previous graph, and each Siso/Ninja invocation reports progress for its own graph/run. Consequently `previous completed + current invocation completed` double-counts or mixes incompatible scopes. The evidence identifies a **ledger/accounting rejection**, not a compiler diagnostic. The logs do not establish that every restored object was consumed or why every action was scheduled; those remain separate questions.
+
+### External technical references
+
+- Ninja's official manual defines `%f` as finished edges and `%t` as the total edges that must be run to complete the build; these are build-invocation/graph progress values, not globally unique action identifiers: https://ninja-build.org/manual.html#environment-variables
+- CircleCI documents that caches are immutable and a missing cache makes the job proceed without the cached contents; a successful restore step alone therefore does not prove compiled actions were reused: https://circleci.com/docs/guides/optimize/caching/ and https://circleci.com/docs/reference/configuration-reference/.
+
+### Corrective action in the active Bare adapter
+
+- Fixed in [Sandium commit `cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) on the canonical `migration/bare-source-adapter` branch.
+- The active ledger now labels action counters `current_siso_invocation_only` / `STAGE_LOCAL_ONLY_NOT_CUMULATIVE`; it does not create a cumulative completed-action estimate. The existing checks for current-stage remote execution/cache evidence and exact build identity remain.
+- Added unit tests that exercise current-invocation metrics, remote/cache evidence requirements, and the regression where a 55,453-action current stage must not be added to a 103,735-action prior ledger.
+- Added a GitHub Actions no-build unit-test workflow in commit [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7). It runs Python unit tests and shell syntax only; its result must be checked before claiming validation.
+- The authoritative CircleCI configuration on `migration/bare-source-adapter` still has the full-build readiness gate closed. No CircleCI build, Chromium sync, GN generation, Siso compilation or APK build was launched for this repair.
+
+### Non-repeat warning
+
+Do not repair this by weakening the graph-total guard or by summing progress numerators across stages. Treat each invocation's counts as stage-local diagnostics. Prove reuse using source/build identity, checkpoint/ledger linkage and actual Siso remote-cache/action evidence. The old branch is historical and must not be re-enabled as current guidance.

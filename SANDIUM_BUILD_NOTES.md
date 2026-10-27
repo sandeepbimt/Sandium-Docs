@@ -118,3 +118,10 @@ The recordkeeper is a metadata/documentation workflow only; it must never check 
 - Attempt 2 passed checkout but failed in Siso installation: `Error: no such package: infra/tools/siso/linux-amd64`. The auth-check step was skipped; no BuildBuddy authorization result exists.
 - Next: verify the pinned Siso revision's exact CIPD package/install method from authoritative Chromium/Brave source and package metadata, correct the workflow minimally, and rerun only the auth-only workflow.
 - No Chromium sync, GN, compilation, APK build, or SANDFOX operation occurred. See EXP-SISO-002 and FAIL-SISO-002.
+
+
+## Historical Stage 2 accounting failure — 2026-10-27 (not an accepted build)
+
+The uploaded CircleCI build #657 log on historical branch `build/bare-apk-once-20261025` records a restored Stage 1 output checkpoint (11,320,374,898 bytes) and then a Stage 2 ledger rejection: previous baseline 103,735 plus current invocation progress 55,453 exceeded normalized total 109,040. The failure is in cumulative progress accounting; it does not establish a compiler error or prove complete action-cache reuse. No verified APK was produced.
+
+The corrective source change is on the authoritative Bare migration branch, commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c). Its regression tests are run by a no-build GitHub Actions workflow. Preserve the existing CircleCI caches and credentials; do not rerun the historical workflow. Current Bare build readiness remains closed, and no full build was launched for this fix.

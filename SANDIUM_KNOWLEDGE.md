@@ -43,3 +43,11 @@
 Implement five stages using the pinned Bare source and existing BuildBuddy/Siso remote action cache; pass only small source-bound stage ledgers through CircleCI. Keep all build workflows fail-closed, preserve credentials and old cache objects, use a new Bare-specific key namespace, and request separate approval before any remote-execution/cache proof or browser build.
 
 Detailed requirements: [Bare adapter](SANDIUM_BARE_BUILD_ADAPTER.md), [remote build design](SANDIUM_REMOTE_BUILD_DESIGN.md), [CI architecture](SANDIUM_CI_ARCHITECTURE.md), [automation contract](SANDIUM_AUTOMATION_RULES.md).
+
+
+## Stage progress and action-cache interpretation (2026-10-27)
+
+- Treat Siso/Ninja `finished/total` values as invocation/graph-scoped progress. Do not add a previous stage's `finished` count to a later invocation's numerator; the action sets may overlap and graph denominators may differ.
+- A restored output archive or a green restore step is not proof that Siso consumed those outputs. Keep separate evidence for checkpoint identity/integrity, actual current-stage remote-execution actions, and remote action-cache hits.
+- The active Bare ledger now records `action_count_scope=STAGE_LOCAL_ONLY_NOT_CUMULATIVE` and requires stage-specific Siso remote/cache evidence. See [stage_ledger.py](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/stage_ledger.py) and [FAIL-LEDGER-002](SANDIUM_FAILURE_LEARNINGS.md#fail-ledger-002--stage-local-siso-progress-was-added-to-a-prior-stage-baseline).
+- Historical branches such as `build/bare-apk-once-20261025` are evidence only, not active workflow guidance. Continue work on `migration/bare-source-adapter`; leave `run_sandium_bare_source_ready=false` until the pipeline and persistence design pass review.

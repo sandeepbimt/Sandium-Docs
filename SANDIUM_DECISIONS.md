@@ -131,3 +131,16 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Rollback:** Revert the source adapter only; preserve all existing credentials, caches and historical records.
 - **Revisit when:** The selected Bare pin changes or a new explicit source decision is committed.
 
+
+
+## DEC-008 — Keep build-progress counters stage-local; prove reuse from identity and Siso metrics
+
+- **Status:** ACCEPTED
+- **Date:** 2026-10-27
+- **Problem:** A historical Stage 2 ledger added a preceding-stage baseline to the new Siso invocation's progress numerator and rejected the job when the result exceeded a normalized graph denominator.
+- **Evidence:** User-provided CircleCI build #657 artifact `build_657_step_110_container_0.txt`: baseline `103735`, current-stage completed count `55453`, normalized total `109040`; exit was the stage-ledger error, not a compiler diagnostic. The same log records an 11.32 GB Stage 1 output checkpoint restored, but that alone does not prove every restored output was consumed.
+- **External references:** Ninja's manual defines `%f` as finished edges and `%t` as the total edges that must be run to complete the build: https://ninja-build.org/manual.html#environment-variables. CircleCI documents cache keys as immutable and cache misses as a successful fallback to running work: https://circleci.com/docs/guides/optimize/caching/ and https://circleci.com/docs/reference/configuration-reference/.
+- **Decision:** Never add Siso/Ninja progress numerators from different stage invocations to produce a global completed-action estimate. Store only stage-local counters. Use source/build identity, validated ledger linkage, checkpoint integrity and current-stage Siso remote-cache/action evidence to prove continuity and reuse.
+- **Implementation:** [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) on `migration/bare-source-adapter`; no-build regression workflow [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7).
+- **Safety and trade-off:** Do not weaken identity/graph validation or restore incompatible old checkpoints. A stage-local count does not itself prove output reuse; actual cache-hit evidence remains mandatory. The full-build gate stays closed until the Bare pipeline is reviewed.
+- **Revisit when:** Runtime metrics from an explicitly approved Bare build demonstrate an alternative, identity-safe way to compare progress across graph revisions.

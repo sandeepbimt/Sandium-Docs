@@ -90,3 +90,14 @@ The new cache-identity writer produces `.sandium-bare-cache-identity.txt` from t
 - Whether a complete APK can be produced within current limits.
 
 Do not resolve these unknowns by recreating the integration. Inspect the existing configuration and stop safely if access or compatibility is unproven.
+
+
+## Progress accounting and reuse proof — 2026-10-27
+
+A historical Stage 2 run rejected progress after adding a previous-stage baseline of 103,735 to a current-invocation Siso count of 55,453 against a normalized graph total of 109,040. The formula is invalid because a Siso/Ninja progress count is scoped to a build invocation/graph; stage counts are not a globally unique, disjoint set of actions. See [FAIL-LEDGER-002](SANDIUM_FAILURE_LEARNINGS.md#fail-ledger-002--stage-local-siso-progress-was-added-to-a-prior-stage-baseline).
+
+- Active-branch fix: [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) adds `action_count_scope=STAGE_LOCAL_ONLY_NOT_CUMULATIVE` and retains exact identity plus per-stage Siso remote/cache evidence checks.
+- Regression suite: [`test_stage_ledger.py`](https://github.com/sandeepbimt/Sandium/blob/migration/bare-source-adapter/ci/bare/test_stage_ledger.py) checks structured metrics, summary parsing, that endpoint text is not proof, current-stage cache-hit requirements, and the no-summation invariant.
+- The no-build workflow [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7) runs only Python tests and shell syntax; no Chromium sync/build steps are present.
+- Do not weaken graph-total or identity checks to make the old run green. For this migration, stage-local progress is diagnostic only; continuation must be proved by source identity/ledger linkage and current-stage Siso remote-cache/action metrics.
+- Full-build readiness remains disabled. The latest no-build workflow result is still required before marking source-level tests green.

@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
-**Last reviewed:** 2026-10-25  
-**Status:** Bare source preflight passed; an explicitly user-approved five-stage APK experiment is wired on `fix/bare-stage-handoff-review`; stage 1 has hit Chromium dependency-sync stalls; no APK produced  
+**Last reviewed:** 2026-10-27  
+**Status:** Bare adapter now has stage-local Siso accounting tests; no-build validation is pending/being checked; full-build readiness remains closed; no APK produced  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -13,6 +13,15 @@
 - Online evidence: depot_tools’ `fetch` flow runs `gclient config` followed by `gclient sync`, and `--no-history` requests shallow clones. Chromium’s official dependency docs confirm dependencies are pinned by hashes in `DEPS`. A Chromium-dev report of the same retry pattern describes HTTP 400 shallow-info failures; another reports connection reset/early EOF. These are relevant failure modes, **not proof of this run’s exact cause**: [depot_tools fetch source](https://github.com/columbia/depot_tools/blob/main/fetch.py), [Chromium dependency documentation](https://github.com/chromium/chromium/blob/main/docs/dependencies.md), [Chromium-dev HTTP 400 case](https://groups.google.com/a/chromium.org/g/chromium-dev/c/pRDAs6tm-Zs), [Chromium-dev connection-reset case](https://groups.google.com/a/chromium.org/g/chromium-dev/c/UFZ7B19A1eM).
 - Code change: bypass `fetch android` because its internal dependency sync occurs **before** the later pin step. The script now configures `.gclient` only, fetches and checks out the exact Chromium pin, then runs one dependency sync against that pinned source. Both the direct source fetch (15-minute bound) and dependency sync (20-minute bound) are time-limited. Git command tracing and separate config/fetch/sync artifacts are enabled. The source sequencing fix is [`8009f34`](https://github.com/sandeepbimt/Sandium/commit/8009f34419ca807f004a2176741f8c7a166c0bc1); log-initialization, pre-network syntax-check and direct-fetch timeout follow-ups are [`cd74848`](https://github.com/sandeepbimt/Sandium/commit/cd74848bf7e866772ce05e2a3dfa0afb48e85dd6), [`a4e9f64`](https://github.com/sandeepbimt/Sandium/commit/a4e9f6469059bdb024201392987cfc524c357877) and [`f0cb6c7`](https://github.com/sandeepbimt/Sandium/commit/f0cb6c7cd055fb4c9b4686ab6c23bea70a1a7add). The five-stage runner now transfers only small stage ledgers through CircleCI cache and relies on BuildBuddy/Siso remote action cache for compiled-action reuse; a final job fails unless stage 5 reports a ZIP- and signature-verified APK. These behaviours remain unverified by a successful run. Related commits: [`e8f643f`](https://github.com/sandeepbimt/Sandium/commit/e8f643f219309c1fac15408e4a6616d79583e55b), [`d3a613f`](https://github.com/sandeepbimt/Sandium/commit/d3a613f9f3f1a63c4ba95d393d1117373ca5c5cf), [`a890529`](https://github.com/sandeepbimt/Sandium/commit/a89052989a9c19a70286950192114c96d0ddf31d) and [`6a9bf6d`](https://github.com/sandeepbimt/Sandium/commit/6a9bf6d29b94c22659da502821dee6e5dad5fc28).
 - **Status of fix:** committed but not yet tested by a new CircleCI run. No APK has been produced. This branch remains experimental and is not an accepted clean base.
+
+
+## Latest progress-accounting diagnosis — 2026-10-27
+
+- Historical run evidence: CircleCI build #657 on `build/bare-apk-once-20261025`, control head `a8617078ceda724451e474a7bd09eacafdb1a92a`. It restored a 11,320,374,898-byte output checkpoint and then failed Stage 2 on `103735 + 55453 > 109040`.
+- Root cause: invalid cumulative arithmetic across invocation-scoped Siso progress counts. Ninja defines the displayed numerator/denominator as finished edges and edges that must be run for the current graph. See [Ninja manual](https://ninja-build.org/manual.html#environment-variables).
+- Corrective change: active Bare branch commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) records stage-local metrics only and keeps real per-stage remote/cache proof requirements.
+- Lightweight no-build tests: [workflow run 40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290); check final conclusion before reporting tests as passed. This workflow does not sync Chromium or run GN/Siso compilation.
+- The historical build is not current source guidance. Continue only on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter); keep `run_sandium_bare_source_ready=false`. No new CircleCI run, Chromium sync, GN generation, compile or APK build was started.
 
 ## Current source of truth
 
@@ -63,7 +72,7 @@
 
 ## Single next action
 
-Test the latest pin-first, single-sync change on `fix/bare-stage-handoff-review`. Confirm `SANDIUM_CHROMIUM_DIRECT_PIN_PASS`; then inspect the one pinned `gclient sync` result. If it fails, use the Git trace and sync log to identify the transport error before changing code again.
+Confirm that no-build unit-test workflow 40442432290 passes. Then continue source-only implementation/review of the five-stage Bare adapter and persistence plan on `migration/bare-source-adapter`; keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging until the adapter and resource plan are reviewed.
 
 ## Records
 

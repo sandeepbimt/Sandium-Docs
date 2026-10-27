@@ -1441,3 +1441,18 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Artifacts:** No artifacts reported by GitHub.
 - **Run evidence:** https://github.com/sandeepbimt/Sandium-Docs/actions/runs/40219367969
 - **Qualification:** Automatically recorded CI evidence only. This run does NOT by itself qualify as an accepted clean base. APK integrity, install/smoke tests, source/config pins and explicit acceptance evidence remain mandatory.
+
+
+## EXP-20261027-LEDGER-001 — Correct Siso action-count scope without a browser build
+
+- **Date:** 2026-10-27
+- **Target:** Historical failure analysis; corrective implementation on canonical Bare migration branch only.
+- **Historical failure input:** CircleCI build #657, workflow ID `108d3c92-8a0b-4bd0-a368-22fdeef3936e`, branch `build/bare-apk-once-20261025`, control head `a8617078ceda724451e474a7bd09eacafdb1a92a`.
+- **Observed:** Stage 2 exited after 43m14s in its build step. The uploaded log shows a restored Stage 1 output checkpoint (11,320,374,898 bytes), Siso progress about 55,453/65,273, and rejection because `103735 + 55453 > 109040`.
+- **Hypothesis evaluated:** Cumulative progress math mixed the previous stage's normalized baseline with a separate invocation's progress count. This is the failure's demonstrated gate defect; it does not prove that the restored build outputs were fully consumed or identify any separate action-level rebuild cause.
+- **Online evidence:** Ninja defines `%f` as finished edges and `%t` as edges needed for the current build; CircleCI documents immutable key-based caching and that cache misses fall back to running work. Links are recorded in [FAIL-LEDGER-002](SANDIUM_FAILURE_LEARNINGS.md#fail-ledger-002--stage-local-siso-progress-was-added-to-a-prior-stage-baseline).
+- **Change:** Commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) updates the active Bare stage ledger to record invocation-scoped metrics and prevents cross-stage summation; tests cover the reported arithmetic pattern and current-stage remote-cache evidence. Commit [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7) adds a no-build GitHub Actions workflow for tests/syntax.
+- **Safety:** No CircleCI pipeline, Chromium sync, GN generation, Siso build, APK packaging, credential change, or cache deletion was performed. The active full-build gate remains closed.
+- **Validation status:** GitHub Actions run [40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) was in progress at documentation update time. Do not mark the tests as passed unless its final conclusion confirms success.
+- **Result / acceptance:** Source fix committed; runtime cross-stage cache reuse remains unverified. No clean base or APK is claimed.
+- **Next action:** Confirm the no-build unit-test workflow result; then continue the Bare five-stage adapter/persistence design with the readiness gate false.
