@@ -9,7 +9,7 @@
 3. Do not recreate or rotate tokens, reconnect projects, recreate contexts, or clear caches.
 4. Keep `run_sandium_bare_source_ready=false` until all source-dependent pipeline steps are adapted and reviewed.
 5. Do not trigger Chromium sync, GN generation, compilation or APK packaging during migration.
-6. Do not claim remote execution, cache reuse, checkpoint restoration or APK success without logs and artifact evidence.
+6. Do not claim remote execution, cache reuse, checkpoint restoration or APK success without logs and artifact evidence; prove forward progress using current-stage evidence and identity-bound ledgers, not by summing separate stages' progress numerators.
 7. Preserve history; label older source-specific records superseded rather than treating them as current implementation guidance.
 8. Never write credentials or token values to repository docs/logs.
 9. ChatGPT owns session-level decisions and handoff updates; automated workflows capture machine-observable evidence.

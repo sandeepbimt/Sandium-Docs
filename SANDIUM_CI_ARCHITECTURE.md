@@ -1,6 +1,6 @@
 # SANDIUM — Bare-Based CI Architecture
 
-**Status:** Migration design; not build-ready  
+**Status:** PROPOSED migration design; not build-ready  
 **Authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)  
 **Migration branch:** [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter)
 
@@ -9,6 +9,8 @@
 Preserve the existing Sandium GitHub, CircleCI, BuildBuddy and Siso integration. Change only the source-dependent adapter and identity data. Do not recreate credentials, contexts, projects, webhooks or cache configuration.
 
 Bare is the only active browser source. The pinned Bare commit declares the Chromium commit to use. The ordered patch series, not a second browser source tree, defines the product-specific changes.
+
+SANDFOX is a separate historical/reference project only; do not use its workflows, credentials, caches, artifacts or source tree as Sandium build dependencies.
 
 ## Existing workflow safety
 

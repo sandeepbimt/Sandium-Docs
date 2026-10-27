@@ -48,6 +48,7 @@ Inspect actual files and logs, distinguish verified facts from hypotheses, make 
 - Do not assume full Chromium checkout/build fits a CI budget without evidence.
 - Do not trigger Chromium sync, compilation or APK builds during source migration.
 - Before any separately approved build, document exact source pins, ordered patches, dependencies, storage, memory, bandwidth, cache behavior, remote execution, expected runtime/cost, pass criteria and diagnostics.
+- Do not start a build until the Bare source adapter, resource/persistence plan and no-build preflight have been reviewed and separate explicit build approval is recorded.
 - Do not claim remote execution, resumability or cross-run reuse until logs prove it.
 
 ## Scope order

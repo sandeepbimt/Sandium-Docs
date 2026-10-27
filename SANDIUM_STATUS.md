@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Bare adapter now has stage-local Siso accounting tests; no-build validation is pending/being checked; full-build readiness remains closed; no APK produced  
+**Status:** Stage-local Siso accounting fix committed; no-build regression tests passed; full-build readiness remains closed; no APK produced  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -20,7 +20,7 @@
 - Historical run evidence: CircleCI build #657 on `build/bare-apk-once-20261025`, control head `a8617078ceda724451e474a7bd09eacafdb1a92a`. It restored a 11,320,374,898-byte output checkpoint and then failed Stage 2 on `103735 + 55453 > 109040`.
 - Root cause: invalid cumulative arithmetic across invocation-scoped Siso progress counts. Ninja defines the displayed numerator/denominator as finished edges and edges that must be run for the current graph. See [Ninja manual](https://ninja-build.org/manual.html#environment-variables).
 - Corrective change: active Bare branch commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) records stage-local metrics only and keeps real per-stage remote/cache proof requirements.
-- Lightweight no-build tests: [workflow run 40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290); check final conclusion before reporting tests as passed. This workflow does not sync Chromium or run GN/Siso compilation.
+- Lightweight no-build tests: [workflow run 40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) passed. It ran stage-ledger/source-identity tests and shell syntax checks; no Chromium sync, GN generation or Siso compilation occurred.
 - The historical build is not current source guidance. Continue only on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter); keep `run_sandium_bare_source_ready=false`. No new CircleCI run, Chromium sync, GN generation, compile or APK build was started.
 
 ## Current source of truth
@@ -62,6 +62,10 @@
 - [x] Decided not to persist the full Chromium source or build-output tree in CircleCI caches/workspaces. Keep only small identity/ledger metadata there; actual cross-stage reuse must come from proven BuildBuddy/Siso remote action-cache hits.
 - [ ] BuildBuddy/Siso remote action execution and useful cache hits are not yet proven for the pinned Bare build. The current explicitly approved attempt is experimental; do not claim success until logs prove remote execution/cache hits and a verified APK.
 
+## Current blocker
+
+The Bare five-stage pipeline is not yet wired/reviewed against the exact pinned source and existing CircleCI persistence limits. Cross-stage BuildBuddy/Siso remote-cache reuse and APK production remain unverified. Keep `run_sandium_bare_source_ready=false`.
+
 ## Still unverified
 
 - [ ] Existing CircleCI project/context can access all existing required secret names without re-assignment.
@@ -72,7 +76,7 @@
 
 ## Single next action
 
-Confirm that no-build unit-test workflow 40442432290 passes. Then continue source-only implementation/review of the five-stage Bare adapter and persistence plan on `migration/bare-source-adapter`; keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging until the adapter and resource plan are reviewed.
+Continue source-only implementation/review of the five-stage Bare adapter and persistence plan on `migration/bare-source-adapter`; keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging until the adapter and resource plan are reviewed.
 
 ## Records
 

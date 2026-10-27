@@ -21,7 +21,7 @@
 - The authoritative source boundary and Bare-specific adapter/design docs are committed in Sandium-Docs.
 - `migration/bare-source-adapter` is isolated from the default branch. Its active CircleCI config is Bare-only: an opt-in source preflight and a fail-closed full-build stub.
 - The five-stage compile/restore/publish workflow is not yet wired because the existing CircleCI account's persistence capacity for Chromium source and build output has not been proven.
-- Historical Stage 2 failure #657 exposed invalid cumulative action-count accounting (prior baseline 103,735 plus current invocation count 55,453 against a 109,040 normalized total). The canonical Bare branch now stores per-invocation action metrics only in commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c); no-build regression workflow is [`40442432290`](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290), whose result must be confirmed.
+- Historical Stage 2 failure #657 exposed invalid cumulative action-count accounting (prior baseline 103,735 plus current invocation count 55,453 against a 109,040 normalized total). The canonical Bare branch now stores per-invocation action metrics only in commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c); no-build regression workflow [`40442432290`](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) completed successfully.
 - The separate no-build preflight branch verifies the pinned Bare patch repository and keeps the existing protected credential name; it does not run Chromium sync or compilation.
 - Static YAML parsing and shell syntax checks passed for the no-build preflight content. CircleCI server validation/execution has not been run.
 - Existing recorded Siso authentication check passed at `remote.buildbuddy.io:443`, instance `sandium/android-arm64/ci`; remote action execution, cache hits and APK production remain unverified.
@@ -38,7 +38,7 @@
 
 ## Single next action
 
-Confirm the no-build unit-test workflow result. Then continue wiring/reviewing the Bare-specific five-stage adapter and persistence feasibility on `migration/bare-source-adapter`, with `run_sandium_bare_source_ready=false`. Do not run CircleCI, Chromium sync, GN generation, compilation or APK build during this step.
+Continue wiring/reviewing the Bare-specific five-stage adapter and persistence feasibility on `migration/bare-source-adapter`, with `run_sandium_bare_source_ready=false`. Do not run CircleCI, Chromium sync, GN generation, compilation or APK build during this step.
 
 <!-- SANDIUM_AUTO_STATUS_START -->
 - No completed GitHub workflow run was available from the API.\n
