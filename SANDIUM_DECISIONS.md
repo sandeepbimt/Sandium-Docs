@@ -155,3 +155,17 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Decision:** Keep the full-build gate false. First establish a stable pre-build identity plus separate effective-GN evidence, then design a stage ledger whose Siso proof requirements match the actions each stage actually executes. Do not use a large source/output archive or repeated cold sync as an assumed solution.
 - **Implementation already completed:** Pin-first bootstrap fix in [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db); no-build validation [40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796) passed.
 - **Revisit when:** The ledger contract passes no-build tests and a durable source/output state-transfer mechanism and resource entitlement are demonstrated without touching old caches or credentials.
+
+
+## DEC-010 — Stage-specific evidence with stable pre-build identity
+
+- **Status:** ACCEPTED
+- **Date:** 2026-10-27
+- **Problem:** The five-stage contract incorrectly required uncached Siso execution during source preparation and required generated GN state before it existed.
+- **Evidence:** Source review of `ci/bare/stage_ledger.py` and `ci/bare/build_identity.py` on `migration/bare-source-adapter`; historical mismatch recorded in [FAIL-ADAPTER-003](SANDIUM_FAILURE_LEARNINGS.md#fail-adapter-003--five-stage-source-adapter-contract-does-not-match-the-documented-stage-responsibilities).
+- **Decision:** Use ledger schema 2 with stage-role-specific evidence. Stage 1 proves source/dependency readiness; Stage 2 proves generated GN args and the Ninja graph; Stage 3 requires an uncached remote Siso action; Stage 4 requires both a cache hit and additional uncached remote action in the same invocation; Stage 5 verifies the artifact's source/GN identity and independently validates APK structure and signature. Keep invocation counters stage-local and never sum across stages.
+- **Identity contract:** A stable source/toolchain digest excludes only generated GN fingerprint data. Stage 2 establishes the effective GN fingerprint, which must match in every later stage. Each ledger records the SHA-256 of the previous ledger and rejects skipped stages or mismatched identity.
+- **Validation:** Added regression tests for role-specific evidence, identity continuity, source marker, graph readiness, artifact verification and no-summation. Do not declare the suite green until the latest no-build workflow has actually been observed passing.
+- **Trade-offs and risks:** This fixes the code contract but does not prove cross-job source/build state persistence, existing account resource entitlements, remote action compatibility, or APK production. The full-build gate remains false and the five-stage pipeline remains unwired.
+- **Rollback:** Revert only the ledger/test/documentation commits on the migration branch if no-build tests reveal an implementation defect; do not touch the default branch, SANDFOX, credentials or existing caches.
+- **Revisit when:** The no-build suite passes and the existing runner/storage/transfer mechanism is proven adequate for Bare's source and build output before any build is approved.
