@@ -1782,3 +1782,12 @@ The written five-stage responsibilities and the stage-ledger contract were devel
 ### Non-repeat warning
 
 Do not enable the full-build gate, use a full source/output cache as an unmeasured workaround, or relax Siso evidence requirements. First define a stable pre-build identity and stage-specific evidence contract; then prove a durable state-transfer path with existing entitlements.
+
+
+### FAIL-ADAPTER-003 resolution update — source contract corrected, persistence blocker remains
+
+- **Date:** 2026-10-27
+- **Source commits:** [`7307a08`](https://github.com/sandeepbimt/Sandium/commit/7307a08495facb2d5e2fd1be302d9d74157184b3), [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538), [`a344207`](https://github.com/sandeepbimt/Sandium/commit/a344207e970e43562397067d14a9c01c87190be8), and [`440aaa9`](https://github.com/sandeepbimt/Sandium/commit/440aaa98980e498d5bea551d0097a51fac68f31f).
+- **Correction:** Stage-ledger schema 2 now aligns evidence with stage responsibilities. Stage 1 stores only stable source/toolchain identity and always leaves the GN fingerprint unset; Stage 2 establishes the effective GN fingerprint and graph evidence; Stage 3 requires uncached remote Siso execution; Stage 4 requires both cache reuse and additional uncached remote work in the same invocation; Stage 5 directly runs APK structure/content/signature verification and checks manifest identity.
+- **Remaining limitation:** This resolves the identified source-level contract mismatch, but does not prove the no-build workflow passed, does not wire the five build jobs, and does not prove durable source/build-output persistence or account-level resource sufficiency. No Chromium sync, GN generation, compilation or APK packaging was started for these fixes.
+- **Prevention:** Keep the full-build gate false until the no-build workflow result is observed and a read-only persistence/resource feasibility review demonstrates a workable state-transfer strategy without clearing or recreating caches.
