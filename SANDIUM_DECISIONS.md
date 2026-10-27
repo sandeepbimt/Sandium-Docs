@@ -144,3 +144,14 @@ Append decisions; never silently overwrite history. Supersede with a new linked 
 - **Implementation:** [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) on `migration/bare-source-adapter`; no-build regression workflow [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7).
 - **Safety and trade-off:** Do not weaken identity/graph validation or restore incompatible old checkpoints. A stage-local count does not itself prove output reuse; actual cache-hit evidence remains mandatory. The full-build gate stays closed until the Bare pipeline is reviewed.
 - **Revisit when:** Runtime metrics from an explicitly approved Bare build demonstrate an alternative, identity-safe way to compare progress across graph revisions.
+
+
+## DEC-009 — Do not wire the Bare five-stage build until ledger roles and durable state transfer are proven
+
+- **Status:** ACCEPTED
+- **Date:** 2026-10-27
+- **Evidence:** The current charter's Stage 1 is source/dependency readiness, but `stage_ledger.py` requires an uncached Siso action in Stage 1. It also requires a complete source identity that includes generated GN state, which is not available before Stage 2's graph-generation responsibility. The active CircleCI migration config remains a source-only preflight plus fail-closed stub.
+- **Resource evidence:** Bare's official [README](https://github.com/BareBrowser/bare-browser) and [BUILDING.md](https://github.com/BareBrowser/bare-browser/blob/main/BUILDING.md) describe roughly 50 GB of source, at least 100 GB free disk and 32 GB allocated VM memory. CircleCI's [cache guide](https://circleci.com/docs/guides/optimize/caching/) explains immutable keys and large-cache restore overhead; current account storage/credit entitlements and a suitable build resource class remain unverified.
+- **Decision:** Keep the full-build gate false. First establish a stable pre-build identity plus separate effective-GN evidence, then design a stage ledger whose Siso proof requirements match the actions each stage actually executes. Do not use a large source/output archive or repeated cold sync as an assumed solution.
+- **Implementation already completed:** Pin-first bootstrap fix in [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db); no-build validation [40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796) passed.
+- **Revisit when:** The ledger contract passes no-build tests and a durable source/output state-transfer mechanism and resource entitlement are demonstrated without touching old caches or credentials.

@@ -1,7 +1,7 @@
 # SANDIUM — Project Status
 
 **Last reviewed:** 2026-10-27  
-**Status:** Stage-local Siso accounting fix committed; no-build regression tests passed; full-build readiness remains closed; no APK produced  
+**Status:** Pinned-bootstrap source fix committed and no-build tests passed; five-stage design remains blocked on stage-ledger contract and durable source/build state  
 **Repository:** https://github.com/sandeepbimt/Sandium  
 **Source authority:** [SANDIUM_SOURCE_OF_TRUTH.md](SANDIUM_SOURCE_OF_TRUTH.md)
 
@@ -21,7 +21,7 @@
 - Root cause: invalid cumulative arithmetic across invocation-scoped Siso progress counts. Ninja defines the displayed numerator/denominator as finished edges and edges that must be run for the current graph. See [Ninja manual](https://ninja-build.org/manual.html#environment-variables).
 - Corrective change: active Bare branch commit [`cce70d9`](https://github.com/sandeepbimt/Sandium/commit/cce70d9028ac1662e1a3a22e40fcbb4ca53c140c) records stage-local metrics only and keeps real per-stage remote/cache proof requirements.
 - Lightweight no-build tests: [workflow run 40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) passed. It ran stage-ledger/source-identity tests and shell syntax checks; no Chromium sync, GN generation or Siso compilation occurred.
-- The historical build is not current source guidance. Continue only on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter); keep `run_sandium_bare_source_ready=false`. No new CircleCI run, Chromium sync, GN generation, compile or APK build was started.
+- The historical build is not current source guidance. Continue only on [`migration/bare-source-adapter`](https://github.com/sandeepbimt/Sandium/tree/migration/bare-source-adapter); keep `run_sandium_bare_source_ready=false`. The pinned-bootstrap fix in [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db) passed no-build run [40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796). No CircleCI run, Chromium sync, GN generation, compile or APK build was started.
 
 ## Current source of truth
 
@@ -64,7 +64,7 @@
 
 ## Current blocker
 
-The Bare five-stage pipeline is not yet wired/reviewed against the exact pinned source and existing CircleCI persistence limits. Cross-stage BuildBuddy/Siso remote-cache reuse and APK production remain unverified. Keep `run_sandium_bare_source_ready=false`.
+The Bare five-stage pipeline is not yet wired. Two blockers were found in source review: the stage-ledger currently requires Siso remote-execution evidence in Stage 1 even though the charter defines Stage 1 as source/dependency readiness, and the build identity currently requires generated GN state, so pre-build stages cannot safely share one identity without a stable pre-build identity contract. Separately, Bare documents a roughly 50 GB Chromium checkout, 100 GB free disk and 32 GB allocated VM, while the current CircleCI config is only a small Python Docker preflight and CircleCI Free's included storage allowance is far below the source-tree size. Cross-stage cache reuse and APK production remain unverified. Keep `run_sandium_bare_source_ready=false`.
 
 ## Still unverified
 
@@ -76,7 +76,7 @@ The Bare five-stage pipeline is not yet wired/reviewed against the exact pinned 
 
 ## Single next action
 
-Continue source-only implementation/review of the five-stage Bare adapter and persistence plan on `migration/bare-source-adapter`; keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging until the adapter and resource plan are reviewed.
+Redesign the stage-ledger contract around the five documented responsibilities, with a stable pre-build identity and explicit Siso-evidence requirements only for stages that actually execute build actions; then update the persistence design without enabling the build gate. Keep `run_sandium_bare_source_ready=false` and do not run Chromium sync, GN generation, compilation or APK packaging.
 
 ## Records
 

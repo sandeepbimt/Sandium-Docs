@@ -1756,3 +1756,29 @@ The ledger added the previous-stage baseline (103,735) to the current Stage 2 in
 ### Non-repeat warning
 
 Do not repair this by weakening the graph-total guard or by summing progress numerators across stages. Treat each invocation's counts as stage-local diagnostics. Prove reuse using source/build identity, checkpoint/ledger linkage and actual Siso remote-cache/action evidence. The old branch is historical and must not be re-enabled as current guidance.
+
+
+## FAIL-ADAPTER-003 — Five-stage source adapter contract does not match the documented stage responsibilities
+
+**Date:** 2026-10-27  
+**Classification:** Source-level design blocker; no browser build was run.
+
+### Evidence
+
+- The active design defines Stage 1 as source/dependency readiness and Stage 2 as toolchain/build-graph preparation.
+- `ci/bare/stage_ledger.py` currently requires Stage 1 to contain at least one uncached Siso remote action and requires each later stage to provide Siso counters/logs and an identity that includes generated GN arguments. A source-only Stage 1 cannot provide those facts, and pre-GN state cannot yet carry the same complete identity as post-GN state.
+- The migration branch's active CircleCI config remains fail-closed; no five-stage build jobs are wired.
+- Bare's [official build notes](https://github.com/BareBrowser/bare-browser/blob/main/BUILDING.md) require about 100 GB free disk and a 32 GB allocated VM, with a roughly 50 GB Chromium checkout. CircleCI's [cache documentation](https://circleci.com/docs/guides/optimize/caching/) describes immutable keys and restore costs for large caches.
+
+### Corrective work completed
+
+- Commit [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db) corrected the bootstrap implementation to enforce the exact Chromium pin before dependency sync and to bound/log source-fetch and dependency-sync phases.
+- No-build workflow [40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796) passed Python compilation, source-identity and ledger tests, bootstrap-contract tests, and shell syntax checks. It did not run Chromium sync, GN, Siso compilation or APK packaging.
+
+### Root cause / risk
+
+The written five-stage responsibilities and the stage-ledger contract were developed independently. Wiring them together as-is would fail before meaningful compile-stage evidence could be recorded or tempt a future change to weaken the remote-execution checks. Separately, a source/output transfer strategy has not been demonstrated within the current CircleCI storage/credit limits.
+
+### Non-repeat warning
+
+Do not enable the full-build gate, use a full source/output cache as an unmeasured workaround, or relax Siso evidence requirements. First define a stable pre-build identity and stage-specific evidence contract; then prove a durable state-transfer path with existing entitlements.

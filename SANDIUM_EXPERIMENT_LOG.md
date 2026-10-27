@@ -1457,3 +1457,17 @@ Choose the next unused ID after checking this ledger and any structured records.
 - **Result / acceptance:** Source fix committed; runtime cross-stage cache reuse remains unverified. No clean base or APK is claimed.
 - **Validation follow-up (2026-10-27):** Run [40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) completed with conclusion `success`. Python compilation, stage-ledger/source-identity tests and shell syntax checks passed; the job explicitly confirmed no Chromium sync, GN generation, Siso build or APK build. This supersedes the provisional 'in progress at documentation update time' note above.
 - **Next action:** Continue the Bare five-stage adapter/persistence design with the readiness gate false.
+
+
+## EXP-20261027-BARE-PIN-BOOTSTRAP-001 — Correct pin-first source preparation (no build)
+
+- **Date:** 2026-10-27
+- **Branch:** `migration/bare-source-adapter`
+- **Commit:** [`952eb6f0b3b6eea206b250b954d7f44a2b4d02db`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db)
+- **Problem:** The checked-in bootstrap still ran `fetch --nohooks android` before applying the explicit Chromium pin, conflicting with the intended pin-first workflow and the status record.
+- **Change:** Configure `.gclient` and existing Siso settings first; fetch the exact Chromium SHA directly; verify HEAD; run a bounded, logged dependency sync at that exact revision; verify HEAD again.
+- **Validation:** GitHub Actions [run 40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796) passed. Tests were source-level/static only; no network checkout, GN generation, compile or APK build was performed.
+- **New blocker found:** The current stage-ledger requires Siso action evidence in Stage 1 despite the documented source-only responsibility, and pre-build identity changes when GN outputs appear. The five-stage workflow must not be wired until this contract is corrected.
+- **Persistence assessment:** Bare documents roughly 50 GB source, 100 GB free disk and 32 GB VM memory requirements. CircleCI's included storage/credits and suitable runner capacity are not proven for this workload; BuildBuddy action cache alone is not a source-workspace persistence solution.
+- **Result:** Bootstrap correction accepted at source level; five-stage pipeline feasibility remains blocked/unproven. No clean base or APK is claimed.
+- **Next action:** Redesign the stage-ledger/pre-build identity contract; keep the full-build gate false.

@@ -101,3 +101,18 @@ A historical Stage 2 run rejected progress after adding a previous-stage baselin
 - The no-build workflow [`d89423f`](https://github.com/sandeepbimt/Sandium/commit/d89423fbaf32bbe30ed6d87bb491a328b727c2f7) runs only Python tests and shell syntax; no Chromium sync/build steps are present.
 - Do not weaken graph-total or identity checks to make the old run green. For this migration, stage-local progress is diagnostic only; continuation must be proved by source identity/ledger linkage and current-stage Siso remote-cache/action metrics.
 - No-build workflow [40442432290](https://github.com/sandeepbimt/Sandium/actions/runs/40442432290) passed stage-ledger/source-identity tests and shell syntax checks. It explicitly confirmed no Chromium sync, GN generation, Siso build or APK build. Full-build readiness remains disabled.
+
+
+## Source-only five-stage feasibility review — 2026-10-27
+
+### Corrected source-bootstrap sequence
+
+The source adapter review found that `bootstrap_chromium.sh` still invoked `fetch --nohooks android`, despite the prior status note saying the source fetch was pin-first. That command can perform an initial dependency sync before the explicit Chromium pin is enforced. Commit [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db) now configures `.gclient` first, writes the existing Sandium Siso settings, fetches the exact Chromium commit directly, verifies HEAD, performs a bounded/logged dependency sync against that pin, and verifies HEAD again. No network bootstrap or build was run by this code change. The no-build regression suite passed in [run 40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796).
+
+### Blockers before wiring the five jobs
+
+1. **Ledger responsibility mismatch:** the documented Stage 1 is source/dependency readiness, but `stage_ledger.py` currently requires an uncached Siso remote action in Stage 1. This contract cannot be satisfied by a source-only stage. The later stages also require source identity that includes generated GN arguments, while the pre-GN stage cannot yet produce the same complete identity. Redesign the ledger around a stable pre-build identity plus separately verified generated/effective GN evidence before wiring the workflow.
+2. **Source/output persistence:** Bare's current build instructions state that the Chromium checkout is about 50 GB, at least 100 GB free disk is required, and the builder VM should have 32 GB allocated. CircleCI's cache documentation says caches are immutable per key and large restores have material transfer/expansion costs; CircleCI Free's included storage allowance is much smaller than the Chromium source tree. Do not use a full source/output archive as the default handoff.
+3. **No persistent source store has been proven:** CircleCI workspaces can pass data between jobs in a workflow but do not, by themselves, provide a reusable source checkout across future workflows. BuildBuddy/Siso remote action cache evidence proves reuse of compatible action results; it does not establish that a later CircleCI job has a local Chromium checkout and generated build graph available. Re-fetching and reconstructing those inputs in every stage would undermine the current runtime target and has not been measured.
+
+**Conclusion:** the current five-stage plan is **not yet demonstrated feasible under the existing constraints**. Keep the build gate false. Do not wire a workflow that would silently re-sync Chromium or claim continuation from a ledger alone.

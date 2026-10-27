@@ -74,3 +74,22 @@ Before a build is considered:
 - obtain explicit approval for one controlled build.
 
 No Chromium sync, GN generation, compilation, APK packaging or CircleCI pipeline was run as part of this design update.
+
+
+## Source-only feasibility review — 2026-10-27
+
+### Source bootstrap correction
+
+The active migration branch had drifted from the previous written status: `bootstrap_chromium.sh` still ran `fetch --nohooks android`, which may start a dependency sync before the workflow enforces its pinned Chromium revision. Commit [`952eb6f`](https://github.com/sandeepbimt/Sandium/commit/952eb6f0b3b6eea206b250b954d7f44a2b4d02db) replaces that sequence with `.gclient` configuration, direct fetch of the exact pinned Chromium commit, pin verification before and after a bounded/logged dependency sync, and no build operation. No source sync was run while making this change. No-build workflow [40443430796](https://github.com/sandeepbimt/Sandium/actions/runs/40443430796) passed.
+
+### Persistence feasibility verdict: BLOCKED / NOT PROVEN
+
+Bare's official [README](https://github.com/BareBrowser/bare-browser) and [BUILDING.md](https://github.com/BareBrowser/bare-browser/blob/main/BUILDING.md) describe a roughly 50 GB Chromium checkout, at least 100 GB free disk, 32 GB allocated VM memory, and a build that takes hours. The current CircleCI config on the migration branch uses a small Python Docker executor for source preflight and a fail-closed stub for the full build; no suitable build resource class or durable source store is configured/proven there.
+
+CircleCI's [cache guide](https://circleci.com/docs/guides/optimize/caching/) says cache entries are immutable for a given key and large caches have restore/expansion costs. Its [persist-data guide](https://circleci.com/docs/guides/optimize/persist-data/) describes caches as reuse across jobs/workflows, but the included Free storage allowance and this account's overage/credit eligibility do not prove that a 50 GB source tree or large output checkpoints can be stored affordably. A cache miss also lets a job proceed by doing the work again; a successful restore step is not proof that useful build work was reused.
+
+BuildBuddy/Siso remote action cache can reuse outputs only for compatible action keys. It does not, by itself, prove that a later CircleCI job has the local Chromium source checkout, dependencies, generated GN graph and toolchain state needed to continue. A five-job workflow that uploads the whole source/output tree is not accepted; a five-job workflow that re-syncs/re-generates from scratch at every stage is not accepted either.
+
+### Required next design change
+
+Before wiring any build job, redesign the stage ledger so stages 1 (source/dependencies) and 2 (toolchain/graph) do not require Siso action counts they cannot generate, and so a stable source/build identity survives the transition from planned GN args to verified effective GN args. Then identify a durable source/output state-transfer mechanism within existing account entitlements, or explicitly conclude that the five-stage requirement cannot be met under current constraints. Keep `run_sandium_bare_source_ready=false`; no build is authorized.
