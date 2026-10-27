@@ -92,7 +92,7 @@ BuildBuddy/Siso remote action cache can reuse outputs only for compatible action
 
 ### Stage-ledger contract update — source-only, 2026-10-27
 
-Schema 2 has been implemented in the active Bare adapter. Current source commits include [`7307a08`](https://github.com/sandeepbimt/Sandium/commit/7307a08495facb2d5e2fd1be302d9d74157184b3) and [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538).
+Schema 2 has been implemented in the active Bare adapter. Current source commits include [`7307a08`](https://github.com/sandeepbimt/Sandium/commit/7307a08495facb2d5e2fd1be302d9d74157184b3), [`05aa490`](https://github.com/sandeepbimt/Sandium/commit/05aa490da9d02ec97b30565f27224f5c0a096538), [`a344207`](https://github.com/sandeepbimt/Sandium/commit/a344207e970e43562397067d14a9c01c87190be8), and [`440aaa9`](https://github.com/sandeepbimt/Sandium/commit/440aaa98980e498d5bea551d0097a51fac68f31f).
 
 - **Stage 1:** requires successful source/dependency preparation evidence; no Siso counters are fabricated.
 - **Stage 2:** requires effective GN arguments and a generated `build.ninja` graph.
